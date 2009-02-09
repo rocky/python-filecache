@@ -33,6 +33,7 @@ classifiers =  ['Development Status :: 4 - Beta',
                 ]
 # download_url = '%s-%s.egg' % (modname, version,)
 
+install_requires   = ['coverage']
 py_modules = [modname]
 
 web = 'http://code.google.com/p/pyficache'

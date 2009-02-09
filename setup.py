@@ -6,7 +6,7 @@ This gets a bit of package info from __pkginfo__.py file
 """
 # Get the required package information 
 from __pkginfo__ import author, author_email, classifiers, \
-    py_modules, modname, \
+    install_requires, py_modules, modname, \
     short_desc, version, web
 
 from setuptools import setup
