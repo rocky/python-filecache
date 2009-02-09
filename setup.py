@@ -23,6 +23,7 @@ setup(
       author_email       = author_email,
       classifiers        = classifiers,
       description        = short_desc,
+      install_requires   = install_requires,
       # license            = license,
       long_description   = long_description,
       name               = modname,
