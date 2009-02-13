@@ -59,7 +59,7 @@ def cached_files():
 # have stat information about a file it will be kept. Return a list of
 # invalidated filenames.  None is returned if a filename was given but
 # not found cached.
-def checkcache(filename=None, use_script_lines=False):
+def checkcache(filename=None, use_linecache_lines=False):
     
     if not filename:
       filenames = file_cache.keys()
@@ -79,7 +79,7 @@ def checkcache(filename=None, use_script_lines=False):
                     (cache_info.st_size != stat.st_size or \
                          cache_info.st_mtime != stat.st_mtime):
                 result.append(filename)
-                update_cache(filename, use_script_lines)
+                update_cache(filename, use_linecache_lines)
                 pass
             pass
         pass
@@ -172,7 +172,11 @@ def remap_file_lines(from_file, to_file, line_range, start):
 def sha1(filename):
     '''Return SHA1 of filename.'''
     filename = unmap_file(filename)
-    if filename not in file_cache: return None
+    if filename not in file_cache: 
+        cache(filename)
+        if filename not in file_cache: 
+            return None
+        pass
     if file_cache[filename].sha1:
         return file_cache[filename].sha1.hexdigest 
     sha1 = hashlib.sha1()
@@ -182,16 +186,25 @@ def sha1(filename):
     file_cache[filename].sha1 = sha1
     return sha1.hexdigest()
       
-def size(filename):
-    '''Return the number of lines in filename'''
+def size(filename, use_cache_only=False):
+    '''Return the number of lines in filename. If `use_cache_only' is False,
+    we'll try to fetch the file if it is not cached.'''
     filename = unmap_file(filename)
     if filename not in file_cache: 
-        return None
+        if not use_cache_only: cache(filename)
+        if filename not in file_cache: 
+            return None
+        pass
     return len(file_cache[filename].lines)
 
-def stat(filename):
-    '''Return File.stat in the cache for filename.'''
-    if filename not in file_cache: return None
+def stat(filename, use_cache_only=False):
+    '''Return stat() info for `filename'. If `use_cache_only' is False,
+    we'll try to fetch the file if it is not cached.'''
+    if filename not in file_cache: 
+        if not use_cache_only: cache(filename)
+        if filename not in file_cache: 
+            return None
+        pass
     return file_cache[filename].stat
 
 def trace_line_numbers(filename, reload_on_change=False):
@@ -222,10 +235,10 @@ def unmap_file_line(filename, line):
         pass
     return [filename, line]
 
-def update_cache(filename, use_script_lines=False):
+def update_cache(filename, use_linecache_lines=False):
     '''Update a cache entry.  If something's wrong, return
     None. Return True if the cache was updated and False if not.  If
-    use_script_lines is True, use an existing cache entry as source
+    use_linecache_lines is True, use an existing cache entry as source
     for the lines of the file.'''
     
     if not filename: return None
@@ -233,7 +246,7 @@ def update_cache(filename, use_script_lines=False):
     if filename in file_cache: del file_cache[filename]
     path = os.path.abspath(filename)
     
-    if use_script_lines:
+    if use_linecache_lines:
       fname_list = [filename]
       if file2file_remap.get(path):
           fname_list.append(file2file_remap[path]) 

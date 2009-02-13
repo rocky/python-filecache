@@ -137,7 +137,6 @@ class TestPyFiCache(unittest.TestCase):
   def test_sha1(self):
       global TEST_DIR
       test_file = os.path.join(TEST_DIR, 'short-file') 
-      pyficache.cache(test_file)
       self.assertEqual('1134f95ea84a3dcc67d7d1bf41390ee1a03af6d2',
                        pyficache.sha1(test_file))
       return
@@ -145,19 +144,18 @@ class TestPyFiCache(unittest.TestCase):
   def test_size(self):
       global TEST_DIR
       test_file = os.path.join(TEST_DIR, 'short-file') 
-      pyficache.cache(test_file)
       self.assertEqual(2, pyficache.size(test_file))
       return
 
   def test_stat(self):
-    self.assertEqual(None, pyficache.stat(__file__),
-                     ("stat for %s shouldn't be None - just cleared cache." %
-                      __file__))
-    line = pyficache.getline(__file__, 1)
-    self.assertTrue(line)
-    self.assertTrue(pyficache.stat(__file__),
-                    "file %s should now have a stat" % __file__ )
-    return
+      self.assertEqual(None, pyficache.stat(__file__, use_cache_only=True),
+                       ("stat for %s should be None - just cleared cache." %
+                        __file__))
+      line = pyficache.getline(__file__, 1)
+      self.assertTrue(line)
+      self.assertTrue(pyficache.stat(__file__),
+                      "file %s should now have a stat" % __file__ )
+      return
 
   pass
 if __name__ == '__main__':
