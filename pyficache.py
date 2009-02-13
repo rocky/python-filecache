@@ -178,7 +178,7 @@ def sha1(filename):
             return None
         pass
     if file_cache[filename].sha1:
-        return file_cache[filename].sha1.hexdigest 
+        return file_cache[filename].sha1.hexdigest()
     sha1 = hashlib.sha1()
     for line in file_cache[filename].lines:
         sha1.update(line)
