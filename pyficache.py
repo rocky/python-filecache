@@ -184,8 +184,9 @@ def sha1(filename):
       
 def size(filename):
     '''Return the number of lines in filename'''
-    if filename not in file_cache: return None
     filename = unmap_file(filename)
+    if filename not in file_cache: 
+        return None
     return len(file_cache[filename].lines)
 
 def stat(filename):
@@ -223,9 +224,9 @@ def unmap_file_line(filename, line):
 
 def update_cache(filename, use_script_lines=False):
     '''Update a cache entry.  If something's wrong, return
-    None. Return true if the cache was updated and false if not.  If
-    use_script_lines is true, use that as the source for the lines
-    of the file.'''
+    None. Return True if the cache was updated and False if not.  If
+    use_script_lines is True, use an existing cache entry as source
+    for the lines of the file.'''
     
     if not filename: return None
 
