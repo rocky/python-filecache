@@ -1,0 +1,36 @@
+2009-02-13 03:35  
+
+	* pyficache.py: Ooops. Python is not Ruby
+
+2009-02-13 01:29  
+
+	* pyficache.py, test/test-pyficache.py: More control as to whether
+	  we want to cache the file if it's not already cached.
+
+2009-02-13 01:16  
+
+	* pyficache.py, test/test-pyficache.py: size() should use unmapped.
+	  Add a size test.
+
+2009-02-09 15:00  
+
+	* setup.py: Note dependency on coverage - this time, for sure!
+
+2009-02-09 14:59  
+
+	* __pkginfo__.py, setup.py: Note dependency on coverage
+
+2009-02-09 01:53  
+
+	* .gitignore, test/.gitignore: Administrivia
+
+2009-02-09 01:52  
+
+	* COPYING, Makefile, README.txt, __pkginfo__.py, pyficache.py,
+	  setup.cfg, setup.py, test, test/devious.py, test/short-file,
+	  test/test-pyficache.py: Initial import
+
+2009-02-09 01:47  
+
+	* .: Initial directory structure.
+
