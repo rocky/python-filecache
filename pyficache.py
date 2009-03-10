@@ -15,7 +15,7 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''A module to read and cache lines of a Python program.'''
 
-import coverage, hashlib, linecache, operator, os
+import coverage, hashlib, linecache, os, types
 
 class LineCacheInfo:
     def __init__(self, stat, line_numbers, lines, path, sha1):
@@ -156,7 +156,7 @@ def remap_file(from_file, to_file):
     return
 
 def remap_file_lines(from_file, to_file, line_range, start):
-    if isinstance(types.IntType, linerange):
+    if isinstance(types.IntType, line_range):
         line_range = range(line_range, line_range+1)
         pass
     if to_file is None: to_file = from_file 
@@ -231,7 +231,7 @@ def unmap_file_line(filename, line):
             if line_range == line:
                 from_file = from_file or filename
                 pass
-            return [from_file, start+line-linerange.begin] 
+            return [from_file, start+line-line_range.begin] 
         pass
     return [filename, line]
 

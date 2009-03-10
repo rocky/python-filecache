@@ -1,30 +1,40 @@
-2009-02-13 03:35  
+2009-03-10 10:45  rocky.bernstein
+
+	* __pkginfo__.py: Make requirement on coverage be exactly 2.85
+	  since the next release may be incompatible
+
+2009-03-08 22:24  rocky.bernstein
+
+	* ., .cvsignore, ChangeLog, NEWS, svn2cl_usermap: Get ready for
+	  initial release
+
+2009-02-13 03:35  rocky.bernstein
 
 	* pyficache.py: Ooops. Python is not Ruby
 
-2009-02-13 01:29  
+2009-02-13 01:29  rocky.bernstein
 
 	* pyficache.py, test/test-pyficache.py: More control as to whether
 	  we want to cache the file if it's not already cached.
 
-2009-02-13 01:16  
+2009-02-13 01:16  rocky.bernstein
 
 	* pyficache.py, test/test-pyficache.py: size() should use unmapped.
 	  Add a size test.
 
-2009-02-09 15:00  
+2009-02-09 15:00  rocky.bernstein
 
 	* setup.py: Note dependency on coverage - this time, for sure!
 
-2009-02-09 14:59  
+2009-02-09 14:59  rocky.bernstein
 
 	* __pkginfo__.py, setup.py: Note dependency on coverage
 
-2009-02-09 01:53  
+2009-02-09 01:53  rocky.bernstein
 
 	* .gitignore, test/.gitignore: Administrivia
 
-2009-02-09 01:52  
+2009-02-09 01:52  rocky.bernstein
 
 	* COPYING, Makefile, README.txt, __pkginfo__.py, pyficache.py,
 	  setup.cfg, setup.py, test, test/devious.py, test/short-file,
