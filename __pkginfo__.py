@@ -16,7 +16,7 @@
 
 modname = 'pyficache'
 
-numversion = (0, 1, 0)
+numversion = (0, 1, 1)
 version = '.'.join([str(num) for num in numversion])
 
 short_desc = \
@@ -33,7 +33,7 @@ classifiers =  ['Development Status :: 4 - Beta',
                 ]
 # download_url = '%s-%s.egg' % (modname, version,)
 
-install_requires   = ['coverage']
+install_requires   = ['coverage == 2.85']
 py_modules = [modname]
 
 web = 'http://code.google.com/p/pyficache'
