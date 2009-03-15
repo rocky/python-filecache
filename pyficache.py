@@ -15,7 +15,7 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''A module to read and cache lines of a Python program.'''
 
-import coverage, hashlib, linecache, os, types
+import coverage, hashlib, linecache, os, sys, types
 
 class LineCacheInfo:
     def __init__(self, stat, line_numbers, lines, path, sha1):
@@ -270,7 +270,7 @@ def update_cache(filename, use_linecache_lines=False):
     elif os.path.basename(filename) == filename:
         # try looking through the search path.
         stat = None
-        for dirname in os.path:
+        for dirname in sys.path:
             path = os.path.join(dirname, filename)
             if os.path.exists(path):
                 stat = os.stat(path)
@@ -297,6 +297,8 @@ if __name__ == '__main__':
     if var: return "" 
     else: return "not "
     return # Not reached
+
+  update_cache('os')
 
   lines = getlines(__file__)
   print "%s has %s lines" % (__file__, len(lines))

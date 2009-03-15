@@ -61,10 +61,6 @@ class TestPyFiCache(unittest.TestCase):
 #                        "checkcache should have reread the temporary file.")
 #       FileUtils.rm tf.path
       
-#       pyficache.update_cache(__file__)
-#       pyficache.clear_file_cache
-#       return
-
 #   def test_cached(self):
 #     self.assertEqual(false, pyficache.is_cached(__file__),
 #                      ("file %s shouldn't be cached - just cleared cache."
@@ -155,6 +151,16 @@ class TestPyFiCache(unittest.TestCase):
       self.assertTrue(line)
       self.assertTrue(pyficache.stat(__file__),
                       "file %s should now have a stat" % __file__ )
+      return
+
+  def test_update_cache(self):
+      self.assertFalse(pyficache.update_cache('foo'))
+      self.assertTrue(pyficache.update_cache(__file__))
+      return
+
+  def test_clear_file_cache(self):
+      pyficache.clear_file_cache()
+      self.assertEqual([], pyficache.cached_files())
       return
 
   pass
