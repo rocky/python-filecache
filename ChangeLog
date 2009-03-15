@@ -1,40 +1,53 @@
-2009-03-10 10:45  rocky.bernstein
+2009-03-15 06:15  rocky@gnu.org
+
+	* NEWS: Get ready for 0.1.2 release
+
+2009-03-15 03:33  rocky@gnu.org
+
+	* __pkginfo__.py, pyficache.py, test/test-pyficache.py: Bug in
+	  update_cache searching for file
+
+2009-03-10 10:51  rocky@gnu.org
+
+	* ChangeLog, pyficache.py: Fix bugs found by pylint.
+
+2009-03-10 10:45  rocky@gnu.org
 
 	* __pkginfo__.py: Make requirement on coverage be exactly 2.85
 	  since the next release may be incompatible
 
-2009-03-08 22:24  rocky.bernstein
+2009-03-08 22:24  rocky@gnu.org
 
 	* ., .cvsignore, ChangeLog, NEWS, svn2cl_usermap: Get ready for
 	  initial release
 
-2009-02-13 03:35  rocky.bernstein
+2009-02-13 03:35  rocky@gnu.org
 
 	* pyficache.py: Ooops. Python is not Ruby
 
-2009-02-13 01:29  rocky.bernstein
+2009-02-13 01:29  rocky@gnu.org
 
 	* pyficache.py, test/test-pyficache.py: More control as to whether
 	  we want to cache the file if it's not already cached.
 
-2009-02-13 01:16  rocky.bernstein
+2009-02-13 01:16  rocky@gnu.org
 
 	* pyficache.py, test/test-pyficache.py: size() should use unmapped.
 	  Add a size test.
 
-2009-02-09 15:00  rocky.bernstein
+2009-02-09 15:00  rocky@gnu.org
 
 	* setup.py: Note dependency on coverage - this time, for sure!
 
-2009-02-09 14:59  rocky.bernstein
+2009-02-09 14:59  rocky@gnu.org
 
 	* __pkginfo__.py, setup.py: Note dependency on coverage
 
-2009-02-09 01:53  rocky.bernstein
+2009-02-09 01:53  rocky@gnu.org
 
 	* .gitignore, test/.gitignore: Administrivia
 
-2009-02-09 01:52  rocky.bernstein
+2009-02-09 01:52  rocky@gnu.org
 
 	* COPYING, Makefile, README.txt, __pkginfo__.py, pyficache.py,
 	  setup.cfg, setup.py, test, test/devious.py, test/short-file,
