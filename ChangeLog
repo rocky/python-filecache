@@ -1,3 +1,11 @@
+2009-03-16 02:11  rocky@gnu.org
+
+	* NEWS, __pkginfo__.py, setup.cfg: Wrong provide in setup.cfg
+
+2009-03-15 06:17  rocky@gnu.org
+
+	* ChangeLog, svn2cl_usermap: Get ready for 0.1.2 release
+
 2009-03-15 06:15  rocky@gnu.org
 
 	* NEWS: Get ready for 0.1.2 release

@@ -7,7 +7,7 @@ This gets a bit of package info from __pkginfo__.py file
 # Get the required package information 
 from __pkginfo__ import author, author_email, classifiers, \
     install_requires, py_modules, modname, \
-    short_desc, version, web
+    short_desc, version, web, zip_safe
 
 from setuptools import setup
 
@@ -31,4 +31,5 @@ setup(
       test_suite         = 'nose.collector',
       url                = web,
       version            = version,
+      zip_safe           = zip_safe
       )
