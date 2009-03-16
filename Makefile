@@ -10,7 +10,7 @@ dist:
 
 # It is too much work to figure out how to add a new command to distutils
 # to do the following. I'm sure distutils will someday get there.
-DISTCLEAN_FILES = build dist *.egg-info *.pyc *.so py*.py
+DISTCLEAN_FILES = build dist *.egg-info *.pyc *.so
 distclean: clean
 	-rm -fr $(DISTCLEAN_FILES) || true
 install: 
