@@ -16,7 +16,7 @@
 
 modname = 'pyficache'
 
-numversion = (0, 1, 2)
+numversion = (0, 1, 3)
 version = '.'.join([str(num) for num in numversion])
 
 short_desc = \
