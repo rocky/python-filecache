@@ -125,7 +125,12 @@ class TestPyFiCache(unittest.TestCase):
 
   def test_trace_line_numbers(self):
     test_file = os.path.join(TEST_DIR, 'short-file')
-    self.assertEqual([], pyficache.trace_line_numbers(test_file))
+    line_nums = pyficache.trace_line_numbers(test_file)
+    if 0 == len(line_nums):
+        self.assertEqual([], line_nums)
+    else:
+        self.assertEqual([1], line_nums)
+        pass
     test_file = os.path.join(TEST_DIR, 'devious.py')
     self.assertEqual([2, 5, 7, 9], pyficache.trace_line_numbers(test_file))
     return

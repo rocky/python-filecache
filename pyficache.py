@@ -216,7 +216,11 @@ def trace_line_numbers(filename, reload_on_change=False):
     if not fullname: return None
     e = file_cache[filename]
     if not e.line_numbers:
-        e.line_numbers = coverage.the_coverage.analyze_morf(fullname)[1]
+        if hasattr(coverage.coverage, 'analyze_morf'):
+            e.line_numbers = coverage.the_coverage.analyze_morf(fullname)[1]
+        else:
+            e.line_numbers = coverage.coverage().analysis(fullname)[1]
+            pass
         pass
     return e.line_numbers
 
