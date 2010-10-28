@@ -1,4 +1,4 @@
-# Copyright (C) 2009 Rocky Bernstein <rocky@gnu.org>
+# Copyright (C) 2009, 2010 Rocky Bernstein <rocky@gnu.org>
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -14,28 +14,35 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """packaging information"""
 
-modname = 'pyficache'
-
-numversion = (0, 1, 3)
-version = '.'.join([str(num) for num in numversion])
-
-short_desc = \
-'Cache lines and information of files which are often Python programs'
-
-author = "Rocky Bernstein"
-author_email = "rocky@gnu.org"
-
+copyright   = '''Copyright (C) 2008, 2009, 2010 Rocky Bernstein <rocky@gnu.org>.'''
 classifiers =  ['Development Status :: 4 - Beta',
                 'Intended Audience :: Developers',
                 'License :: OSI Approved :: GNU General Public License (GPL)',
                 'Programming Language :: Python',
                 'Topic :: Software Development :: Libraries :: Python Modules',
                 ]
-# download_url = '%s-%s.egg' % (modname, version,)
 
+# The rest in alphabetic order
+author             = "Rocky Bernstein"
+author_email       = "rocky@gnu.org"
+ftp_url            = None
 install_requires   = ['coverage']
+license            = 'GPL'
+mailing_list       = None
+modname            = 'pyficache'
 py_modules = [modname]
+
+short_desc = \
+'Cache lines and information of files which are often Python programs'
+
+# VERSION.py sets variable VERSION.
+import os.path
+execfile(os.path.join(os.path.dirname(__file__), 'VERSION.py'))
 
 web = 'http://code.google.com/p/pyficache'
 
 zip_safe = False # tracebacks in zip files are funky and not debuggable
+
+def read(*rnames):
+    return open(os.path.join(os.path.dirname(__file__), *rnames)).read()
+long_description   = ( read("README.txt") + '\n\n' +  read("NEWS") )

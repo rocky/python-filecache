@@ -5,18 +5,14 @@ distutils setup (setup.py)
 This gets a bit of package info from __pkginfo__.py file
 """
 # Get the required package information 
-from __pkginfo__ import author, author_email, classifiers, \
-    install_requires, py_modules, modname, \
-    short_desc, version, web, zip_safe
+
+from __pkginfo__ import \
+    author,           author_email,       classifiers,      ftp_url,      \
+    install_requires, license,            long_description, mailing_list, \
+    modname,          py_modules,                                         \
+    short_desc,       VERSION, web, zip_safe
 
 from setuptools import setup
-
-import os
-top_dir = os.path.dirname(__file__)
-README  = os.path.join(top_dir, 'README.txt')
-
-# Description in package will come from the README file.
-long_description = open(README).read() + '\n\n'
 
 setup(
       author             = author,
@@ -24,12 +20,12 @@ setup(
       classifiers        = classifiers,
       description        = short_desc,
       install_requires   = install_requires,
-      # license            = license,
+      license            = license,
       long_description   = long_description,
       name               = modname,
       py_modules         = py_modules,
       test_suite         = 'nose.collector',
       url                = web,
-      version            = version,
+      version            = VERSION,
       zip_safe           = zip_safe
       )
