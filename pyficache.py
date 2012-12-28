@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#   Copyright (C) 2008, 2009 Rocky Bernstein <rocky@gnu.org>
+#   Copyright (C) 2008, 2009, 2012 Rocky Bernstein <rocky@gnu.org>
 #
 #   This program is free software: you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
@@ -27,6 +27,10 @@ class LineCacheInfo:
 # The file cache. The key is a name as would be given by co_filename
 # or __file__. The value is a LineCacheInfo object. 
 file_cache = {}
+script_cache = {}
+
+# Used for pygments syntax highlighting
+python_highlighter = None
 
 # Maps a string filename (a String) to a key in file_cache (a String).
 #
@@ -42,24 +46,49 @@ file_cache = {}
 file2file_remap = {} 
 file2file_remap_lines = {}
   
-# Clear the file cache entirely.
-def clear_file_cache():
+# Clear the file cache. If no filename is given clear it entirely.
+# if a filename is given, clear just that filename.
+def clear_file_cache(filename=None):
     global file_cache, file2file_remap, file2file_remap_lines
-    file_cache = {}
-    file2file_remap = {}
-    file2file_remap_lines = {}
+    if filename is not None:
+      if filename in file_cache:
+        del file_cache[filename]
+        pass
+    else:
+        file_cache = {}
+        file2file_remap = {}
+        file2file_remap_lines = {}
+        pass
     return
 
-# Return an array of cached file names
+def clear_file_format_cache():
+    '''Remove syntax-formatted lines in the cache. Use this
+    when you change the Pygments syntax or Token formatting
+    and want to redo how files may have previously been 
+    syntax marked.'''
+    for fname, cache_info in file_cache.iteritems():
+        for format, lines in cache_info.iteritems():
+            if 'plain' == format: continue
+            file_cache[fname].lines[format] = None
+            pass
+        pass
+    pass
+
+def clear_script_cache():
+    '''Clear the script cache entirely.'''
+    script_cache = {}
+    pass
+
 def cached_files():
+    '''Return an array of cached file names'''
     return file_cache.keys()
 
-# Discard cache entries that are out of date. If +filename+ is +None+
-# all entries in the file cache +file_cache+ are checked.  If we don't
-# have stat information about a file it will be kept. Return a list of
-# invalidated filenames.  None is returned if a filename was given but
-# not found cached.
 def checkcache(filename=None, use_linecache_lines=False):
+    '''Discard cache entries that are out of date. If *filename* is *None*
+    all entries in the file cache *file_cache* are checked.  If we do not
+    have stat information about a file it will be kept. Return a list of
+    invalidated filenames.  None is returned if a filename was given but
+    not found cached.'''
     
     if not filename:
       filenames = file_cache.keys()
@@ -80,15 +109,18 @@ def checkcache(filename=None, use_linecache_lines=False):
                          cache_info.st_mtime != stat.st_mtime):
                 result.append(filename)
                 update_cache(filename, use_linecache_lines)
+            else:
+                result.append(filename)
+                update_cache(filename)
                 pass
-            pass
         pass
     return result
 
-def cache(filename, reload_on_change=False):
-    '''Cache filename if it's not already cached.
+def cache_file(filename, reload_on_change=False):
+    '''Cache filename if it is not already cached.
     Return the expanded filename for it in the cache
-    or nil if we can't find the file.'''
+    or nil if we ca not find the file.'''
+    global file_cache
     if filename in file_cache:
         if reload_on_change: checkcache(filename)
         pass
@@ -99,6 +131,23 @@ def cache(filename, reload_on_change=False):
       return file_cache[filename].path
     else: return None
     return # Not reached
+
+def cache(filename, reload_on_change=False):
+    '''Older routine - for compability.  Cache filename if it is not
+    already cached.  Return the expanded filename for it in the cache
+    or None if we ca not find the file.'''
+    global file_cache
+    if filename in file_cache:
+        if reload_on_change: checkcache(filename)
+        pass
+    else:
+        update_cache(filename, True)
+        pass
+    if filename in file_cache:
+        return file_cache[filename].path
+    else:
+        return None
+    pass
 
 def is_cached(filename):
     '''Return True if filename is cached'''
@@ -115,7 +164,7 @@ def getline(filename, line_number, reload_on_change=True):
     
     Examples:
 
-    lines = pyficache.getline('/tmp/myfile.py')
+    lines = pyficache.getline("/tmp/myfile.py")
     # Same as above
     sys.path.append('/tmp')
     lines = pyficache.getlines('myfile.py')
@@ -130,9 +179,10 @@ def getline(filename, line_number, reload_on_change=True):
     return # Not reached
 
 def getlines(filename, reload_on_change=False):
-    '''Read lines of `filename' and cache the results. However
-    `filename' was previously cached use the results from the
-    cache. Return None if we can't get lines'''
+    '''Read lines of <filename> and cache the results. However
+    <filename> was previously cached use the results from the
+    cache. Return None if we can not get lines
+    '''
     filename = unmap_file(filename)
     if reload_on_change: checkcache(filename) 
     if filename in file_cache:
@@ -156,7 +206,7 @@ def remap_file(from_file, to_file):
     return
 
 def remap_file_lines(from_file, to_file, line_range, start):
-    if isinstance(types.IntType, line_range):
+    if isinstance(line_range, types.IntType):
         line_range = range(line_range, line_range+1)
         pass
     if to_file is None: to_file = from_file 
@@ -198,8 +248,8 @@ def size(filename, use_cache_only=False):
     return len(file_cache[filename].lines)
 
 def stat(filename, use_cache_only=False):
-    '''Return stat() info for `filename'. If `use_cache_only' is False,
-    we'll try to fetch the file if it is not cached.'''
+    '''Return stat() info for *filename*. If *use_cache_only* is False,
+    we will try to fetch the file if it is not cached.'''
     if filename not in file_cache: 
         if not use_cache_only: cache(filename)
         if filename not in file_cache: 
@@ -235,12 +285,12 @@ def unmap_file_line(filename, line):
             if line_range == line:
                 from_file = from_file or filename
                 pass
-            return [from_file, start+line-line_range.begin] 
+            return [from_file, start+line-line_range[0]] 
         pass
     return [filename, line]
 
 def update_cache(filename, use_linecache_lines=False):
-    '''Update a cache entry.  If something's wrong, return
+    '''Update a cache entry.  If something is wrong, return
     None. Return True if the cache was updated and False if not.  If
     use_linecache_lines is True, use an existing cache entry as source
     for the lines of the file.'''
@@ -320,14 +370,15 @@ if __name__ == '__main__':
   print "%s is %scached." % (__file__, 
                              yes_no(is_cached(__file__)))
   print stat(__file__)
+  print "Full path: %s" % path(__file__)
   checkcache() # Check all files in the cache
   clear_file_cache()
   print("%s is now %scached." % (__file__, yes_no(is_cached(__file__))))
-#   # digest = SCRIPT_LINES__.select{|k,v| k =~ /digest.rb$/}
-#   # if digest is not None: print digest.first[0]
-#   line = getline(__file__, 7)
-#   print "The 7th line is\n%s" % line
-  # remap_file_lines(__file__, 'test2', [10..20], 6)
-  # print getline('test2', 10)
-  # print "Remapped 10th line of test2 is\n%s" % line
+  #   # digest = SCRIPT_LINES__.select{|k,v| k =~ /digest.rb$/}
+  #   # if digest is not None: print digest.first[0]
+  line = getline(__file__, 7)
+  print "The 7th line is\n%s" % line
+  remap_file_lines(__file__, 'test2', range(10,21), 6)
+  line = getline('test2', 11)
+  print "Remapped 11th line of test2 is:\n%s" % line
         
