@@ -72,56 +72,59 @@ class TestPyFiCache(unittest.TestCase):
       os.remove(path)
       return
       
-#   def test_cached(self):
-#     self.assertEqual(false, pyficache.is_cached(__file__),
-#                      ("file %s shouldn't be cached - just cleared cache."
-#                      % __file__))
-#     line = pyficache.getline(__file__, 1)
-#     assert line
-#     self.assertEqual(true, pyficache.is_cached(__file__),
-#                  "file #{__file__} should now be cached")
-#     self.assertEqual(false, pyficache.cached_script?('./short-file'),
-#                  "Should not find './short-file' in SCRIPT_LINES__")
-#     self.assertEqual(true, 78 < LineCache.size(__file__))
-#     Dir.chdir(os.dir.dirname(__file__)) do 
-#       load('./short-file', 0)
-#       self.assertEqual(true, pyficache.cached_script?('./short-file'),
-#                    "Should be able to find './short-file' in SCRIPT_LINES__")
-#     end
-#     return
+  def test_cached(self):
+    self.assertEqual(False, pyficache.is_cached(__file__),
+                     ("file %s shouldn't be cached - just cleared cache."
+                     % __file__))
+    line = pyficache.getline(__file__, 1)
+    assert line
+    self.assertEqual(True, pyficache.is_cached(__file__),
+                 "file %s should now be cached" % __file__)
+    # self.assertEqual(false, pyficache.cached_script?('./short-file'),
+    #              "Should not find './short-file' in SCRIPT_LINES__")
+    self.assertEqual(True, 78 < pyficache.size(__file__))
 
-#   def test_remap(self):
-#     pyficache.remap_file(__file__, 'another-name')
-#     line1 = pyficache.getline('another-name', 1)
-#     line2 = pyficache.getline(__file__, 1)
-#     self.assertEqual(line1, line2, 'Both lines should be the same via remap_file')
-#     return
+    # Unlike Ruby, Python doesn't have SCRIPT_LINES__
+    # old_dir = os.getcwd()
+    # os.chdir(os.path.dirname(os.path.abspath((__file__))))
+    # load('./short-file', 0)
+    # self.assertEqual(True, pyficache.cached_script?('./short-file'),
+    #                "Should be able to find './short-file' in SCRIPT_LINES__")
+    # os.chdir(old_dir)
+    return
 
-#   def test_remap_lines(self):
-#     pyficache.remap_file_lines(__file__, 'test2', (10..11), 6)
+  def test_remap(self):
+    pyficache.remap_file(__file__, 'another-name')
+    line1 = pyficache.getline('another-name', 1)
+    line2 = pyficache.getline(__file__, 1)
+    self.assertEqual(line1, line2, 'Both lines should be the same via remap_file')
+    return
 
-#     line5 = pyficache.getline(__file__, 5)
-#     pyficache.remap_file_lines(__file__, 'test2', 9, 5)
-#     rline9  = pyficache.getline('test2', 9)
-#     self.assertEqual(line5, rline9, 
-#                  'lines should be the same via remap_file_line - remap integer')
+  def test_remap_lines(self):
+    pyficache.remap_file_lines(__file__, 'test2', range(10,12), 6)
 
-#     line6 = pyficache.getline(__file__, 6)
-#     rline10 = pyficache.getline('test2', 10)
-#     self.assertEqual(line6, rline10, 
-#                  'lines should be the same via remap_file_line - range')
+    line5 = pyficache.getline(__file__, 5)
+    pyficache.remap_file_lines(__file__, 'test2', 9, 5)
+    rline9  = pyficache.getline('test2', 9)
+    self.assertEqual(line5, rline9, 
+                 'lines should be the same via remap_file_line - remap integer')
 
-#     line7 = pyficache.getline(__file__, 7)
-#     rline11 = pyficache.getline('test2', 11)
-#     self.assertEqual(line7, rline11, 
-#                  'lines should be the same via remap_file_line - range')
+    line6 = pyficache.getline(__file__, 6)
+    rline10 = pyficache.getline('test2', 10)
+    self.assertEqual(line6, rline10, 
+                 'lines should be the same via remap_file_line - range')
 
-#     line8 = pyficache.getline(__file__, 8)
-#     pyficache.remap_file_lines(__file__, None, 20, 8)
-#     rline20 = pyficache.getline(__file__, 20)
-#     self.assertEqual(line8, rline20, 
-#                  'lines should be the same via remap_file_line - None file')
-#     return
+    line7 = pyficache.getline(__file__, 7)
+    rline11 = pyficache.getline('test2', 11)
+    self.assertEqual(line7, rline11, 
+                 'lines should be the same via remap_file_line - range')
+
+    line8 = pyficache.getline(__file__, 8)
+    pyficache.remap_file_lines(__file__, None, 20, 8)
+    rline20 = pyficache.getline(__file__, 20)
+    self.assertEqual(line8, rline20, 
+                 'lines should be the same via remap_file_line - None file')
+    return
 
   def test_path(self):
     self.assertEqual(None, pyficache.path(__file__),
