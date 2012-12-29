@@ -92,9 +92,9 @@ def checkcache(filename=None, opts=False):
     not found cached.'''
     
     if isinstance(opts, types.DictType):
-        use_script_lines = opts['use_script_lines']
+        use_linecache_lines = opts['use_linecache_lines']
     else:
-        use_script_lines = opts
+        use_linecache_lines = opts
         pass
 
     if not filename:
@@ -140,7 +140,7 @@ def cache_file(filename, reload_on_change=False, opts={}):
         if reload_on_change: checkcache(filename)
         pass
     else:
-        opts['use_script_lines'] = True
+        opts['use_linecache_lines'] = True
         update_cache(filename, opts)
         pass
     if filename in file_cache:
@@ -198,8 +198,8 @@ def getline(file_or_script, line_number, opts=True):
     filename = unmap_file(file_or_script)
     filename, line_number = unmap_file_line(filename, line_number)
     lines = getlines(filename, opts)
-    if lines and line_number >=1 and line_number < len(lines):
-        return lines[line_number-1].rstrip('\n')
+    if lines and line_number >=1 and line_number <= len(lines):
+        return lines[line_number-1]
     else:
         return None
     return # Not reached
@@ -211,18 +211,18 @@ def getlines(filename, opts=False):
     '''
     global file_cache
     reload_on_change = False
-    use_script_lines = False
+    use_linecache_lines = False
     if isinstance(opts, types.DictType):
         if 'reload_on_change' in opts:
             reload_on_change = opts['reload_on_change']
             pass
-        if 'use_script_lines' in opts:
-            use_script_lines = opts['use_script_lines']
+        if 'use_linecache_lines' in opts:
+            use_linecache_lines = opts['use_linecache_lines']
             pass
         pass
     else:
         reload_on_change = opts
-        use_script_lines = False
+        use_linecache_lines = False
         opts = {'reload_on_change': reload_on_change}
         pass
     if reload_on_change: checkcache(filename) 
@@ -238,7 +238,7 @@ def getlines(filename, opts=False):
             pass
         return lines[fmt]
     else:
-        opts['use_script_lines'] = True
+        opts['use_linecache_lines'] = True
         update_cache(filename, opts)
         if filename in file_cache:
             return file_cache[filename].lines[fmt]

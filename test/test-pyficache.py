@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 'Unit test for pyficache'
 import inspect, os, sys, unittest
+from tempfile import mkstemp
 top_builddir = os.path.join(os.path.dirname(__file__), '..')
 if top_builddir[-1] != os.path.sep:
     top_builddir += os.path.sep
@@ -27,39 +28,49 @@ class TestPyFiCache(unittest.TestCase):
       self.assertEqual(compare_lines, lines,
                        'We should get exactly the same lines as reading this file.')
     
-#       # Test getline to read this file. The file should now be cached,
-#       # so internally a different set of routines are used.
-#       test_line = 1
-#       line = pyficache.getline(__file__, test_line)
-#       self.assertEqual(compare_lines[test_line-1], line,
-#                        'We should get exactly the same line as reading this file.')
+      # Test getline to read this file. The file should now be cached,
+      # so internally a different set of routines are used.
+      test_line = 1
+      line = pyficache.getline(__file__, test_line)
+      self.assertEqual(compare_lines[test_line-1], line,
+                       'We should get exactly the same line as reading this file.')
     
-#       # Test getting the line via a relative file name
-#       Dir.chdir(os.path.dirname(__file__)) do 
-#       short_file = os.path.basename(__file__)
-#       test_line = 10
-#       line = pyficache.getline(short_file, test_line)
-#       self.assertEqual(compare_lines[test_line-1], line,
-#                    'Short filename lookup should work')
-  
-#       # Write a temporary file; read contents, rewrite it and check that
-#       # we get a change when calling getline.
-#       tf = Tempfile.new("testing")
-#       test_string = "Now is the time.\n"
-#       tf.puts(test_string)
-#       tf.close()
-#       line = pyficache.getline(tf.path, 1)
-#       self.assertEqual(test_string, line,
-#                        "C'mon - a simple line test like this worked before.")
-#       tf.open()
-#       test_string = "Now is another time.\n"
-#       tf.puts(test_string)
-#       tf.close()
-#       pyficache.checkcache()
-#       line = pyficache.getline(tf.path, 1)
-#       self.assertEqual(test_string, line,
-#                        "checkcache should have reread the temporary file.")
-#       FileUtils.rm tf.path
+      # Test getting the line via a relative file name
+      old_dir = os.getcwd()
+      os.chdir(os.path.dirname(os.path.abspath((__file__))))
+      short_file = os.path.basename(__file__)
+      test_line = 10
+      line = pyficache.getline(short_file, test_line)
+      self.assertEqual(compare_lines[test_line-1], line,
+                       'Short filename lookup should work')
+      os.chdir(old_dir)
+
+      # from pydbgr.api import debug
+      # debug() # Get me into the debugger!
+
+      # Write a temporary file; read contents, rewrite it and check that
+      # we get a change when calling getline.
+      (fd, path) = mkstemp(prefix="pyfcache", suffix='.txt')
+      test_string = "Now is the time.\n"
+      with open(path, 'w') as f:
+          f.write(test_string)
+          f.close()
+          pass
+      line = pyficache.getline(path, 1)
+      self.assertEqual(test_string, line,
+                       "C'mon - a simple line test like this worked before.")
+      with open(path, 'w') as f:
+          test_string = "Now is another time.\n"
+          f.write(test_string)
+          f.close()
+          pass
+
+      pyficache.checkcache()
+      line = pyficache.getline(path, 1)
+      self.assertEqual(test_string, line,
+                       "checkcache should have reread the temporary file.")
+      os.remove(path)
+      return
       
 #   def test_cached(self):
 #     self.assertEqual(false, pyficache.is_cached(__file__),
