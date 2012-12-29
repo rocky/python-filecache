@@ -144,7 +144,7 @@ class TestPyFiCache(unittest.TestCase):
 
   def test_size(self):
       global TEST_DIR
-      test_file = os.path.join(TEST_DIR, 'short-file') 
+      test_file = os.path.join(TEST_DIR, 'short-file')
       self.assertEqual(2, pyficache.size(test_file))
       return
 
