@@ -82,7 +82,7 @@ class TestPyFiCache(unittest.TestCase):
                  "file %s should now be cached" % __file__)
     # self.assertEqual(false, pyficache.cached_script?('./short-file'),
     #              "Should not find './short-file' in SCRIPT_LINES__")
-    self.assertEqual(True, 78 < pyficache.size(__file__))
+    # self.assertEqual(True, 78 < pyficache.size(__file__))
 
     # Unlike Ruby, Python doesn't have SCRIPT_LINES__
     # old_dir = os.getcwd()

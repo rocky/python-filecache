@@ -234,7 +234,9 @@ def getlines(filename, opts=False):
     if filename in file_cache:
         lines = file_cache[filename].lines
         if 'output' in opts and fmt not in lines:
-            lines[fmt] = highlight_string(''.join(lines['plain'])).split('\n')
+            lines[fmt] = [
+                line + "\n" for line in
+                highlight_string(''.join(lines['plain'])).split('\n') ]
             pass
         return lines[fmt]
     else:
@@ -438,7 +440,7 @@ if __name__ == '__main__':
   i = 0
   for line in lines:
       i += 1
-      print line
+      print line.rstrip('\n')
       if i > 20: break
       pass
   line = getline(__file__, 6)
