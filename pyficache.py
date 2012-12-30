@@ -21,6 +21,18 @@ from pygments import highlight
 from pygments.lexers import PythonLexer
 from pygments.formatters import TerminalFormatter
 
+default_opts = {'reload_on_change': False,
+                'use_linecache_lines': True,
+                'output' : 'plain'}
+
+def option_get(key, options):
+    global default_opts
+    if not options or key not in options:
+        return default_opts.get(key)
+    else:
+        return options[key]
+    return None # Not reached
+
 class LineCacheInfo:
     def __init__(self, stat, line_numbers, lines, path, sha1):
         self.stat, self.lines, self.path, self.sha1 = (stat, lines, path, sha1)
@@ -157,7 +169,7 @@ def cache(filename, reload_on_change=False):
         if reload_on_change: checkcache(filename)
         pass
     else:
-        update_cache(filename, True)
+        update_cache(filename, {'reload_on_change': True})
         pass
     if filename in file_cache:
         return file_cache[filename].path
@@ -182,7 +194,7 @@ def is_empty(filename):
     filename=unmap_file(filename)
     return 0 == len(file_cache[filename].lines['plain'])
 
-def getline(file_or_script, line_number, opts={'reload_on_change': False}):
+def getline(file_or_script, line_number, opts=default_opts):
     '''Get line *line_number* from file named *file_or_script*. Return None if
     there was a problem or it is not found.
 
@@ -191,14 +203,11 @@ def getline(file_or_script, line_number, opts={'reload_on_change': False}):
     lines = pyficache.getline("/tmp/myfile.py")
     '''
     # Compatibility with older interface
-    if isinstance(opts, types.DictType):
-        if 'reload_on_change' in opts:
-            reload_on_change = opts['reload_on_change']
-            pass
-        else:
-            reload_on_change = False
-    else:
-        reload_on_change = opts
+    if not isinstance(opts, types.DictType):
+        global default_opts
+        r_o_c = opts
+        opts = default_opts
+        opts['reload_on_change'] = r_o_c
         pass
     filename = unmap_file(file_or_script)
     filename, line_number = unmap_file_line(filename, line_number)
@@ -209,43 +218,21 @@ def getline(file_or_script, line_number, opts={'reload_on_change': False}):
         return None
     return # Not reached
 
-def getlines(filename, opts=False):
+def getlines(filename, opts=default_opts):
     '''Read lines of <filename> and cache the results. However, if
     <filename> was previously cached use the results from the
     cache. Return None if we can not get lines
     '''
     global file_cache
-    reload_on_change = False
-    use_linecache_lines = False
-    if isinstance(opts, types.DictType):
-        if 'reload_on_change' in opts:
-            reload_on_change = opts['reload_on_change']
-            pass
-        if 'use_linecache_lines' in opts:
-            use_linecache_lines = opts['use_linecache_lines']
-            pass
-        pass
-    else:
-        reload_on_change = opts
-        use_linecache_lines = False
-        opts = {'reload_on_change': reload_on_change}
-        pass
-    if reload_on_change: checkcache(filename) 
-    if 'output' in opts:
-        fmt = opts['output']
-    else:
-        fmt = 'plain'
-        pass
+    if option_get('reload_on_change', opts): checkcache(filename)
+    fmt = option_get('output', opts)
     if filename in file_cache:
         lines = file_cache[filename].lines
         if 'output' in opts and fmt not in lines:
-            lines[fmt] = [
-                line + "\n" for line in
-                highlight_string(''.join(lines['plain'])).split('\n') ]
+            lines[fmt] = highlight_array(lines['plain'])
             pass
         return lines[fmt]
     else:
-        opts['use_linecache_lines'] = True
         update_cache(filename, opts)
         if filename in file_cache:
             return file_cache[filename].lines[fmt]
@@ -254,14 +241,12 @@ def getlines(filename, opts=False):
         pass
     return
 
+def highlight_array(array):
+    fmt_array = highlight_string('\n'.join(array)).split('\n')
+    lines = [ line + "\n" for line in fmt_array ]
+    return lines
+
 def highlight_string(string):
-    # require 'rubygems'
-    # begin
-    #  require 'coderay'
-    #  require 'term/ansicolor'
-    # rescue LoadError
-    #  return string
-    # end
     return highlight(string,PythonLexer(), TerminalFormatter())
 
 def path(filename):
@@ -359,34 +344,28 @@ def unmap_file_line(filename, line):
         pass
     return [filename, line]
 
-def update_cache(filename, opts={}):
+def update_cache(filename, opts=default_opts):
     '''Update a cache entry.  If something is wrong, return
     None. Return True if the cache was updated and False if not.  If
     use_linecache_lines is True, use an existing cache entry as source
     for the lines of the file.'''
-    
-    if isinstance(opts, types.DictType):
-        if 'use_linecache' in opts: 
-            use_linecache_lines = opts['use_linecache']
-        else:
-            use_linecache_lines = False
-    else:
-        # Compatibility with older interface
-        use_linecache_lines = opts
-        opts = {'use_linecache_lines' : use_linecache_lines}
-        pass
     
     if not filename: return None
 
     if filename in file_cache: del file_cache[filename]
     path = os.path.abspath(filename)
     
-    if use_linecache_lines:
+    if option_get('use_linecache_lines', opts):
       fname_list = [filename]
       if file2file_remap.get(path):
           fname_list.append(file2file_remap[path]) 
           for filename in fname_list:
-              lines = linecache.getlines(filename)
+              plain_lines = linecache.getlines(filename)
+              term_lines  = highlight_array(plain_lines)
+              lines = {
+                  'plain'   : plain_lines,
+                  'terminal': term_lines
+                  }
               try:
                   stat = os.stat(filename)
               except:
@@ -418,8 +397,8 @@ def update_cache(filename, opts={}):
       lines = {'plain' : fp.readlines()}
       fp.close()
       if 'output' in opts: 
-          raw_string = ''.join(lines)
-          lines[opts['output']] = highlight_string(raw_string).split('\n')
+          raw_string = ''.join(lines['plain'])
+          lines[opts['output']] = highlight_array(raw_string.split('\n'))
           pass
 
     except:
@@ -438,6 +417,7 @@ if __name__ == '__main__':
     else: return "not "
     return # Not reached
 
+  print getline(__file__, 1, {'output': 'terminal'}).rstrip('\n')
   update_cache('os')
 
   lines = getlines(__file__)
@@ -450,9 +430,9 @@ if __name__ == '__main__':
       if i > 20: break
       pass
   line = getline(__file__, 6)
-  print "The 6th line is\n%s" % line
+  print "The 6th line is\n%s" % line.rstrip('\n')
   line = remap_file(__file__, 'another_name')
-  print getline('another_name', 7)
+  print getline('another_name', 7).rstrip('\n')
 
   print "Files cached: %s" % cached_files()
   update_cache(__file__)

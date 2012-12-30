@@ -25,13 +25,15 @@ class TestPyFiCache(unittest.TestCase):
     
       # Test getlines to read this file.
       lines = pyficache.getlines(__file__)
+      print "got: ", len(lines), "right: ", len(compare_lines)
       self.assertEqual(compare_lines, lines,
-                       'We should get exactly the same lines as reading this file.')
+                        'We should get exactly the same lines as reading this file.')
     
       # Test getline to read this file. The file should now be cached,
       # so internally a different set of routines are used.
       test_line = 1
       line = pyficache.getline(__file__, test_line)
+      print "right: ", compare_lines[test_line], "got: ", line
       self.assertEqual(compare_lines[test_line-1], line,
                        'We should get exactly the same line as reading this file.')
     
