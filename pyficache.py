@@ -182,7 +182,7 @@ def is_empty(filename):
     filename=unmap_file(filename)
     return 0 == len(file_cache[filename].lines['plain'])
 
-def getline(file_or_script, line_number, opts=True):
+def getline(file_or_script, line_number, opts={'reload_on_change': False}):
     '''Get line *line_number* from file named *file_or_script*. Return None if
     there was a problem or it is not found.
 
@@ -190,8 +190,13 @@ def getline(file_or_script, line_number, opts=True):
 
     lines = pyficache.getline("/tmp/myfile.py")
     '''
+    # Compatibility with older interface
     if isinstance(opts, types.DictType):
-        reload_on_change = opts['reload_on_change']
+        if 'reload_on_change' in opts:
+            reload_on_change = opts['reload_on_change']
+            pass
+        else:
+            reload_on_change = False
     else:
         reload_on_change = opts
         pass
@@ -354,7 +359,7 @@ def unmap_file_line(filename, line):
         pass
     return [filename, line]
 
-def update_cache(filename, opts=False):
+def update_cache(filename, opts={}):
     '''Update a cache entry.  If something is wrong, return
     None. Return True if the cache was updated and False if not.  If
     use_linecache_lines is True, use an existing cache entry as source
@@ -366,6 +371,7 @@ def update_cache(filename, opts=False):
         else:
             use_linecache_lines = False
     else:
+        # Compatibility with older interface
         use_linecache_lines = opts
         opts = {'use_linecache_lines' : use_linecache_lines}
         pass
