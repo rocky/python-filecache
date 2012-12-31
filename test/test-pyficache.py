@@ -25,15 +25,13 @@ class TestPyFiCache(unittest.TestCase):
     
       # Test getlines to read this file.
       lines = pyficache.getlines(__file__)
-      print "got: ", len(lines), "right: ", len(compare_lines)
       self.assertEqual(compare_lines, lines,
                         'We should get exactly the same lines as reading this file.')
     
       # Test getline to read this file. The file should now be cached,
       # so internally a different set of routines are used.
       test_line = 1
-      line = pyficache.getline(__file__, test_line)
-      print "right: ", compare_lines[test_line], "got: ", line
+      line = pyficache.getline(__file__, test_line, {'strip_nl': False})
       self.assertEqual(compare_lines[test_line-1], line,
                        'We should get exactly the same line as reading this file.')
     
@@ -42,9 +40,9 @@ class TestPyFiCache(unittest.TestCase):
       os.chdir(os.path.dirname(os.path.abspath((__file__))))
       short_file = os.path.basename(__file__)
       test_line = 10
-      line = pyficache.getline(short_file, test_line)
+      line = pyficache.getline(short_file, test_line, {'strip_nl': False})
       self.assertEqual(compare_lines[test_line-1], line,
-                       'Short filename lookup should work')
+                       'Short filename lookup on %s should work' % short_file)
       os.chdir(old_dir)
 
       # from pydbgr.api import debug
@@ -58,11 +56,11 @@ class TestPyFiCache(unittest.TestCase):
           f.write(test_string)
           f.close()
           pass
-      line = pyficache.getline(path, 1)
+      line = pyficache.getline(path, 1, {'strip_nl': False})
       self.assertEqual(test_string, line,
                        "C'mon - a simple line test like this worked before.")
       with open(path, 'w') as f:
-          test_string = "Now is another time.\n"
+          test_string = "Now is another time."
           f.write(test_string)
           f.close()
           pass

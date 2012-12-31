@@ -21,17 +21,24 @@ from pygments import highlight
 from pygments.lexers import PythonLexer
 from pygments.formatters import TerminalFormatter
 
-default_opts = {'reload_on_change': False,
-                'use_linecache_lines': True,
-                'output' : 'plain'}
+default_opts = {
+    'reload_on_change'    : False,  # Check if file has changed since last time
+    'use_linecache_lines' : True,  
+    'strip_nl'            : True,   # Strip trailing \n on line returned
+    'output'              : 'plain' # To we want plain output? Set to 'terminal'
+                                    # for terminal syntax-colored output
+    }
 
-def option_get(key, options):
+def get_option(key, options):
     global default_opts
     if not options or key not in options:
         return default_opts.get(key)
     else:
         return options[key]
     return None # Not reached
+
+def has_trailing_nl(string):
+    return '\n' == string[-1]
 
 class LineCacheInfo:
     def __init__(self, stat, line_numbers, lines, path, sha1):
@@ -213,7 +220,12 @@ def getline(file_or_script, line_number, opts=default_opts):
     filename, line_number = unmap_file_line(filename, line_number)
     lines = getlines(filename, opts)
     if lines and line_number >=1 and line_number <= len(lines):
-        return lines[line_number-1]
+        line = lines[line_number-1]
+        if get_option('strip_nl', opts):
+            return line.rstrip('\n')
+        else:
+            return line
+        pass
     else:
         return None
     return # Not reached
@@ -224,8 +236,8 @@ def getlines(filename, opts=default_opts):
     cache. Return None if we can not get lines
     '''
     global file_cache
-    if option_get('reload_on_change', opts): checkcache(filename)
-    fmt = option_get('output', opts)
+    if get_option('reload_on_change', opts): checkcache(filename)
+    fmt = get_option('output', opts)
     if filename in file_cache:
         lines = file_cache[filename].lines
         if 'terminal' not in lines:
@@ -241,9 +253,10 @@ def getlines(filename, opts=default_opts):
         pass
     return
 
-def highlight_array(array):
+def highlight_array(array, trailing_nl=True):
     fmt_array = highlight_string('\n'.join(array)).split('\n')
     lines = [ line + "\n" for line in fmt_array ]
+    if not trailing_nl: lines[-1] = lines[-1].rstrip('\n')
     return lines
 
 def highlight_string(string):
@@ -355,25 +368,25 @@ def update_cache(filename, opts=default_opts):
     if filename in file_cache: del file_cache[filename]
     path = os.path.abspath(filename)
     
-    if option_get('use_linecache_lines', opts):
+    if get_option('use_linecache_lines', opts):
       fname_list = [filename]
       if file2file_remap.get(path):
           fname_list.append(file2file_remap[path]) 
           for filename in fname_list:
-              plain_lines = linecache.getlines(filename)
-              term_lines  = highlight_array(plain_lines)
-              lines = {
-                  'plain'   : plain_lines,
-                  'terminal': term_lines
-                  }
               try:
                   stat = os.stat(filename)
+                  plain_lines = linecache.getlines(filename)
+                  trailing_nl = has_trailing_nl(plain_lines[-1])
+                  term_lines  = highlight_array(plain_lines, trailing_nl)
+                  lines = {
+                      'plain'   : plain_lines,
+                      'terminal': term_lines
+                      }
+                  file_cache[filename] = LineCacheInfo(stat, None, lines, path, 
+                                                       None)
               except:
                   stat = None
                   pass
-              pass
-          file_cache[filename] = LineCacheInfo(stat, None, lines, path, 
-                                               None)
           file2file_remap[path] = filename
           return filename
       pass
@@ -396,10 +409,11 @@ def update_cache(filename, opts=default_opts):
       fp = open(path, 'r')
       lines = {'plain' : fp.readlines()}
       fp.close()
-      if 'output' in opts: 
-          raw_string = ''.join(lines['plain'])
-          lines[opts['output']] = highlight_array(raw_string.split('\n'))
-          pass
+      raw_string        = ''.join(lines['plain'])
+      trailing_nl       = has_trailing_nl(raw_string)
+      lines['terminal'] = highlight_array(raw_string.split('\n'),
+                                          trailing_nl)
+      pass
 
     except:
       ##  print '*** cannot open', path, ':', msg
@@ -430,9 +444,9 @@ if __name__ == '__main__':
       if i > 20: break
       pass
   line = getline(__file__, 6)
-  print "The 6th line is\n%s" % line.rstrip('\n')
+  print "The 6th line is\n%s" % line
   line = remap_file(__file__, 'another_name')
-  print getline('another_name', 7).rstrip('\n')
+  print getline('another_name', 7)
 
   print "Files cached: %s" % cached_files()
   update_cache(__file__)
