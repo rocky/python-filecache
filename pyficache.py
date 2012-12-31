@@ -228,8 +228,8 @@ def getlines(filename, opts=default_opts):
     fmt = option_get('output', opts)
     if filename in file_cache:
         lines = file_cache[filename].lines
-        if 'output' in opts and fmt not in lines:
-            lines[fmt] = highlight_array(lines['plain'])
+        if 'terminal' not in lines:
+            lines['terminal'] = highlight_array(lines['plain'])
             pass
         return lines[fmt]
     else:
@@ -417,7 +417,7 @@ if __name__ == '__main__':
     else: return "not "
     return # Not reached
 
-  print getline(__file__, 1, {'output': 'terminal'}).rstrip('\n')
+  print getline(__file__, 1, {'output': 'terminal'})
   update_cache('os')
 
   lines = getlines(__file__)
@@ -454,4 +454,3 @@ if __name__ == '__main__':
   remap_file_lines(__file__, 'test2', range(10,21), 6)
   line = getline('test2', 11)
   print "Remapped 11th line of test2 is:\n%s" % line
-        
