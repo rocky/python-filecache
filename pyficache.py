@@ -188,7 +188,6 @@ def cache(filename, reload_on_change=False):
     filename = pyc2py(filename)
     if filename in file_cache:
         if orig_filename != filename:
-            print "+++ Got 3rd" 
             remap_file(orig_filename, file_cache[filename].path)
             pass
         return file_cache[filename].path
@@ -428,7 +427,6 @@ def update_cache(filename, opts=default_opts):
         if not stat: return False 
         pass
     try:
-        print "+++Trying %s...." % path
         fp = open(path, 'r')
         lines = {'plain' : fp.readlines()}
         fp.close()
@@ -443,7 +441,6 @@ def update_cache(filename, opts=default_opts):
         pass
     
     except:
-        print "+++Exception on %s...." % path
         ##  print '*** cannot open', path, ':', msg
         return None
     
