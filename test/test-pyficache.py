@@ -19,8 +19,15 @@ class TestPyFiCache(unittest.TestCase):
       return
   
   def test_basic(self):
-      fp = open(__file__, 'r')
+      filename = __file__
+      if '.pyc' == filename[-4:]:
+        filename = filename[:-1]
+        pass
+
+      fp = open(filename, 'r')
       compare_lines = fp.readlines()
+      self.assertTrue(compare_lines,
+                      "Should have been able to read %s for comparing" % filename)
       fp.close()
     
       # Test getlines to read this file.
@@ -73,26 +80,28 @@ class TestPyFiCache(unittest.TestCase):
       return
       
   def test_cached(self):
-    self.assertEqual(False, pyficache.is_cached(__file__),
-                     ("file %s shouldn't be cached - just cleared cache."
-                     % __file__))
-    line = pyficache.getline(__file__, 1)
-    assert line
-    self.assertEqual(True, pyficache.is_cached(__file__),
-                 "file %s should now be cached" % __file__)
-    # self.assertEqual(false, pyficache.cached_script?('./short-file'),
-    #              "Should not find './short-file' in SCRIPT_LINES__")
-    # self.assertEqual(True, 78 < pyficache.size(__file__))
-
-    # Unlike Ruby, Python doesn't have SCRIPT_LINES__
-    # old_dir = os.getcwd()
-    # os.chdir(os.path.dirname(os.path.abspath((__file__))))
-    # load('./short-file', 0)
-    # self.assertEqual(True, pyficache.cached_script?('./short-file'),
-    #                "Should be able to find './short-file' in SCRIPT_LINES__")
-    # os.chdir(old_dir)
-    return
-
+      myfile = __file__
+      self.assertEqual(False, pyficache.is_cached(__file__),
+                       ("file %s shouldn't be cached - just cleared cache."
+                        % __file__))
+      print "file is ", __file__
+      line = pyficache.getline(__file__, 1)
+      assert line
+      self.assertEqual(True, pyficache.is_cached(__file__),
+                       "file %s should now be cached" % __file__)
+      # self.assertEqual(false, pyficache.cached_script?('./short-file'),
+      #              "Should not find './short-file' in SCRIPT_LINES__")
+      # self.assertEqual(True, 78 < pyficache.size(__file__))
+      
+      # Unlike Ruby, Python doesn't have SCRIPT_LINES__
+      # old_dir = os.getcwd()
+      # os.chdir(os.path.dirname(os.path.abspath((__file__))))
+      # load('./short-file', 0)
+      # self.assertEqual(True, pyficache.cached_script?('./short-file'),
+      #                "Should be able to find './short-file' in SCRIPT_LINES__")
+      # os.chdir(old_dir)
+      return
+  
   def test_remap(self):
     pyficache.remap_file(__file__, 'another-name')
     line1 = pyficache.getline('another-name', 1)
@@ -131,7 +140,7 @@ class TestPyFiCache(unittest.TestCase):
                      ("path for %s should be None - just cleared cache." %
                       __file__))
     path = pyficache.cache(__file__)
-    self.assertTrue(path)
+    self.assertTrue(path, "should have cached path for %s" % __file__)
     self.assertEqual(path, pyficache.path(__file__),
                      ("path %s of %s should be the same as we got before (%s)" %
                       (path, __file__, pyficache.path(__file__))))

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#   Copyright (C) 2008, 2009, 2012 Rocky Bernstein <rocky@gnu.org>
+#   Copyright (C) 2008-2009, 2012-2013 Rocky Bernstein <rocky@gnu.org>
 #
 #   This program is free software: you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
@@ -39,6 +39,11 @@ def get_option(key, options):
 
 def has_trailing_nl(string):
     return '\n' == string[-1]
+
+def pyc2py(filename):
+    if '.pyc' == filename[-4:]:
+        return filename[:-1]
+    return filename
 
 class LineCacheInfo:
     def __init__(self, stat, line_numbers, lines, path, sha1):
@@ -150,11 +155,12 @@ def cache_script(script, opts={}):
         pass
     return script
 
-def cache_file(filename, reload_on_change=False, opts={}):
+def cache_file(filename, reload_on_change=False, opts=default_opts):
     '''Cache filename if it is not already cached.
     Return the expanded filename for it in the cache
-    or nil if we ca not find the file.'''
+    or nil if we can not find the file.'''
     global file_cache
+    filename = pyc2py(filename)
     if filename in file_cache:
         if reload_on_change: checkcache(filename)
         pass
@@ -178,7 +184,13 @@ def cache(filename, reload_on_change=False):
     else:
         update_cache(filename, {'reload_on_change': True})
         pass
+    orig_filename = filename
+    filename = pyc2py(filename)
     if filename in file_cache:
+        if orig_filename != filename:
+            print "+++ Got 3rd" 
+            remap_file(orig_filename, file_cache[filename].path)
+            pass
         return file_cache[filename].path
     else:
         return None
@@ -246,6 +258,7 @@ def getlines(filename, opts=default_opts):
         return lines[fmt]
     else:
         update_cache(filename, opts)
+        filename = pyc2py(filename)
         if filename in file_cache:
             return file_cache[filename].lines[fmt]
         else:
@@ -274,6 +287,7 @@ def remap_file(from_file, to_file):
     return
 
 def remap_file_lines(from_file, to_file, line_range, start):
+    from_file = pyc2py(from_file)
     if isinstance(line_range, types.IntType):
         line_range = range(line_range, line_range+1)
         pass
@@ -318,6 +332,7 @@ def size(filename, use_cache_only=False):
 def stat(filename, use_cache_only=False):
     '''Return stat() info for *filename*. If *use_cache_only* is False,
     we will try to fetch the file if it is not cached.'''
+    filename = pyc2py(filename)
     if filename not in file_cache: 
         if not use_cache_only: cache(filename)
         if filename not in file_cache: 
@@ -365,6 +380,8 @@ def update_cache(filename, opts=default_opts):
     
     if not filename: return None
 
+    orig_filename = filename
+    filename = pyc2py(filename)
     if filename in file_cache: del file_cache[filename]
     path = os.path.abspath(filename)
     
@@ -387,6 +404,11 @@ def update_cache(filename, opts=default_opts):
               except:
                   stat = None
                   pass
+              pass
+          if orig_filename != filename:
+              file2file_remap[orig_filename] = filename
+              file2file_remap[os.path.abspath(orig_filename)] = filename
+              pass
           file2file_remap[path] = filename
           return filename
       pass
@@ -406,19 +428,25 @@ def update_cache(filename, opts=default_opts):
         if not stat: return False 
         pass
     try:
-      fp = open(path, 'r')
-      lines = {'plain' : fp.readlines()}
-      fp.close()
-      raw_string        = ''.join(lines['plain'])
-      trailing_nl       = has_trailing_nl(raw_string)
-      lines['terminal'] = highlight_array(raw_string.split('\n'),
-                                          trailing_nl)
-      pass
-
+        print "+++Trying %s...." % path
+        fp = open(path, 'r')
+        lines = {'plain' : fp.readlines()}
+        fp.close()
+        raw_string        = ''.join(lines['plain'])
+        trailing_nl       = has_trailing_nl(raw_string)
+        lines['terminal'] = highlight_array(raw_string.split('\n'),
+                                            trailing_nl)
+        if orig_filename != filename:
+            file2file_remap[orig_filename] = filename
+            file2file_remap[os.path.abspath(orig_filename)] = filename
+            pass
+        pass
+    
     except:
-      ##  print '*** cannot open', path, ':', msg
-      return None
-
+        print "+++Exception on %s...." % path
+        ##  print '*** cannot open', path, ':', msg
+        return None
+    
     file_cache[filename] = LineCacheInfo(os.stat(path), None, lines,
                                          path, None)
     file2file_remap[path] = filename
