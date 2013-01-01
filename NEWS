@@ -1,3 +1,9 @@
+0.2.0 01-01-13
+
+- Caches terminal syntax-colorized code for terminals
+- Interface more closely matches Ruby linecache module.
+- Treats filename.pyc like filename.py
+
 0.1.4 10-28-10
 
 - Correct packaging

@@ -1,3 +1,87 @@
+2013-01-01 10:42  rocky@gnu.org
+
+	* pyficache.py: Remove debug output.
+
+2013-01-01 10:40  rocky@gnu.org
+
+	* pyficache.py, test/test-pyficache.py: If filename ending in .pyc
+	  is given, convert it to .py. There is probably a better way to do
+	  this than what I have. Cull from linecache?
+
+2012-12-31 11:14  rocky@gnu.org
+
+	* pyficache.py, test/test-pyficache.py: Handle files that don't end
+	  in \n. Towards fixing more bugs. Warning: tests still fail.
+
+2012-12-31 00:20  rocky@gnu.org
+
+	* pyficache.py: Towards removing the bugs
+
+2012-12-30 19:23  rocky@gnu.org
+
+	* pyficache.py, test/test-pyficache.py: Bugs bugs bugs
+
+2012-12-30 15:05  rocky@gnu.org
+
+	* pyficache.py: Use newer interface more agressively. Fix
+	  uninitialized dict key bug.
+
+2012-12-30 05:35  rocky@gnu.org
+
+	* pyficache.py, test/test-pyficache.py: Add "\n" in syntax
+	  formatted line just as we do in plain lines.
+
+2012-12-29 16:47  rocky@gnu.org
+
+	* Makefile: Add remake-style target comments
+
+2012-12-29 13:10  rocky@gnu.org
+
+	* test/test-pyficache.py: The complete linecache tests from Ruby
+	  have now been ported and work.
+
+2012-12-29 12:54  rocky@gnu.org
+
+	* VERSION.py, pyficache.py, test/test-pyficache.py: More testing,
+	  more bugs removed
+
+2012-12-29 05:01  rocky@gnu.org
+
+	* __pkginfo__.py, pyficache.py, test/test-pyficache.py: Add syntax
+	  coloring via pygments!
+
+2012-12-28 09:51  rocky@gnu.org
+
+	* VERSION.py, pyficache.py: Start to bring in line with Ruby
+	  linecache gem in preparation for adding colorization
+
+2010-10-29 00:22  rocky@gnu.org
+
+	* setup.cfg: Get ready for release
+
+2010-10-29 00:12  rocky@gnu.org
+
+	* setup.py: Need pkg_resources?
+
+2010-10-28 14:16  rocky@gnu.org
+
+	* NEWS, VERSION.py, __pkginfo__.py, setup.py: Go over packaging.
+
+2009-12-29 21:40  rocky@gnu.org
+
+	* __pkginfo__.py, pyficache.py, test/test-pyficache.py: Allow
+	  working with coverage 3.2 and coverage 2.85 and possibly other
+	  coverages.
+
+2009-03-16 02:26  rocky@gnu.org
+
+	* Makefile: "Make distclean" was removing pyficache.py.
+
+2009-03-16 02:22  rocky@gnu.org
+
+	* ChangeLog, setup.py: Also don't install compressed package for
+	  now
+
 2009-03-16 02:11  rocky@gnu.org
 
 	* NEWS, __pkginfo__.py, setup.cfg: Wrong provide in setup.cfg
