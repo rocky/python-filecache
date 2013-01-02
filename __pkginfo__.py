@@ -26,14 +26,14 @@ classifiers =  ['Development Status :: 4 - Beta',
 author             = "Rocky Bernstein"
 author_email       = "rocky@gnu.org"
 ftp_url            = None
-install_requires   = ['coverage', 'pygments >= 1.4']
+install_requires   = ['coverage', 'pygments >= 1.1']
 license            = 'GPL'
 mailing_list       = None
 modname            = 'pyficache'
 py_modules = [modname]
 
 short_desc = \
-'Cache lines and information of files which are often Python programs'
+'Cache lines and file information which are generally Python programs'
 
 # VERSION.py sets variable VERSION.
 import os.path
