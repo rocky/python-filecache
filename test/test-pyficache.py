@@ -187,6 +187,8 @@ class TestPyFiCache(unittest.TestCase):
       return
 
   def test_clear_file_cache(self):
+      pyficache.update_cache(__file__)
+      pyficache.clear_file_format_cache()
       pyficache.clear_file_cache()
       self.assertEqual([], pyficache.cached_files())
       return

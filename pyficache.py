@@ -92,9 +92,9 @@ def clear_file_format_cache():
     and want to redo how files may have previously been 
     syntax marked.'''
     for fname, cache_info in file_cache.iteritems():
-        for format, lines in cache_info.iteritems():
-            if 'plain' == format: continue
-            file_cache[fname].lines[format] = None
+        for fmt in cache_info.lines:
+            if 'plain' == fmt: continue
+            file_cache[fname].lines[fmt] = None
             pass
         pass
     pass
@@ -492,6 +492,7 @@ if __name__ == '__main__':
   print stat(__file__)
   print "Full path: %s" % path(__file__)
   checkcache() # Check all files in the cache
+  clear_file_format_cache()
   clear_file_cache()
   print("%s is now %scached." % (__file__, yes_no(is_cached(__file__))))
   #   # digest = SCRIPT_LINES__.select{|k,v| k =~ /digest.rb$/}
