@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 'Unit test for pyficache'
-import inspect, os, sys, unittest
+import inspect, os, re, sys, unittest
 from tempfile import mkstemp
 top_builddir = os.path.join(os.path.dirname(__file__), '..')
 if top_builddir[-1] != os.path.sep:
@@ -34,13 +34,16 @@ class TestPyFiCache(unittest.TestCase):
       lines = pyficache.getlines(__file__)
       self.assertEqual(compare_lines, lines,
                         'We should get exactly the same lines as reading this file.')
-    
+
       # Test getline to read this file. The file should now be cached,
       # so internally a different set of routines are used.
-      test_line = 1
+      test_line = 2
       line = pyficache.getline(__file__, test_line, {'strip_nl': False})
       self.assertEqual(compare_lines[test_line-1], line,
                        'We should get exactly the same line as reading this file.')
+      line = pyficache.getline(__file__, test_line, {'output': 'light'})
+      self.assertTrue(line.index('Unit test for pyficache') > 0,
+                       'Terminal formatted line 2 should have "Unit test for pyficache"')
     
       # Test getting the line via a relative file name
       old_dir = os.getcwd()

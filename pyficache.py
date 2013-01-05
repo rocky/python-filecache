@@ -262,7 +262,7 @@ def getlines(filename, opts=default_opts):
 
 def highlight_array(array, trailing_nl=True,
                     light_or_dark='light'):
-    fmt_array = highlight_string('\n'.join(array),
+    fmt_array = highlight_string(''.join(array),
                                  light_or_dark).split('\n')
     lines = [ line + "\n" for line in fmt_array ]
     if not trailing_nl: lines[-1] = lines[-1].rstrip('\n')
@@ -473,7 +473,7 @@ if __name__ == '__main__':
   i = 0
   for line in lines:
       i += 1
-      print line.rstrip('\n')
+      print line.rstrip('\n').rstrip('\n')
       if i > 20: break
       pass
   line = getline(__file__, 6)
