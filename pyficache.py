@@ -249,30 +249,38 @@ def getlines(filename, opts=default_opts):
     global file_cache
     if get_option('reload_on_change', opts): checkcache(filename)
     fmt = get_option('output', opts)
-    if filename in file_cache:
-        lines = file_cache[filename].lines
-        if 'terminal' not in lines:
-            lines['terminal'] = highlight_array(lines['plain'])
-            pass
-        return lines[fmt]
-    else:
+    if filename not in file_cache:
         update_cache(filename, opts)
         filename = pyc2py(filename)
-        if filename in file_cache:
-            return file_cache[filename].lines[fmt]
-        else:
-            return None
+        if filename not in file_cache: return None
         pass
-    return
+    lines = file_cache[filename].lines
+    if fmt not in lines:
+        lines[fmt] = highlight_array(lines['plain'], light_or_dark=fmt)
+        pass
+    return lines[fmt]
 
-def highlight_array(array, trailing_nl=True):
-    fmt_array = highlight_string('\n'.join(array)).split('\n')
+def highlight_array(array, trailing_nl=True,
+                    light_or_dark='light'):
+    fmt_array = highlight_string('\n'.join(array),
+                                 light_or_dark).split('\n')
     lines = [ line + "\n" for line in fmt_array ]
     if not trailing_nl: lines[-1] = lines[-1].rstrip('\n')
     return lines
 
-def highlight_string(string):
-    return highlight(string,PythonLexer(), TerminalFormatter())
+python_lexer = PythonLexer()
+dark_terminal_formatter=TerminalFormatter(bg = 'dark')
+light_terminal_formatter=TerminalFormatter(bg = 'light')
+
+def highlight_string(string, light_or_dark='light'):
+    global python_lexer
+    if 'light' == light_or_dark:
+        global light_terminal_formatter
+        return highlight(string, python_lexer, light_terminal_formatter)
+    else:
+        global darkterminal_formatter
+        return highlight(string, python_lexer, dark_terminal_formatter)
+    pass
 
 def path(filename):
     '''Return full filename path for filename'''
@@ -351,7 +359,9 @@ def trace_line_numbers(filename, reload_on_change=False):
         if hasattr(coverage.coverage, 'analyze_morf'):
             e.line_numbers = coverage.the_coverage.analyze_morf(fullname)[1]
         else:
-            e.line_numbers = coverage.coverage().analysis(fullname)[1]
+            cov = coverage.coverage()
+            cov._warn_no_data = False
+            e.line_numbers = cov.analysis(fullname)[1]
             pass
         pass
     return e.line_numbers
@@ -393,10 +403,8 @@ def update_cache(filename, opts=default_opts):
                   stat = os.stat(filename)
                   plain_lines = linecache.getlines(filename)
                   trailing_nl = has_trailing_nl(plain_lines[-1])
-                  term_lines  = highlight_array(plain_lines, trailing_nl)
                   lines = {
                       'plain'   : plain_lines,
-                      'terminal': term_lines
                       }
                   file_cache[filename] = LineCacheInfo(stat, None, lines, path, 
                                                        None)
@@ -456,12 +464,12 @@ if __name__ == '__main__':
     else: return "not "
     return # Not reached
 
-  print getline(__file__, 1, {'output': 'terminal'})
+  print getline(__file__, 1, {'output': 'dark'})
   update_cache('os')
 
   lines = getlines(__file__)
   print "%s has %s lines" % (__file__, len(lines))
-  lines = getlines(__file__, {'output': 'terminal'})
+  lines = getlines(__file__, {'output': 'light'})
   i = 0
   for line in lines:
       i += 1
