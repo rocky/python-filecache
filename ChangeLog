@@ -1,151 +1,221 @@
-2013-01-01 10:42  rocky@gnu.org
+2013-01-05  rocky <rocky@gnu.com>
 
-	* pyficache.py: Remove debug output.
+	* pyficache.py, test/test-pyficache.py: Terminal formmated had \n's
+	every other line.
 
-2013-01-01 10:40  rocky@gnu.org
+2013-01-04  rocky <rocky@gnu.com>
+
+	* pyficache.py, test/test-pyficache.py: Fix bug in clearing file
+	format cache.
+
+2013-01-04  rocky <rocky@gnu.com>
+
+	* .gitignore, pyficache.py: pyficache.py: Handle "dark" versus
+	"light" terminal highlighting and lazy cache these. Remove Coverage:
+	no data collected warning. .gitignore *.bak
+
+2013-01-03  rocky <rocky@gnu.com>
+
+	* Makefile: Fix up target to make ChangeLog to use git not svn.
+	Allow us to set python interpreter
+
+2013-01-02  rocky <rocky@gnu.com>
+
+	* .cvsignore, .gitignore, svn2cl_usermap: Adminstrivia
+
+2013-01-02  rocky.bernstein <rocky.bernstein@928b09c6-f64b-11dd-aa46-671127399dce>
+
+	* VERSION.py, __pkginfo__.py: Tolerating older pygments is good for
+	older Python 2.6. Bump version, copyright date and other small
+	changes git-svn-id: https://pyficache.googlecode.com/svn/trunk@40
+	928b09c6-f64b-11dd-aa46-671127399dce
+
+2013-01-01  rocky.bernstein <rocky.bernstein@928b09c6-f64b-11dd-aa46-671127399dce>
+
+	* ChangeLog, NEWS, VERSION.py, __pkginfo__.py: Get ready for release
+	0.2.0 git-svn-id: https://pyficache.googlecode.com/svn/trunk@38
+	928b09c6-f64b-11dd-aa46-671127399dce
+
+2013-01-01  rocky.bernstein <rocky.bernstein@928b09c6-f64b-11dd-aa46-671127399dce>
+
+	* pyficache.py: Remove debug output.  git-svn-id: https://pyficache.googlecode.com/svn/trunk@37
+	928b09c6-f64b-11dd-aa46-671127399dce
+
+2013-01-01  rocky.bernstein <rocky.bernstein@928b09c6-f64b-11dd-aa46-671127399dce>
 
 	* pyficache.py, test/test-pyficache.py: If filename ending in .pyc
-	  is given, convert it to .py. There is probably a better way to do
-	  this than what I have. Cull from linecache?
+	is given, convert it to .py. There is probably a better way to do
+	this than what I have. Cull from linecache? git-svn-id: https://pyficache.googlecode.com/svn/trunk@36
+	928b09c6-f64b-11dd-aa46-671127399dce
 
-2012-12-31 11:14  rocky@gnu.org
+2012-12-31  rocky.bernstein <rocky.bernstein@928b09c6-f64b-11dd-aa46-671127399dce>
 
 	* pyficache.py, test/test-pyficache.py: Handle files that don't end
-	  in \n. Towards fixing more bugs. Warning: tests still fail.
+	in \n. Towards fixing more bugs. Warning: tests still fail.  git-svn-id: https://pyficache.googlecode.com/svn/trunk@35
+	928b09c6-f64b-11dd-aa46-671127399dce
 
-2012-12-31 00:20  rocky@gnu.org
+2012-12-31  rocky.bernstein <rocky.bernstein@928b09c6-f64b-11dd-aa46-671127399dce>
 
-	* pyficache.py: Towards removing the bugs
+	* pyficache.py: Towards removing the bugs git-svn-id: https://pyficache.googlecode.com/svn/trunk@34
+	928b09c6-f64b-11dd-aa46-671127399dce
 
-2012-12-30 19:23  rocky@gnu.org
+2012-12-30  rocky.bernstein <rocky.bernstein@928b09c6-f64b-11dd-aa46-671127399dce>
 
-	* pyficache.py, test/test-pyficache.py: Bugs bugs bugs
+	* pyficache.py, test/test-pyficache.py: Bugs bugs bugs git-svn-id: https://pyficache.googlecode.com/svn/trunk@33
+	928b09c6-f64b-11dd-aa46-671127399dce
 
-2012-12-30 15:05  rocky@gnu.org
+2012-12-30  rocky.bernstein <rocky.bernstein@928b09c6-f64b-11dd-aa46-671127399dce>
 
 	* pyficache.py: Use newer interface more agressively. Fix
-	  uninitialized dict key bug.
+	uninitialized dict key bug.  git-svn-id: https://pyficache.googlecode.com/svn/trunk@32
+	928b09c6-f64b-11dd-aa46-671127399dce
 
-2012-12-30 05:35  rocky@gnu.org
+2012-12-30  rocky.bernstein <rocky.bernstein@928b09c6-f64b-11dd-aa46-671127399dce>
 
-	* pyficache.py, test/test-pyficache.py: Add "\n" in syntax
-	  formatted line just as we do in plain lines.
+	* pyficache.py, test/test-pyficache.py: Add "\n" in syntax formatted
+	line just as we do in plain lines.  git-svn-id: https://pyficache.googlecode.com/svn/trunk@31
+	928b09c6-f64b-11dd-aa46-671127399dce
 
-2012-12-29 16:47  rocky@gnu.org
+2012-12-29  rocky.bernstein <rocky.bernstein@928b09c6-f64b-11dd-aa46-671127399dce>
 
-	* Makefile: Add remake-style target comments
+	* Makefile: Add remake-style target comments git-svn-id: https://pyficache.googlecode.com/svn/trunk@30
+	928b09c6-f64b-11dd-aa46-671127399dce
 
-2012-12-29 13:10  rocky@gnu.org
+2012-12-29  rocky.bernstein <rocky.bernstein@928b09c6-f64b-11dd-aa46-671127399dce>
 
 	* test/test-pyficache.py: The complete linecache tests from Ruby
-	  have now been ported and work.
+	have now been ported and work.  git-svn-id: https://pyficache.googlecode.com/svn/trunk@29
+	928b09c6-f64b-11dd-aa46-671127399dce
 
-2012-12-29 12:54  rocky@gnu.org
+2012-12-29  rocky.bernstein <rocky.bernstein@928b09c6-f64b-11dd-aa46-671127399dce>
 
 	* VERSION.py, pyficache.py, test/test-pyficache.py: More testing,
-	  more bugs removed
+	more bugs removed git-svn-id: https://pyficache.googlecode.com/svn/trunk@28
+	928b09c6-f64b-11dd-aa46-671127399dce
 
-2012-12-29 05:01  rocky@gnu.org
+2012-12-29  rocky.bernstein <rocky.bernstein@928b09c6-f64b-11dd-aa46-671127399dce>
 
 	* __pkginfo__.py, pyficache.py, test/test-pyficache.py: Add syntax
-	  coloring via pygments!
+	coloring via pygments! git-svn-id: https://pyficache.googlecode.com/svn/trunk@27
+	928b09c6-f64b-11dd-aa46-671127399dce
 
-2012-12-28 09:51  rocky@gnu.org
+2012-12-28  rocky.bernstein <rocky.bernstein@928b09c6-f64b-11dd-aa46-671127399dce>
 
 	* VERSION.py, pyficache.py: Start to bring in line with Ruby
-	  linecache gem in preparation for adding colorization
+	linecache gem in preparation for adding colorization git-svn-id: https://pyficache.googlecode.com/svn/trunk@26
+	928b09c6-f64b-11dd-aa46-671127399dce
 
-2010-10-29 00:22  rocky@gnu.org
+2010-10-29  rocky.bernstein <rocky.bernstein@928b09c6-f64b-11dd-aa46-671127399dce>
 
-	* setup.cfg: Get ready for release
+	* setup.cfg: Get ready for release git-svn-id: https://pyficache.googlecode.com/svn/trunk@24
+	928b09c6-f64b-11dd-aa46-671127399dce
 
-2010-10-29 00:12  rocky@gnu.org
+2010-10-29  rocky.bernstein <rocky.bernstein@928b09c6-f64b-11dd-aa46-671127399dce>
 
-	* setup.py: Need pkg_resources?
+	* setup.py: Need pkg_resources? git-svn-id: https://pyficache.googlecode.com/svn/trunk@23
+	928b09c6-f64b-11dd-aa46-671127399dce
 
-2010-10-28 14:16  rocky@gnu.org
+2010-10-28  rocky.bernstein <rocky.bernstein@928b09c6-f64b-11dd-aa46-671127399dce>
 
-	* NEWS, VERSION.py, __pkginfo__.py, setup.py: Go over packaging.
+	* NEWS, VERSION.py, __pkginfo__.py, setup.py: Go over packaging.  git-svn-id: https://pyficache.googlecode.com/svn/trunk@22
+	928b09c6-f64b-11dd-aa46-671127399dce
 
-2009-12-29 21:40  rocky@gnu.org
+2009-12-29  rocky.bernstein <rocky.bernstein@928b09c6-f64b-11dd-aa46-671127399dce>
 
 	* __pkginfo__.py, pyficache.py, test/test-pyficache.py: Allow
-	  working with coverage 3.2 and coverage 2.85 and possibly other
-	  coverages.
+	working with coverage 3.2 and coverage 2.85 and possibly other
+	coverages.  git-svn-id: https://pyficache.googlecode.com/svn/trunk@21
+	928b09c6-f64b-11dd-aa46-671127399dce
 
-2009-03-16 02:26  rocky@gnu.org
+2009-03-16  rocky.bernstein <rocky.bernstein@928b09c6-f64b-11dd-aa46-671127399dce>
 
-	* Makefile: "Make distclean" was removing pyficache.py.
+	* Makefile: "Make distclean" was removing pyficache.py.  git-svn-id: https://pyficache.googlecode.com/svn/trunk@19
+	928b09c6-f64b-11dd-aa46-671127399dce
 
-2009-03-16 02:22  rocky@gnu.org
+2009-03-16  rocky.bernstein <rocky.bernstein@928b09c6-f64b-11dd-aa46-671127399dce>
 
-	* ChangeLog, setup.py: Also don't install compressed package for
-	  now
+	* ChangeLog, setup.py: Also don't install compressed package for now git-svn-id: https://pyficache.googlecode.com/svn/trunk@18
+	928b09c6-f64b-11dd-aa46-671127399dce
 
-2009-03-16 02:11  rocky@gnu.org
+2009-03-16  rocky.bernstein <rocky.bernstein@928b09c6-f64b-11dd-aa46-671127399dce>
 
-	* NEWS, __pkginfo__.py, setup.cfg: Wrong provide in setup.cfg
+	* NEWS, __pkginfo__.py, setup.cfg: Wrong provide in setup.cfg git-svn-id: https://pyficache.googlecode.com/svn/trunk@17
+	928b09c6-f64b-11dd-aa46-671127399dce
 
-2009-03-15 06:17  rocky@gnu.org
+2009-03-15  rocky.bernstein <rocky.bernstein@928b09c6-f64b-11dd-aa46-671127399dce>
 
-	* ChangeLog, svn2cl_usermap: Get ready for 0.1.2 release
+	* ChangeLog, svn2cl_usermap: Get ready for 0.1.2 release git-svn-id: https://pyficache.googlecode.com/svn/trunk@15
+	928b09c6-f64b-11dd-aa46-671127399dce
 
-2009-03-15 06:15  rocky@gnu.org
+2009-03-15  rocky.bernstein <rocky.bernstein@928b09c6-f64b-11dd-aa46-671127399dce>
 
-	* NEWS: Get ready for 0.1.2 release
+	* NEWS: Get ready for 0.1.2 release git-svn-id: https://pyficache.googlecode.com/svn/trunk@14
+	928b09c6-f64b-11dd-aa46-671127399dce
 
-2009-03-15 03:33  rocky@gnu.org
+2009-03-15  rocky.bernstein <rocky.bernstein@928b09c6-f64b-11dd-aa46-671127399dce>
 
 	* __pkginfo__.py, pyficache.py, test/test-pyficache.py: Bug in
-	  update_cache searching for file
+	update_cache searching for file git-svn-id: https://pyficache.googlecode.com/svn/trunk@13
+	928b09c6-f64b-11dd-aa46-671127399dce
 
-2009-03-10 10:51  rocky@gnu.org
+2009-03-10  rocky.bernstein <rocky.bernstein@928b09c6-f64b-11dd-aa46-671127399dce>
 
-	* ChangeLog, pyficache.py: Fix bugs found by pylint.
+	* ChangeLog, pyficache.py: Fix bugs found by pylint.  git-svn-id: https://pyficache.googlecode.com/svn/trunk@12
+	928b09c6-f64b-11dd-aa46-671127399dce
 
-2009-03-10 10:45  rocky@gnu.org
+2009-03-10  rocky.bernstein <rocky.bernstein@928b09c6-f64b-11dd-aa46-671127399dce>
 
-	* __pkginfo__.py: Make requirement on coverage be exactly 2.85
-	  since the next release may be incompatible
+	* __pkginfo__.py: Make requirement on coverage be exactly 2.85 since
+	the next release may be incompatible git-svn-id: https://pyficache.googlecode.com/svn/trunk@11
+	928b09c6-f64b-11dd-aa46-671127399dce
 
-2009-03-08 22:24  rocky@gnu.org
+2009-03-08  rocky.bernstein <rocky.bernstein@928b09c6-f64b-11dd-aa46-671127399dce>
 
-	* ., .cvsignore, ChangeLog, NEWS, svn2cl_usermap: Get ready for
-	  initial release
+	* .cvsignore, ChangeLog, NEWS, svn2cl_usermap: Get ready for initial
+	release git-svn-id: https://pyficache.googlecode.com/svn/trunk@9
+	928b09c6-f64b-11dd-aa46-671127399dce
 
-2009-02-13 03:35  rocky@gnu.org
+2009-02-13  rocky.bernstein <rocky.bernstein@928b09c6-f64b-11dd-aa46-671127399dce>
 
-	* pyficache.py: Ooops. Python is not Ruby
+	* pyficache.py: Ooops. Python is not Ruby git-svn-id: https://pyficache.googlecode.com/svn/trunk@8
+	928b09c6-f64b-11dd-aa46-671127399dce
 
-2009-02-13 01:29  rocky@gnu.org
+2009-02-13  rocky.bernstein <rocky.bernstein@928b09c6-f64b-11dd-aa46-671127399dce>
 
 	* pyficache.py, test/test-pyficache.py: More control as to whether
-	  we want to cache the file if it's not already cached.
+	we want to cache the file if it's not already cached.  git-svn-id: https://pyficache.googlecode.com/svn/trunk@7
+	928b09c6-f64b-11dd-aa46-671127399dce
 
-2009-02-13 01:16  rocky@gnu.org
+2009-02-13  rocky.bernstein <rocky.bernstein@928b09c6-f64b-11dd-aa46-671127399dce>
 
 	* pyficache.py, test/test-pyficache.py: size() should use unmapped.
-	  Add a size test.
+	Add a size test.  git-svn-id: https://pyficache.googlecode.com/svn/trunk@6
+	928b09c6-f64b-11dd-aa46-671127399dce
 
-2009-02-09 15:00  rocky@gnu.org
+2009-02-09  rocky.bernstein <rocky.bernstein@928b09c6-f64b-11dd-aa46-671127399dce>
 
-	* setup.py: Note dependency on coverage - this time, for sure!
+	* setup.py: Note dependency on coverage - this time, for sure! git-svn-id: https://pyficache.googlecode.com/svn/trunk@5
+	928b09c6-f64b-11dd-aa46-671127399dce
 
-2009-02-09 14:59  rocky@gnu.org
+2009-02-09  rocky.bernstein <rocky.bernstein@928b09c6-f64b-11dd-aa46-671127399dce>
 
-	* __pkginfo__.py, setup.py: Note dependency on coverage
+	* __pkginfo__.py, setup.py: Note dependency on coverage git-svn-id: https://pyficache.googlecode.com/svn/trunk@4
+	928b09c6-f64b-11dd-aa46-671127399dce
 
-2009-02-09 01:53  rocky@gnu.org
+2009-02-09  rocky.bernstein <rocky.bernstein@928b09c6-f64b-11dd-aa46-671127399dce>
 
-	* .gitignore, test/.gitignore: Administrivia
+	* .gitignore, test/.gitignore: Administrivia git-svn-id: https://pyficache.googlecode.com/svn/trunk@3
+	928b09c6-f64b-11dd-aa46-671127399dce
 
-2009-02-09 01:52  rocky@gnu.org
+2009-02-09  rocky.bernstein <rocky.bernstein@928b09c6-f64b-11dd-aa46-671127399dce>
 
 	* COPYING, Makefile, README.txt, __pkginfo__.py, pyficache.py,
-	  setup.cfg, setup.py, test, test/devious.py, test/short-file,
-	  test/test-pyficache.py: Initial import
+	setup.cfg, setup.py, test/devious.py, test/short-file,
+	test/test-pyficache.py: Initial import git-svn-id: https://pyficache.googlecode.com/svn/trunk@2
+	928b09c6-f64b-11dd-aa46-671127399dce
 
-2009-02-09 01:47  
+2009-02-09  (no author) <(no author)@928b09c6-f64b-11dd-aa46-671127399dce>
 
-	* .: Initial directory structure.
+	* Initial directory structure.  git-svn-id: https://pyficache.googlecode.com/svn/trunk@1
+	928b09c6-f64b-11dd-aa46-671127399dce
 
