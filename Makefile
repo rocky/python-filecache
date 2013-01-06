@@ -17,7 +17,15 @@ clean:
 
 #: Create source (tarball) and binary (egg) distribution
 dist: 
-	$(PYTHON) ./setup.py sdist bdist
+	$(PYTHON) ./setup.py sdist bdist_egg
+
+#: Create source tarball
+sdist: 
+	$(PYTHON) ./setup.py sdist
+
+#: Create binary egg distribution
+bdist_egg: 
+	$(PYTHON) ./setup.py bdist_egg
 
 # It is too much work to figure out how to add a new command to distutils
 # to do the following. I'm sure distutils will someday get there.

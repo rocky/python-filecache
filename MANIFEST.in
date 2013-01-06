@@ -1,0 +1,8 @@
+include Makefile
+include NEWS
+include __pkginfo__.py
+include VERSION.py
+recursive-include test test-pyficache.py
+recursive-include test devious.py
+recursive-include test short-file
+
