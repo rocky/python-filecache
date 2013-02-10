@@ -1,3 +1,6 @@
+0.2.2 02-10-13
+- Make it work on 3k
+
 0.2.1 01-06-13
 - Handle "dark" and "light" terminal style
 - Remove a Coverage warning
