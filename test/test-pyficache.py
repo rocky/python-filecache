@@ -87,7 +87,6 @@ class TestPyFiCache(unittest.TestCase):
       self.assertEqual(False, pyficache.is_cached(__file__),
                        ("file %s shouldn't be cached - just cleared cache."
                         % __file__))
-      print "file is ", __file__
       line = pyficache.getline(__file__, 1)
       assert line
       self.assertEqual(True, pyficache.is_cached(__file__),
@@ -113,7 +112,7 @@ class TestPyFiCache(unittest.TestCase):
     return
 
   def test_remap_lines(self):
-    pyficache.remap_file_lines(__file__, 'test2', range(10,12), 6)
+    pyficache.remap_file_lines(__file__, 'test2', list(range(10,12)), 6)
 
     line5 = pyficache.getline(__file__, 5)
     pyficache.remap_file_lines(__file__, 'test2', 9, 5)

@@ -91,10 +91,10 @@ def clear_file_format_cache():
     when you change the Pygments syntax or Token formatting
     and want to redo how files may have previously been 
     syntax marked.'''
-    for fname, cache_info in file_cache.iteritems():
-        for fmt in cache_info.lines:
-            if 'plain' == fmt: continue
-            file_cache[fname].lines[fmt] = None
+    for fname, cache_info in file_cache.items():
+        for format, lines in cache_info.lines.items():
+            if 'plain' == format: continue
+            file_cache[fname].lines[format] = None
             pass
         pass
     pass
@@ -106,7 +106,7 @@ def clear_script_cache():
 
 def cached_files():
     '''Return an array of cached file names'''
-    return file_cache.keys()
+    return list(file_cache.keys())
 
 def checkcache(filename=None, opts=False):
     '''Discard cache entries that are out of date. If *filename* is *None*
@@ -115,14 +115,14 @@ def checkcache(filename=None, opts=False):
     invalidated filenames.  None is returned if a filename was given but
     not found cached.'''
     
-    if isinstance(opts, types.DictType):
+    if isinstance(opts, dict):
         use_linecache_lines = opts['use_linecache_lines']
     else:
         use_linecache_lines = opts
         pass
 
     if not filename:
-      filenames = file_cache.keys()
+      filenames = list(file_cache.keys())
     elif filename in file_cache:
       filenames = [filename]
     else:
@@ -198,7 +198,7 @@ def cache(filename, reload_on_change=False):
 def is_cached(file_or_script):
     '''Return True if file_or_script is cached'''
     global file_cache
-    if isinstance(file_or_script, types.StringType):
+    if isinstance(file_or_script, str):
         return unmap_file(file_or_script) in file_cache
     else:
         return is_cached_script(file_or_script)
@@ -206,7 +206,7 @@ def is_cached(file_or_script):
 
 def is_cached_script(filename):
     global script_cache
-    return unmap_file(filename) in keys(script_cache)
+    return unmap_file(filename) in list(script_cache.keys())
 
 def is_empty(filename):
     filename=unmap_file(filename)
@@ -221,7 +221,7 @@ def getline(file_or_script, line_number, opts=default_opts):
     lines = pyficache.getline("/tmp/myfile.py")
     '''
     # Compatibility with older interface
-    if not isinstance(opts, types.DictType):
+    if not isinstance(opts, dict):
         global default_opts
         r_o_c = opts
         opts = default_opts
@@ -296,8 +296,8 @@ def remap_file(from_file, to_file):
 
 def remap_file_lines(from_file, to_file, line_range, start):
     from_file = pyc2py(from_file)
-    if isinstance(line_range, types.IntType):
-        line_range = range(line_range, line_range+1)
+    if isinstance(line_range, int):
+        line_range = list(range(line_range, line_range+1))
         pass
     if to_file is None: to_file = from_file 
     if file2file_remap_lines.get(to_file):
@@ -321,7 +321,7 @@ def sha1(filename):
         return file_cache[filename].sha1.hexdigest()
     sha1 = hashlib.sha1()
     for line in file_cache[filename].lines['plain']:
-        sha1.update(line)
+        sha1.update(line.encode('utf-8'))
         pass
     file_cache[filename].sha1 = sha1
     return sha1.hexdigest()
@@ -465,41 +465,41 @@ if __name__ == '__main__':
     else: return "not "
     return # Not reached
 
-  print getline(__file__, 1, {'output': 'dark'})
+  print(getline(__file__, 1, {'output': 'dark'}))
   update_cache('os')
 
   lines = getlines(__file__)
-  print "%s has %s lines" % (__file__, len(lines))
+  print("%s has %s lines" % (__file__, len(lines)))
   lines = getlines(__file__, {'output': 'light'})
   i = 0
   for line in lines:
       i += 1
-      print line.rstrip('\n').rstrip('\n')
+      print(line.rstrip('\n').rstrip('\n'))
       if i > 20: break
       pass
   line = getline(__file__, 6)
-  print "The 6th line is\n%s" % line
+  print("The 6th line is\n%s" % line)
   line = remap_file(__file__, 'another_name')
-  print getline('another_name', 7)
+  print(getline('another_name', 7))
 
-  print "Files cached: %s" % cached_files()
+  print("Files cached: %s" % cached_files())
   update_cache(__file__)
   checkcache(__file__)
-  print "%s has %s lines" % (__file__, size(__file__))
-  print "%s trace line numbers:\n" % __file__
-  print "%s " % repr(trace_line_numbers(__file__))
-  print "%s is %scached." % (__file__, 
-                             yes_no(is_cached(__file__)))
-  print stat(__file__)
-  print "Full path: %s" % path(__file__)
+  print("%s has %s lines" % (__file__, size(__file__)))
+  print("%s trace line numbers:\n" % __file__)
+  print("%s " % repr(trace_line_numbers(__file__)))
+  print("%s is %scached." % (__file__, 
+                             yes_no(is_cached(__file__))))
+  print(stat(__file__))
+  print("Full path: %s" % path(__file__))
   checkcache() # Check all files in the cache
   clear_file_format_cache()
   clear_file_cache()
-  print("%s is now %scached." % (__file__, yes_no(is_cached(__file__))))
+  print(("%s is now %scached." % (__file__, yes_no(is_cached(__file__)))))
   #   # digest = SCRIPT_LINES__.select{|k,v| k =~ /digest.rb$/}
   #   # if digest is not None: print digest.first[0]
   line = getline(__file__, 7)
-  print "The 7th line is\n%s" % line
-  remap_file_lines(__file__, 'test2', range(10,21), 6)
+  print("The 7th line is\n%s" % line)
+  remap_file_lines(__file__, 'test2', list(range(10,21)), 6)
   line = getline('test2', 11)
-  print "Remapped 11th line of test2 is:\n%s" % line
+  print("Remapped 11th line of test2 is:\n%s" % line)

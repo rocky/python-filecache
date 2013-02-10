@@ -37,7 +37,9 @@ short_desc = \
 
 # VERSION.py sets variable VERSION.
 import os.path
-execfile(os.path.join(os.path.dirname(__file__), 'VERSION.py'))
+exec(compile(open(os.path.join(os.path.dirname(__file__),
+                               'VERSION.py')).read(),
+             os.path.join(os.path.dirname(__file__), 'VERSION.py'), 'exec'))
 
 web = 'http://code.google.com/p/pyficache'
 
