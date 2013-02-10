@@ -71,9 +71,9 @@ script_cache = {}
 file2file_remap = {} 
 file2file_remap_lines = {}
   
-# Clear the file cache. If no filename is given clear it entirely.
-# if a filename is given, clear just that filename.
 def clear_file_cache(filename=None):
+    '''Clear the file cache. If no filename is given clear it entirely.
+    if a filename is given, clear just that filename.'''
     global file_cache, file2file_remap, file2file_remap_lines
     if filename is not None:
       if filename in file_cache:
@@ -242,9 +242,9 @@ def getline(file_or_script, line_number, opts=default_opts):
     return # Not reached
 
 def getlines(filename, opts=default_opts):
-    '''Read lines of <filename> and cache the results. However, if
-    <filename> was previously cached use the results from the
-    cache. Return None if we can not get lines
+    '''Read lines of *filename* and cache the results. However, if
+    *filename* was previously cached use the results from the
+    cache. Return *None* if we can not get lines
     '''
     global file_cache
     if get_option('reload_on_change', opts): checkcache(filename)
@@ -290,6 +290,7 @@ def path(filename):
     return file_cache[filename].path
 
 def remap_file(from_file, to_file):
+    '''Make *to_file* be a synonym for *from_file*'''
     file2file_remap[to_file] = from_file
     return
 
@@ -337,7 +338,7 @@ def size(filename, use_cache_only=False):
     return len(file_cache[filename].lines['plain'])
 
 def stat(filename, use_cache_only=False):
-    '''Return stat() info for *filename*. If *use_cache_only* is False,
+    '''Return stat() info for *filename*. If *use_cache_only* is *False*,
     we will try to fetch the file if it is not cached.'''
     filename = pyc2py(filename)
     if filename not in file_cache: 
@@ -383,8 +384,8 @@ def unmap_file_line(filename, line):
 
 def update_cache(filename, opts=default_opts):
     '''Update a cache entry.  If something is wrong, return
-    None. Return True if the cache was updated and False if not.  If
-    use_linecache_lines is True, use an existing cache entry as source
+    *None*. Return *True* if the cache was updated and *False* if not.  If
+    *use_linecache_lines* is *True*, use an existing cache entry as source
     for the lines of the file.'''
     
     if not filename: return None
