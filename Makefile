@@ -14,6 +14,7 @@ check:
 #: Clean up temporary files
 clean: 
 	$(PYTHON) ./setup.py $@
+	rm -v *~ test/*~ *.orig *.rej test/*.orig test/*.rej 2>/dev/null || true
 
 #: Create source (tarball) and binary (egg) distribution
 dist: 
