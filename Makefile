@@ -4,6 +4,9 @@
 # These comments before the targets start with #:
 # remake --tasks to shows the targets and the comments
 
+GIT2CL ?= git2cl
+PYTHON ?= python
+
 PHONY=check clean dist distclean test
 all: check
 
@@ -32,7 +35,7 @@ bdist_egg:
 # to do the following. I'm sure distutils will someday get there.
 DISTCLEAN_FILES = build dist *.egg-info *.pyc *.so
 
-#: Remove ALL dervied files 
+#: Remove ALL derived files 
 distclean: clean
 	-rm -fr $(DISTCLEAN_FILES) || true
 
