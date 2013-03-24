@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 'Unit test for pyficache'
+from __future__ import with_statement
 import inspect, os, re, sys, unittest
 from tempfile import mkstemp
 top_builddir = os.path.join(os.path.dirname(__file__), '..')
