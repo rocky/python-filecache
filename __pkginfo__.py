@@ -26,7 +26,7 @@ classifiers =  ['Development Status :: 4 - Beta',
 author             = "Rocky Bernstein"
 author_email       = "rocky@gnu.org"
 ftp_url            = None
-install_requires   = ['coverage', 'pygments >= 1.1']
+install_requires   = ['coverage', 'pygments >= 1.1', 'hashlib']
 license            = 'GPL'
 mailing_list       = None
 modname            = 'pyficache'
