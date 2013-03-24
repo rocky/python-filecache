@@ -14,6 +14,8 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """packaging information"""
 
+import sys
+
 copyright   = '''Copyright (C) 2008-2010, 2012-2013 Rocky Bernstein <rocky@gnu.org>.'''
 classifiers =  ['Development Status :: 4 - Beta',
                 'Intended Audience :: Developers',
@@ -26,7 +28,11 @@ classifiers =  ['Development Status :: 4 - Beta',
 author             = "Rocky Bernstein"
 author_email       = "rocky@gnu.org"
 ftp_url            = None
-install_requires   = ['coverage', 'pygments >= 1.1', 'hashlib']
+install_requires   = ['coverage', 'pygments >= 1.1']
+if sys.version_info[0] == 2 and sys.version_info[1] < 5:
+    install_requires   += ['hashlib']
+    pass
+
 license            = 'GPL'
 mailing_list       = None
 modname            = 'pyficache'
