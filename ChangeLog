@@ -1,3 +1,29 @@
+2013-03-24  rocky <rocky@gnu.org>
+
+	* VERSION.py: Get ready for release 0.2.3
+
+2013-03-24  rocky <rocky@gnu.org>
+
+	* __pkginfo__.py: hashlib is only needed before 2.5
+
+2013-03-24  rocky <rocky@gnu.org>
+
+	* : commit 082de609d0ef99b47324949e86a55e874862d505 Author: rocky
+	<rocky@gnu.org> Date:   Sun Mar 24 03:49:29 2013 -0400
+
+2013-03-17  rocky <rocky@gnu.org>
+
+	* test/test-pyficache.py: 2.5 compatibility
+
+2013-02-14  rocky <rocky@gnu.com>
+
+	* Makefile, VERSION.py: Set reasonable default values for PYTHON and
+	GIT2CL
+
+2013-02-10  rocky <rocky@gnu.com>
+
+	* ChangeLog, NEWS, VERSION.py: Get ready for release 0.2.2
+
 2013-02-10  rocky <rocky@gnu.com>
 
 	* .gitignore, Makefile: Clean more stuff. Ignore more stuff
