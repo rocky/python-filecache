@@ -27,7 +27,7 @@ default_opts = {
     'use_linecache_lines' : True,
     'strip_nl'            : True,    # Strip trailing \n on line returned
     'output'              : 'plain'  # To we want plain output?
-                                     #Set to 'terminal'
+                                     # Set to 'terminal'
                                      # for terminal syntax-colored output
     }
 
