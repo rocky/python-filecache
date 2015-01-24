@@ -32,17 +32,12 @@ test-short: check-short
 #: Run all tests
 check:
 	$(PYTHON) ./setup.py nosetests
-	[[ $(PYTHON3) != $(PYTHON) ]] && $(PYTHON3) ./setup.py nosetests || true
+	[ $(PYTHON3) != $(PYTHON) ] && $(PYTHON3) ./setup.py nosetests || true
 
 #: Run unit (white-box) tests
 check-short:
 	$(PYTHON) ./setup.py nosetests --quiet | \
 	$(PYTHON) ./make-check-filter.py
-
-#: Run all tests
-check-short:
-	$(PYTHON) ./setup.py nosetests | \
-	$(PYTHON) ./make-check-filter
 
 #: Clean up temporary files
 clean:
