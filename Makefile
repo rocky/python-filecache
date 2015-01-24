@@ -1,4 +1,5 @@
 # Compatibility for us old-timers.
+PHONY=check clean dist distclean test rmChangeLog
 
 # Note: This makefile include remake-style target comments.
 # These comments before the targets start with #:
@@ -17,9 +18,26 @@ all: check
 lint:
 	flake8 pyficache.py
 
+PHONY=check clean dist distclean test rmChangeLog
+
+#: the default target - same as running "check"
+all: check
+
+#: Same as "check"
+test: check
+
+#: Same as "check-short"
+test-short: check-short
+
 #: Run all tests
 check:
 	$(PYTHON) ./setup.py nosetests
+	[[ $(PYTHON3) != $(PYTHON) ]] && $(PYTHON3) ./setup.py nosetests || true
+
+#: Run unit (white-box) tests
+check-short:
+	$(PYTHON) ./setup.py nosetests --quiet | \
+	$(PYTHON) ./make-check-filter.py
 
 #: Run all tests
 check-short:
@@ -29,7 +47,6 @@ check-short:
 #: Clean up temporary files
 clean:
 	$(PYTHON) ./setup.py $@
-	rm -v *~ test/*~ *.orig *.rej test/*.orig test/*.rej 2>/dev/null || true
 
 #: Create source (tarball) and binary (egg) distribution
 dist:
@@ -55,15 +72,10 @@ distclean: clean
 install:
 	$(PYTHON) ./setup.py install
 
-#: Same as 'check' target
-test: check
-
+ChangeLog: rmChangeLog
+	git log --pretty --numstat --summary | $(GIT2CL) >$@
 
 rmChangeLog:
 	rm ChangeLog || true
-
-#: Create a ChangeLog from git via git log and git2cl
-ChangeLog: rmChangeLog
-	git log --pretty --numstat --summary | $(GIT2CL) >$@
 
 .PHONY: $(PHONY)
