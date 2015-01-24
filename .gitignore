@@ -1,7 +1,8 @@
-__pycache__
 /*.bak
 /*.egg-info
 /*.pyc
 /*~
+/*.egg
+__pycache__
 build
 dist

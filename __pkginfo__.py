@@ -1,4 +1,4 @@
-# Copyright (C) 2009, 2010, 2013 Rocky Bernstein <rocky@gnu.org>
+# Copyright (C) 2009, 2010, 2013, 2015 Rocky Bernstein <rocky@gnu.org>
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -14,8 +14,10 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """packaging information"""
 
-copyright   = '''Copyright (C) 2008-2010, 2012-2013 Rocky Bernstein <rocky@gnu.org>.'''
-classifiers =  ['Development Status :: 4 - Beta',
+copyright   = '''
+Copyright (C) 2008-2010, 2012-2013, 2015 Rocky Bernstein <rocky@gnu.org>.
+'''
+classifiers =  ['Development Status :: 5 - Production/Stable',
                 'Intended Audience :: Developers',
                 'License :: OSI Approved :: GNU General Public License (GPL)',
                 'Programming Language :: Python',
@@ -47,4 +49,4 @@ zip_safe = False # tracebacks in zip files are funky and not debuggable
 
 def read(*rnames):
     return open(os.path.join(os.path.dirname(__file__), *rnames)).read()
-long_description   = ( read("README.txt") + '\n\n' +  read("NEWS") )
+long_description   = ( read("README.rst") + '\n' )
