@@ -453,7 +453,7 @@ def update_cache(filename, opts=default_opts):
         pass
 
     except:
-        ##  print '*** cannot open', path, ':', msg
+        # print '*** cannot open', path, ':', msg
         return None
 
     file_cache[filename] = LineCacheInfo(os.stat(path), None, lines,
