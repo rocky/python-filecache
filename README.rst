@@ -1,5 +1,6 @@
-|Downloads| |Build Status| |Latest Version| |Supported Python versions|SYNOPSIS
+|Downloads| |Build Status| |Latest Version| |Supported Python versions|
 
+SYNOPSIS
 ========
 
 The *pyficache* module allows one to get any line from any file, caching
