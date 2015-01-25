@@ -28,12 +28,12 @@ Summary
 Credits
 -------
 
-  This is a port of the my Ruby linecache module which in turn is
-  based on the Python linecache module. So in a sense this is decorator
-  and extension of that.
+This is a port of the my Ruby linecache module which in turn is based
+on the Python linecache module. So in a sense this is decorator and
+extension of that.
 
-  coverage.py provides the cool stuff to figure out lines where there
-  statements.
+_coverage provides the cool stuff to figure out lines where there
+statements.
 
 Other stuff
 -----------
@@ -41,3 +41,5 @@ Other stuff
 Author:   Rocky Bernstein <rockyb@rubyforge.net>
 License:  Copyright (c) 2009, 2015 Rocky Bernstein
           Released under the GNU GPL 3 license
+
+.. _coverage: http://nedbatchelder.com/code/coverage/
