@@ -28,11 +28,10 @@ Summary
 Credits
 -------
 
-This is a port of the my Ruby linecache module which in turn is based
-on the Python linecache module. So in a sense this is decorator and
-extension of that.
+This is a port of the my Ruby linecache_ module which in turn is based
+on the Python linecache module.
 
-_coverage provides the cool stuff to figure out lines where there
+coverage_ provides the cool stuff to figure out lines where there
 statements.
 
 Other stuff
@@ -43,3 +42,4 @@ License:  Copyright (c) 2009, 2015 Rocky Bernstein
           Released under the GNU GPL 3 license
 
 .. _coverage: http://nedbatchelder.com/code/coverage/
+.. _linecache: https://rubygems.org/gems/linecache
