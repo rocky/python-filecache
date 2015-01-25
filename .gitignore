@@ -1,8 +1,9 @@
 /*.bak
+/*.egg
 /*.egg-info
 /*.pyc
 /*~
-/*.egg
+/Pygments*
 __pycache__
 build
 dist

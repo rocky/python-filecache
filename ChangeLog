@@ -1,6 +1,52 @@
+2015-01-24  rocky <rocky@gnu.org>
+
+	* .gitignore, VERSION.py, __pkginfo__.py: Get ready for release
+	0.2.4
+
+2015-01-24  rocky <rocky@gnu.org>
+
+	* .travis.yml, README.rst: Try travis
+
+2015-01-24  rocky <rocky@gnu.org>
+
+	* README.rst: More ReSt markup
+
+2015-01-24  rocky <rocky@gnu.org>
+
+	* README.rst: ReST markup
+
+2015-01-24  rocky <rocky@gnu.org>
+
+	* pyficache.py: Yet another lint thing
+
+2015-01-24  rocky <rocky@gnu.org>
+
+	* pyficache.py: One more lint on comment
+
+2015-01-24  rocky <rocky@gnu.org>
+
+	* Makefile: I hate conflicted merges
+
+2015-01-24  rocky <rocky@gnu.org>
+
+	* : commit d582ab76d99c0f72c1020884387a748ca123ac42 Author: rocky
+	<rocky@gnu.org> Date:   Sat Jan 24 07:21:11 2015 -0500
+
+2013-03-26  rocky <rocky@gnu.org>
+
+	* __pkginfo__.py: Nope pygments 1.0 won't cut it. Need pygments 1.1
+
+2013-03-25  rocky <rocky@gnu.org>
+
+	* VERSION.py, __pkginfo__.py: FC9 installs with pygments 1.0 and I
+	think that's good enough for what we need.
+
 2013-03-24  rocky <rocky@gnu.org>
 
-	* VERSION.py: Get ready for release 0.2.3
+	* ChangeLog, Makefile, VERSION.py, make-check-filter.py,
+	test/test-pyficache.py: VERSION.py: Get ready for release 0.2.3.
+	Makefile: Add check-short target. test/test-pyficache.py: remove
+	"from future" for Python 2.4.
 
 2013-03-24  rocky <rocky@gnu.org>
 

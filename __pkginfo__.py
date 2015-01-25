@@ -48,7 +48,7 @@ exec(compile(open(os.path.join(os.path.dirname(__file__),
                                'VERSION.py')).read(),
              os.path.join(os.path.dirname(__file__), 'VERSION.py'), 'exec'))
 
-web = 'http://code.google.com/p/pyficache'
+web = 'http://github.com/rocky/python-filecache'
 
 zip_safe = False # tracebacks in zip files are funky and not debuggable
 
