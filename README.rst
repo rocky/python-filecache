@@ -1,4 +1,5 @@
-SYNOPSIS
+|Downloads| |Build Status| |Latest Version| |Supported Python versions|SYNOPSIS
+
 ========
 
 The *pyficache* module allows one to get any line from any file, caching
@@ -42,3 +43,11 @@ License:  Copyright (c) 2009, 2015 Rocky Bernstein. Released under the GNU GPL 3
 
 .. _coverage: http://nedbatchelder.com/code/coverage/
 .. _linecache: https://rubygems.org/gems/linecache
+
+.. |Downloads| image:: https://pypip.in/download/pyficache/badge.svg
+.. |Build Status| image:: https://travis-ci.org/rocky/python2-trepan.svg
+   :target: https://travis-ci.org/rocky/pyficache/
+.. |Latest Version| image:: https://pypip.in/version/pyficache/badge.svg?text=version
+   :target: https://pypi.python.org/pypi/pyficache/
+.. |Supported Python versions| image:: https://pypip.in/py_versions/pyficache/badge.svg
+   :target: https://pypi.python.org/pypi/pyficache/
