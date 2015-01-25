@@ -38,8 +38,7 @@ Other stuff
 -----------
 
 Author:   Rocky Bernstein <rockyb@rubyforge.net>
-License:  Copyright (c) 2009, 2015 Rocky Bernstein
-          Released under the GNU GPL 3 license
+License:  Copyright (c) 2009, 2015 Rocky Bernstein. Released under the GNU GPL 3 license
 
 .. _coverage: http://nedbatchelder.com/code/coverage/
 .. _linecache: https://rubygems.org/gems/linecache
