@@ -1,4 +1,10 @@
-0.2.3 2013-01-24
+0.2.5 2013-04-15
+
+- Add remove_remap_file() which will be used in trepanning debuggers
+- Modernize somewhat: revise doc and __init__.py to use rSt.
+
+0.2.4 2013-03-24
+
 - First github release
 
 0.2.3 2013-03-24

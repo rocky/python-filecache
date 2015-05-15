@@ -1,7 +1,22 @@
+2015-05-15  rocky <rocky@gnu.org>
+
+	* .gitignore, .travis.yml, README.rst, VERSION.py, __init__.py,
+	pyficache.py, requirements.txt, test/test-pyficache.py: Add
+	remove_remap_file. Update RST Modernize somewhat __init__.py uses
+	rSt
+
 2015-01-24  rocky <rocky@gnu.org>
 
-	* .gitignore, VERSION.py, __pkginfo__.py: Get ready for release
-	0.2.4
+	* README.rst: ReSt hacking
+
+2015-01-24  rocky <rocky@gnu.org>
+
+	* .travis.yml, README.rst: Can't use python 3.2 in travis
+
+2015-01-24  rocky <rocky@gnu.org>
+
+	* .gitignore, ChangeLog, NEWS, VERSION.py, __pkginfo__.py: Get ready
+	for release 0.2.4
 
 2015-01-24  rocky <rocky@gnu.org>
 
