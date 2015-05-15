@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#   Copyright (C) 2008-2009, 2012-2013 Rocky Bernstein <rocky@gnu.org>
+#   Copyright (C) 2008-2009, 2012-2013, 2015 Rocky Bernstein <rocky@gnu.org>
 #
 #   This program is free software: you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
@@ -144,18 +144,27 @@ def checkcache(filename=None, opts=False):
         pass
     return result
 
-def cache_script(script, opts={}):
+def cache_script(script, text, opts={}):
     '''Cache script if it is not already cached.'''
     global script_cache
-    if script in script_cache:
+    if script not in script_cache:
         update_script_cache(script, opts)
         pass
     return script
 
+def uncache_script(script, opts={}):
+    '''remove script from cache.'''
+    global script_cache
+    if script in script_cache:
+        del script_cache[script]
+        return script
+    return None
+
 def update_script_cache(script, opts={}):
     '''Cache script if it is not already cached.'''
     global script_cache
-    update_cache(script_cache, opts)
+    if script not in script_cache:
+        script_cache[script] = text
     return script
 
 def cache_file(filename, reload_on_change=False, opts=default_opts):
@@ -311,6 +320,15 @@ def remap_file_lines(from_file, to_file, line_range, start):
         file2file_remap_lines[to_file] = [[from_file, line_range, start]]
         pass
     return
+
+def remove_remap_file(filename):
+    '''Remove any mapping for *filename* and return that if it exists'''
+    global file2file_remap
+    if filename in file2file_remap:
+        retval = file2file_remap[filename]
+        del file2file_remap[filename]
+        return retval
+    return None
 
 def sha1(filename):
     '''Return SHA1 of filename.'''

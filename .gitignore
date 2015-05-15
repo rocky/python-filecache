@@ -3,6 +3,8 @@
 /*.egg-info
 /*.pyc
 /*~
+/.eggs
+/.python-version
 /Pygments*
 __pycache__
 build

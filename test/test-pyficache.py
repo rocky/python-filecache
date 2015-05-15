@@ -118,6 +118,16 @@ class TestPyFiCache(unittest.TestCase):
         line2 = pyficache.getline(__file__, 1)
         self.assertEqual(line1, line2,
                          'Both lines should be the same via remap_file')
+        filename = pyficache.remove_remap_file('another-name')
+        self.assertEqual(filename, __file__)
+        filename = pyficache.remove_remap_file('another-name')
+        self.assertEqual(filename, None)
+        return
+
+    def test_uncache(self):
+        self.assertEqual(pyficache.uncache_script('<script>'), None,
+                         '<script should not be cached')
+
         return
 
     def test_remap_lines(self):
