@@ -148,7 +148,7 @@ def cache_script(script, text, opts={}):
     '''Cache script if it is not already cached.'''
     global script_cache
     if script not in script_cache:
-        update_script_cache(script, opts)
+        update_script_cache(script, text, opts)
         pass
     return script
 
@@ -160,7 +160,7 @@ def uncache_script(script, opts={}):
         return script
     return None
 
-def update_script_cache(script, opts={}):
+def update_script_cache(script, text, opts={}):
     '''Cache script if it is not already cached.'''
     global script_cache
     if script not in script_cache:

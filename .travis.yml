@@ -15,4 +15,4 @@ install:
 
 script:
 - make test
-- flake8 trepan
+- make lint
