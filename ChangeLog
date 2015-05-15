@@ -1,5 +1,25 @@
 2015-05-15  rocky <rocky@gnu.org>
 
+	* NEWS, VERSION.py: Get ready for release 0.2.6
+
+2015-05-15  rocky <rocky@gnu.org>
+
+	* .travis.yml, pyficache.py: Travis 3rd try
+
+2015-05-15  rocky <rocky@gnu.org>
+
+	* requirements-dev.txt: Travis 2nd try
+
+2015-05-15  rocky <rocky@gnu.org>
+
+	* .travis.yml, VERSION.py: Fix travis
+
+2015-05-15  rocky <rocky@gnu.org>
+
+	* ChangeLog, NEWS: Get ready for release 0.2.5
+
+2015-05-15  rocky <rocky@gnu.org>
+
 	* .gitignore, .travis.yml, README.rst, VERSION.py, __init__.py,
 	pyficache.py, requirements.txt, test/test-pyficache.py: Add
 	remove_remap_file. Update RST Modernize somewhat __init__.py uses
