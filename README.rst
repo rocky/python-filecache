@@ -91,7 +91,7 @@ License:  Copyright (c) 2009, 2015 Rocky Bernstein. Released under the GNU GPL 3
     :alt: License
 .. _coverage: http://nedbatchelder.com/code/coverage/
 .. _linecache: https://rubygems.org/gems/linecache
--- _trepan: https://pypi.python.org/pypi/trepan
+.. _trepan: :target https://pypi.python.org/pypi/trepan
 
 .. |Downloads| image:: https://pypip.in/download/pyficache/badge.svg
 .. |Build Status| image:: https://travis-ci.org/rocky/python2-trepan.svg
