@@ -19,7 +19,7 @@ import coverage, hashlib, linecache, os, sys
 
 from pygments import highlight
 from pygments.lexers import PythonLexer
-from pygments.formatters import TerminalFormatter
+from pygments.formatters import TerminalFormatter, Terminal256Formatter
 
 default_opts = {
     'reload_on_change'    : False,   # Check if file has changed since last
@@ -258,40 +258,55 @@ def getlines(filename, opts=default_opts):
     *filename* was previously cached use the results from the
     cache. Return *None* if we can not get lines
     '''
-    global file_cache
     if get_option('reload_on_change', opts): checkcache(filename)
     fmt = get_option('output', opts)
+    highlight_opts = {'bg': fmt}
+    cs = opts.get('style')
+
+    # Colorstyle of Terminal255Formatter takes precidence over
+    # light/dark colorthemes of TerminalFormatter
+    if cs:
+        highlight_opts['style'] = cs
+        fmt = cs
+
     if filename not in file_cache:
         update_cache(filename, opts)
         filename = pyc2py(filename)
         if filename not in file_cache: return None
         pass
     lines = file_cache[filename].lines
-    if fmt not in lines:
-        lines[fmt] = highlight_array(lines['plain'], light_or_dark=fmt)
+    if fmt not in lines.keys():
+        lines[fmt] = highlight_array(lines['plain'], **highlight_opts)
         pass
     return lines[fmt]
 
 def highlight_array(array, trailing_nl=True,
-                    light_or_dark='light'):
+                    bg='light', **options):
     fmt_array = highlight_string(''.join(array),
-                                 light_or_dark).split('\n')
+                                 bg, **options).split('\n')
     lines = [ line + "\n" for line in fmt_array ]
     if not trailing_nl: lines[-1] = lines[-1].rstrip('\n')
     return lines
 
 python_lexer = PythonLexer()
-dark_terminal_formatter=TerminalFormatter(bg = 'dark')
-light_terminal_formatter=TerminalFormatter(bg = 'light')
 
-def highlight_string(string, light_or_dark='light'):
-    global python_lexer
-    if 'light' == light_or_dark:
-        global light_terminal_formatter
-        return highlight(string, python_lexer, light_terminal_formatter)
+# TerminalFormatter uses a colorTHEME with light and dark pairs.
+# But Terminal256Formatter uses a colorSTYLE.  Ugh
+dark_terminal_formatter = TerminalFormatter(bg = 'dark')
+light_terminal_formatter = TerminalFormatter(bg = 'light')
+terminal_256_formatter = Terminal256Formatter()
+
+def highlight_string(string, bg='light', **options):
+    global terminal_256_formatter
+    if options.get('style'):
+        if terminal_256_formatter.style != options['style']:
+            terminal_256_formatter = Terminal256Formatter(style=options['style'])
+            del options['style']
+        return highlight(string, python_lexer, terminal_256_formatter, **options)
+    elif 'light' == bg:
+        return highlight(string, python_lexer, light_terminal_formatter, **options)
     else:
-        global darkterminal_formatter
-        return highlight(string, python_lexer, dark_terminal_formatter)
+        return highlight(string, python_lexer, dark_terminal_formatter, **options)
     pass
 
 def path(filename):
@@ -462,8 +477,15 @@ def update_cache(filename, opts=default_opts):
         fp.close()
         raw_string        = ''.join(lines['plain'])
         trailing_nl       = has_trailing_nl(raw_string)
-        lines['terminal'] = highlight_array(raw_string.split('\n'),
-                                            trailing_nl)
+        if 'style' in opts:
+            key = opts['style']
+            highlight_opts = {'style': key}
+        else:
+            key = 'terminal'
+            highlight_opts = {}
+
+        lines[key] = highlight_array(raw_string.split('\n'),
+                                     trailing_nl, **highlight_opts)
         if orig_filename != filename:
             file2file_remap[orig_filename] = filename
             file2file_remap[os.path.abspath(orig_filename)] = filename
@@ -487,6 +509,10 @@ if __name__ == '__main__':
         return  # Not reached
 
     print(getline(__file__, 1, {'output': 'dark'}))
+    print(getline(__file__, 2, {'output': 'light'}))
+    from pygments.styles import STYLE_MAP
+    opts = {'style': list(STYLE_MAP.keys())[0]}
+    print(getline(__file__, 1, opts))
     update_cache('os')
 
     lines = getlines(__file__)

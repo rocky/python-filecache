@@ -1,2 +1,3 @@
 nose
 coverage >= 3.6
+pygments >= 2.0
