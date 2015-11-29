@@ -22,7 +22,7 @@ source lines.
 A file path can be remapped to another path. This is useful for
 example when debugging remotely and the remote file path may be
 different from the path on a local filesystem. In the trepan_ `debugger
-https://pypi.python.org/pypi/trepan3k>`_, *eval* and *exec* strings are
+<https://pypi.python.org/pypi/trepan3k>`_, *eval* and *exec* strings are
 saved in a temporary file and then the pseudo-filename `<string>` is
 remapped to that temporary file name.
 
