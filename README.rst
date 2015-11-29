@@ -86,7 +86,7 @@ License:  Copyright (c) 2009, 2015 Rocky Bernstein. Released under the GNU GPL 3
 .. |downloads| image:: https://img.shields.io/pypi/dd/pyficache.svg
     :target: https://pypi.python.org/pypi/pyficache
     :alt: Daily PyPI downloads
-. |license| image:: https://img.shields.io/pypi/l/pyficache.svg
+.. |license| image:: https://img.shields.io/pypi/l/pyficache.svg
     :target: https://pypi.python.org/pypi/pyficache
     :alt: License
 .. _coverage: http://nedbatchelder.com/code/coverage/
