@@ -300,13 +300,17 @@ def highlight_string(string, bg='light', **options):
     global terminal_256_formatter
     if options.get('style'):
         if terminal_256_formatter.style != options['style']:
-            terminal_256_formatter = Terminal256Formatter(style=options['style'])
+            terminal_256_formatter = \
+              Terminal256Formatter(style=options['style'])
             del options['style']
-        return highlight(string, python_lexer, terminal_256_formatter, **options)
+        return highlight(string, python_lexer, terminal_256_formatter,
+                         **options)
     elif 'light' == bg:
-        return highlight(string, python_lexer, light_terminal_formatter, **options)
+        return highlight(string, python_lexer, light_terminal_formatter,
+                         **options)
     else:
-        return highlight(string, python_lexer, dark_terminal_formatter, **options)
+        return highlight(string, python_lexer, dark_terminal_formatter,
+                         **options)
     pass
 
 def path(filename):
