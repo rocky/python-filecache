@@ -1,4 +1,4 @@
-|versions| |downloads| |Build Status| |license|
+|downloads| |Build Status| |license|
 
 Synopsis
 --------
@@ -80,9 +80,6 @@ Other stuff
 Author:   Rocky Bernstein <rockyb@rubyforge.net>
 License:  Copyright (c) 2009, 2015 Rocky Bernstein. Released under the GNU GPL 3 license
 
-.. |versions| image:: https://img.shields.io/pypi/pyversions/pyficache.svg
-    :target: https://pypi.python.org/pypi/pyficache
-    :alt: Python versions supported
 .. |downloads| image:: https://img.shields.io/pypi/dd/pyficache.svg
     :target: https://pypi.python.org/pypi/pyficache
     :alt: Daily PyPI downloads
