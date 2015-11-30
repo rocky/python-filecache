@@ -1,14 +1,19 @@
-0.2.6 2013-04-15
+0.3.0 2013-11-29 John
+
+- Allow setting a pygments style and other pygments options.  Requires pygments 2.x
+- Some bugs fixed and doc updated.
+
+0.2.6 2015-04-15
 
 - Fix bug in update_script_cache()
 - Minor changes for testing and travis
 
-0.2.5 2013-04-15
+0.2.5 2015-04-15
 
 - Add remove_remap_file() which will be used in trepanning debuggers
 - Modernize somewhat: revise doc and __init__.py to use rSt.
 
-0.2.4 2013-03-24
+0.2.4 2015-03-24
 
 - First github release
 

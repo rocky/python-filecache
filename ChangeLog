@@ -1,6 +1,41 @@
+2015-11-29  rocky <rocky@gnu.org>
+
+	* README.rst: fix RST link
+
+2015-11-29  rocky <rocky@gnu.org>
+
+	* README.rst: One more RST bug
+
+2015-11-29  rocky <rocky@gnu.org>
+
+	* README.rst: Versions sheild no working. Remove
+
+2015-11-29  rocky <rocky@gnu.org>
+
+	* README.rst: Another RST typo
+
+2015-11-29  rocky <rocky@gnu.org>
+
+	* README.rst: RST Typo
+
+2015-11-29  rocky <rocky@gnu.org>
+
+	* README.rst, VERSION.py: Update README.rst and get ready for 0.3.0
+	release
+
+2015-11-29  rocky <rocky@gnu.org>
+
+	* pyficache.py, tox.ini: Lint stuff
+
+2015-11-28  rocky <rocky@gnu.org>
+
+	* __pkginfo__.py, pyficache.py, requirements.txt: Allow setting a
+	pygments style and other pygments options.  Requires pygments 2.x
+	now.
+
 2015-05-15  rocky <rocky@gnu.org>
 
-	* NEWS, VERSION.py: Get ready for release 0.2.6
+	* ChangeLog, NEWS, VERSION.py: Get ready for release 0.2.6
 
 2015-05-15  rocky <rocky@gnu.org>
 
