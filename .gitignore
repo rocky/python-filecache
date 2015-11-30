@@ -6,6 +6,7 @@
 /.eggs
 /.python-version
 /Pygments*
+/how-to-make-a-release.txt
 __pycache__
 build
 dist
