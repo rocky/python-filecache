@@ -428,8 +428,7 @@ def unmap_file_line(filename, line):
         pass
     return [filename, line]
 
-def update_cache(filename, opts=default_opts,
-                 module_globals=None):
+def update_cache(filename, opts=default_opts, module_globals=None):
     '''Update a cache entry.  If something is wrong, return
     *None*. Return *True* if the cache was updated and *False* if not.  If
     *use_linecache_lines* is *True*, use an existing cache entry as source
@@ -497,7 +496,8 @@ def update_cache(filename, opts=default_opts,
 
                 lines[key] = highlight_array(raw_string.split('\n'),
                                     trailing_nl, **highlight_opts)
-                file_cache[filename] = LineCacheInfo(None, None, lines, filename, None)
+                file_cache[filename] = \
+                  LineCacheInfo(None, None, lines, filename, None)
                 file2file_remap[path] = filename
                 return True
             pass
