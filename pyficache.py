@@ -407,6 +407,14 @@ def trace_line_numbers(filename, reload_on_change=False):
         pass
     return e.line_numbers
 
+def is_mapped_file(filename):
+    if filename in file2file_remap :
+        return 'file'
+    elif file2file_remap_lines.get(filename):
+        return 'file_line'
+    else:
+        return None
+
 def unmap_file(filename):
     if filename in file2file_remap : return file2file_remap[filename]
     else: return filename
@@ -422,7 +430,7 @@ def unmap_file_line(filename, line):
         pass
     return [filename, line]
 
-def update_cache(filename, opts=default_opts):
+def update_cache(filename, opts=default_opts, module_globals=None):
     '''Update a cache entry.  If something is wrong, return
     *None*. Return *True* if the cache was updated and *False* if not.  If
     *use_linecache_lines* is *True*, use an existing cache entry as source
@@ -434,7 +442,7 @@ def update_cache(filename, opts=default_opts):
     filename = pyc2py(filename)
     if filename in file_cache: del file_cache[filename]
     path = os.path.abspath(filename)
-
+    stat = None
     if get_option('use_linecache_lines', opts):
         fname_list = [filename]
         if file2file_remap.get(path):
@@ -450,7 +458,6 @@ def update_cache(filename, opts=default_opts):
                     file_cache[filename] = LineCacheInfo(stat, None, lines,
                                                          path, None)
                 except:
-                    stat = None
                     pass
                 pass
             if orig_filename != filename:
@@ -464,8 +471,41 @@ def update_cache(filename, opts=default_opts):
 
     if os.path.exists(path):
         stat = os.stat(path)
-    elif os.path.basename(filename) == filename:
-        # try looking through the search path.
+    elif module_globals and '__loader__' in module_globals:
+        name = module_globals.get('__name__')
+        loader = module_globals['__loader__']
+        get_source = getattr(loader, 'get_source', None)
+        if name and get_source:
+            try:
+                data = get_source(name)
+            except (ImportError, IOError):
+                pass
+            else:
+                if data is None:
+                    # No luck, the PEP302 loader cannot find the source
+                    # for this module.
+                    return None
+                # FIXME: DRY with code below
+                lines = {'plain' : data.splitlines()}
+                raw_string        = ''.join(lines['plain'])
+                trailing_nl       = has_trailing_nl(raw_string)
+                if 'style' in opts:
+                    key = opts['style']
+                    highlight_opts = {'style': key}
+                else:
+                    key = 'terminal'
+                    highlight_opts = {}
+
+                lines[key] = highlight_array(raw_string.split('\n'),
+                                    trailing_nl, **highlight_opts)
+                file_cache[filename] = LineCacheInfo(None, None, lines, filename, None)
+                file2file_remap[path] = filename
+                return True
+            pass
+        pass
+    if not os.path.isabs(filename):
+        # Try looking through the module search path, which is only useful
+        # when handling a relative filename.
         stat = None
         for dirname in sys.path:
             path = os.path.join(dirname, filename)
@@ -475,10 +515,12 @@ def update_cache(filename, opts=default_opts):
             pass
         if not stat: return False
         pass
+
     try:
         fp = open(path, 'r')
         lines = {'plain' : fp.readlines()}
         fp.close()
+        # FIXME: DRY with code above
         raw_string        = ''.join(lines['plain'])
         trailing_nl       = has_trailing_nl(raw_string)
         if 'style' in opts:
@@ -500,8 +542,7 @@ def update_cache(filename, opts=default_opts):
         # print '*** cannot open', path, ':', msg
         return None
 
-    file_cache[filename] = LineCacheInfo(os.stat(path), None, lines,
-                                         path, None)
+    file_cache[filename] = LineCacheInfo(stat, None, lines, path, None)
     file2file_remap[path] = filename
     return True
 
