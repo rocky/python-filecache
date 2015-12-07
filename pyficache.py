@@ -209,7 +209,6 @@ def cache(filename, reload_on_change=False):
 
 def is_cached(file_or_script):
     '''Return True if file_or_script is cached'''
-    global file_cache
     if isinstance(file_or_script, str):
         return unmap_file(file_or_script) in file_cache
     else:
@@ -217,7 +216,6 @@ def is_cached(file_or_script):
     return
 
 def is_cached_script(filename):
-    global script_cache
     return unmap_file(filename) in list(script_cache.keys())
 
 def is_empty(filename):
@@ -430,7 +428,8 @@ def unmap_file_line(filename, line):
         pass
     return [filename, line]
 
-def update_cache(filename, opts=default_opts, module_globals=None):
+def update_cache(filename, opts=default_opts,
+                 module_globals=None):
     '''Update a cache entry.  If something is wrong, return
     *None*. Return *True* if the cache was updated and *False* if not.  If
     *use_linecache_lines* is *True*, use an existing cache entry as source
