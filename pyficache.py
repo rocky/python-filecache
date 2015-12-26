@@ -240,7 +240,7 @@ def getline(file_or_script, line_number, opts=default_opts):
     filename = unmap_file(file_or_script)
     filename, line_number = unmap_file_line(filename, line_number)
     lines = getlines(filename, opts)
-    if lines and line_number >=1 and line_number <= len(lines):
+    if lines and line_number >=1 and line_number <= maxline(filename):
         line = lines[line_number-1]
         if get_option('strip_nl', opts):
             return line.rstrip('\n')
@@ -375,6 +375,20 @@ def size(filename, use_cache_only=False):
         pass
     return len(file_cache[filename].lines['plain'])
 
+def maxline(filename, use_cache_only=False):
+    """Return the maximum line number filename after taking into account
+    line remapping. If no remapping then this is the same as soze"""
+    if filename not in file2file_remap_lines:
+        return size(filename, use_cache_only)
+    max_lineno = -1
+    for from_file, line_range, start in file2file_remap_lines[filename]:
+        if len(line_range) < 2: continue
+        max_lineno = max(max_lineno, line_range[1])
+    if max_lineno == -1:
+        return size(filename, use_cache_only)
+    else:
+        return max_lineno
+
 def stat(filename, use_cache_only=False):
     '''Return stat() info for *filename*. If *use_cache_only* is *False*,
     we will try to fetch the file if it is not cached.'''
@@ -414,8 +428,15 @@ def is_mapped_file(filename):
         return None
 
 def unmap_file(filename):
+    # FIXME: this is wrong
     if filename in file2file_remap : return file2file_remap[filename]
     else: return filename
+    # if filename in file2file_remap :
+    #     return file2file_remap[filename]
+    # elif filename in file2file_remap_lines :
+    #     return file2file_remap_lines.get(filename)[0][0]
+    # else:
+    #     return filename
     return  # Not reached
 
 def unmap_file_line(filename, line):
@@ -516,30 +537,28 @@ def update_cache(filename, opts=default_opts, module_globals=None):
         pass
 
     try:
-        fp = open(path, 'r')
-        lines = {'plain' : fp.readlines()}
-        fp.close()
-        # FIXME: DRY with code above
-        raw_string        = ''.join(lines['plain'])
-        trailing_nl       = has_trailing_nl(raw_string)
-        if 'style' in opts:
-            key = opts['style']
-            highlight_opts = {'style': key}
-        else:
-            key = 'terminal'
-            highlight_opts = {}
-
-        lines[key] = highlight_array(raw_string.split('\n'),
-                                     trailing_nl, **highlight_opts)
-        if orig_filename != filename:
-            file2file_remap[orig_filename] = filename
-            file2file_remap[os.path.abspath(orig_filename)] = filename
-            pass
-        pass
-
+        with open(path, 'r') as fp:
+            lines = {'plain' : fp.readlines()}
     except:
-        # print '*** cannot open', path, ':', msg
         return None
+
+    # FIXME: DRY with code above
+    raw_string        = ''.join(lines['plain'])
+    trailing_nl       = has_trailing_nl(raw_string)
+    if 'style' in opts:
+        key = opts['style'] or 'default'
+        highlight_opts = {'style': key}
+    else:
+        key = 'terminal'
+        highlight_opts = {}
+
+    lines[key] = highlight_array(raw_string.split('\n'),
+                                 trailing_nl, **highlight_opts)
+    if orig_filename != filename:
+        file2file_remap[orig_filename] = filename
+        file2file_remap[os.path.abspath(orig_filename)] = filename
+        pass
+    pass
 
     file_cache[filename] = LineCacheInfo(stat, None, lines, path, None)
     file2file_remap[path] = filename

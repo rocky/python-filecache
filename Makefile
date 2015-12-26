@@ -31,8 +31,7 @@ test-short: check-short
 
 #: Run all tests
 check:
-	$(PYTHON) ./setup.py nosetests
-	[ $(PYTHON3) != $(PYTHON) ] && $(PYTHON3) ./setup.py nosetests || true
+	nosetests
 
 #: Run unit (white-box) tests
 check-short:
