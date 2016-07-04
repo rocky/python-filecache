@@ -40,7 +40,7 @@ def get_option(key, options):
     return None  # Not reached
 
 def has_trailing_nl(string):
-    return '\n' == string[-1]
+    return len(string) > 0 and '\n' == string[-1]
 
 def pyc2py(filename):
     if '.pyc' == filename[-4:]:

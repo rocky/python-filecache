@@ -1,3 +1,29 @@
+2015-12-26  rocky <rocky@gnu.org>
+
+	* Makefile, pyficache.py: Fix bug in setting pygments style, Line
+	remapping stuff is stil borked though.
+
+2015-12-07  rocky <rocky@gnu.org>
+
+	* pyficache.py: Redo last commit to fix flake8 warning
+
+2015-12-07  rocky <rocky@gnu.org>
+
+	* pyficache.py: remove flake8 warning
+
+2015-12-07  rocky <rocky@gnu.org>
+
+	* pyficache.py: Add test for whether a file is mapped (is_unmap
+	file) and try dynamic loader file retrieval
+
+2015-11-29  rocky <rocky@gnu.org>
+
+	* .gitignore, docs/Makefile, docs/conf.py: Consider readthedocs
+
+2015-11-29  rocky <rocky@gnu.org>
+
+	* ChangeLog, NEWS: Get ready for release 0.3.0 - this time for sure!
+
 2015-11-29  rocky <rocky@gnu.org>
 
 	* README.rst: fix RST link
