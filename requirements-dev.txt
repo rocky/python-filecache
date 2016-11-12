@@ -1,2 +1,2 @@
 nose
-flake8
+flake8<3
