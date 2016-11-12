@@ -48,9 +48,10 @@ def pyc2py(filename):
     return filename
 
 class LineCacheInfo:
-    def __init__(self, stat, line_numbers, lines, path, sha1):
+    def __init__(self, stat, line_numbers, lines, path, sha1, eols=None):
         self.stat, self.lines, self.path, self.sha1 = (stat, lines, path, sha1)
         self.line_numbers = line_numbers
+        self.eols = eols
         return
     pass
 
@@ -537,8 +538,9 @@ def update_cache(filename, opts=default_opts, module_globals=None):
         pass
 
     try:
-        with open(path, 'r') as fp:
+        with open(path, 'rU') as fp:
             lines = {'plain' : fp.readlines()}
+            eols = fp.newlines
     except:
         return None
 
@@ -560,7 +562,7 @@ def update_cache(filename, opts=default_opts, module_globals=None):
         pass
     pass
 
-    file_cache[filename] = LineCacheInfo(stat, None, lines, path, None)
+    file_cache[filename] = LineCacheInfo(stat, None, lines, path, None, eols)
     file2file_remap[path] = filename
     return True
 

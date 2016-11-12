@@ -187,6 +187,21 @@ class TestPyFiCache(unittest.TestCase):
                          pyficache.trace_line_numbers(test_file))
         return
 
+    def test_universal_new_lines(self):
+        test_file = os.path.join(TEST_DIR, 'dos-file')
+        lines = pyficache.getlines(test_file)
+        self.assertEqual(lines, ['Foo\n', 'bar\n', 'baz\n'])
+        self.assertTrue(test_file in pyficache.file_cache)
+        file_obj = pyficache.file_cache[test_file]
+        self.assertEqual('\r\n', file_obj.eols)
+
+        test_file = os.path.join(TEST_DIR, 'mixed-eol-file')
+        lines = pyficache.getlines(test_file)
+        self.assertEqual(lines, ['Unix\n', 'DOS\n', 'unix\n'])
+        self.assertTrue(test_file in pyficache.file_cache)
+        file_obj = pyficache.file_cache[test_file]
+        self.assertEqual(('\n', '\r\n'), file_obj.eols)
+
     def test_sha1(self):
         global TEST_DIR
         test_file = os.path.join(TEST_DIR, 'short-file')
