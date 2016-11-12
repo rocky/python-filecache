@@ -11,6 +11,7 @@ sys.path.insert(0, top_builddir)
 TEST_DIR = os.path.dirname(__file__)
 
 import pyficache
+from pyficache import PYVER, PYTHON3
 
 # Test LineCache module
 class TestPyFiCache(unittest.TestCase):
@@ -235,6 +236,23 @@ class TestPyFiCache(unittest.TestCase):
         pyficache.clear_file_format_cache()
         pyficache.clear_file_cache()
         self.assertEqual([], pyficache.cached_files())
+        return
+
+    def test_pyc2py(self):
+        if PYTHON3:
+            testdata = (
+                ("pyc/__pycache__/foo.cpython-%s.pyc" % PYVER, "pyc/foo.py"),
+                ("__pycache__/pyo.cpython-%s.pyc" % PYVER, "pyo.py"),
+                ("foo/__pycache__/bar.cpython-%s.pyo" % PYVER, "foo/bar.py"),
+                )
+        else:
+            testdata = (
+                ("pyc/foo.pyc", "pyc/foo.py"),
+                ("pyo.pyc", "pyo.py"),
+                ("foo.pyo", "foo.py"),
+                )
+        for path, expect in testdata:
+            self.assertEqual(pyficache.pyc2py(path), expect)
         return
 
     pass

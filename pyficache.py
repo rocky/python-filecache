@@ -53,11 +53,15 @@ Synopsis
 
 """
 
-import coverage, hashlib, linecache, os, sys
+import coverage, hashlib, linecache, os, re, sys
 
 from pygments import highlight
 from pygments.lexers import PythonLexer
 from pygments.formatters import TerminalFormatter, Terminal256Formatter
+
+PYTHON3 = (sys.version_info >= (3, 0))
+PYVER = "%s%s" % sys.version_info[0:2]
+
 
 default_opts = {
     'reload_on_change'    : False,   # Check if file has changed since last
@@ -81,8 +85,15 @@ def has_trailing_nl(string):
     return len(string) > 0 and '\n' == string[-1]
 
 def pyc2py(filename):
-    if '.pyc' == filename[-4:]:
-        return filename[:-1]
+    """
+    Find corresponding .py name given a .pyc or .pyo
+    """
+    if re.match(".*py[co]$", filename):
+        if PYTHON3:
+            return re.sub(r'(.*)__pycache__/(.+)\.cpython-%s.py[co]$' % PYVER, '\\1\\2.py',
+                          filename)
+        else:
+            return filename[:-1]
     return filename
 
 class LineCacheInfo:
@@ -576,9 +587,13 @@ def update_cache(filename, opts=default_opts, module_globals=None):
         pass
 
     try:
-        with open(path, 'rU') as fp:
-            lines = {'plain' : fp.readlines()}
-            eols = fp.newlines
+        if PYTHON3:
+            with open(path, newline=None) as fp:
+                lines = {'plain' : fp.readlines()}
+        else:
+            with open(path, 'rU') as fp:
+                lines = {'plain' : fp.readlines()}
+        eols = fp.newlines
     except:
         return None
 
