@@ -61,9 +61,6 @@ class TestPyFiCache(unittest.TestCase):
                          % short_file)
         os.chdir(old_dir)
 
-        # from pydbgr.api import debug
-        # debug() # Get me into the debugger!
-
         # Write a temporary file; read contents, rewrite it and check that
         # we get a change when calling getline.
         (fd, path) = mkstemp(prefix="pyfcache", suffix='.txt')
@@ -86,7 +83,10 @@ class TestPyFiCache(unittest.TestCase):
         line = pyficache.getline(path, 1)
         self.assertEqual(test_string, line,
                          "checkcache should have reread the temporary file.")
-        os.remove(path)
+        try:
+            os.remove(path)
+        except:
+            pass
         return
 
     def test_cached(self):

@@ -16,7 +16,7 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """Read and cache lines of a Python program.
 
-Module toget any line from any file, caching lines of the file on
+Module to get line from any file, caching lines of the file on
 first access to the file. Although the file may be any file, this
 package is more tailored to the case wherethe file is a Python script.
 
