@@ -1,3 +1,26 @@
+2016-11-12  rocky <rocky@gnu.org>
+
+	* NEWS, VERSION.py: Get ready for release 0.3.1
+
+2016-11-12  R. Bernstein <rocky@users.noreply.github.com>
+
+	* : Merge pull request #3 from jayvdb/universal-newlines Universal newlines
+
+2016-11-12  John Vandenberg <jayvdb@gmail.com>
+
+	* pyficache.py, test/dos-file, test/mixed-eol-file,
+	test/test-pyficache.py: Enable universal new lines Also add `LineCacheInfo.eols` attribute recording EOLs used for each
+	file opened by filecache.  `eols` is None for files loaded from
+	`linecache`.  Fixes https://github.com/rocky/python-filecache/issues/1
+
+2016-11-12  John Vandenberg <jayvdb@gmail.com>
+
+	* requirements-dev.txt: Use flake8 2.x flake8 v3 only supports Python 2.7+.
+
+2016-07-03  rocky <rocky@gnu.org>
+
+	* ChangeLog, pyficache.py: Guard against bad index
+
 2015-12-26  rocky <rocky@gnu.org>
 
 	* Makefile, pyficache.py: Fix bug in setting pygments style, Line

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-#   Copyright (C) 2008-2009, 2012-2013, 2015 Rocky Bernstein <rocky@gnu.org>
+#   Copyright (C) 2008-2009, 2012-2013, 2015-2016
+#   Rocky Bernstein <rocky@gnu.org>
 #
 #   This program is free software: you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
@@ -13,7 +14,44 @@
 #
 #   You should have received a copy of the GNU General Public License
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
-'''A module to read and cache lines of a Python program.'''
+"""Read and cache lines of a Python program.
+
+Module toget any line from any file, caching lines of the file on
+first access to the file. Although the file may be any file, this
+package is more tailored to the case wherethe file is a Python script.
+
+Synopsis
+--------
+
+    import pyficache
+    filename = __file__ # e.g. '/tmp/myprogram'
+     # return all lines of filename as an array
+    lines = pyficache.getlines(filename)
+
+     # return line 6, and reload all lines if the file has changed.
+    line = pyficache.getline(filename, 6, {'reload_on_change': True})
+
+    # return line 6 syntax highlighted via pygments using style 'emacs'
+    line = pyficache.getline(filename, 6, {'style': 'emacs'})
+
+    pyficache.remap_file('/tmp/myprogram.py', 'another-name')
+    line_from_alias = pyficache.getline('another-name', 6)
+
+    assert __file__, pyficache.remove_remap_file('another-name')
+
+    # another-name is no longer an alias for /tmp/myprogram
+    assert None, pyficache.remove_remap_file('another-name')
+
+    # Clear cache for __file__
+    pyficache.clear_file_cache(__file__)
+
+    # Clear all cached files.
+    pyficache.clear_file_cache()
+
+    # Check for modifications of all cached files.
+    pyficache.update_cache()
+
+"""
 
 import coverage, hashlib, linecache, os, sys
 
@@ -75,8 +113,8 @@ file2file_remap = {}
 file2file_remap_lines = {}
 
 def clear_file_cache(filename=None):
-    '''Clear the file cache. If no filename is given clear it entirely.
-    if a filename is given, clear just that filename.'''
+    """Clear the file cache. If no filename is given clear it entirely.
+    if a filename is given, clear just that filename."""
     global file_cache, file2file_remap, file2file_remap_lines
     if filename is not None:
         if filename in file_cache:
@@ -90,10 +128,10 @@ def clear_file_cache(filename=None):
     return
 
 def clear_file_format_cache():
-    '''Remove syntax-formatted lines in the cache. Use this
+    """Remove syntax-formatted lines in the cache. Use this
     when you change the Pygments syntax or Token formatting
     and want to redo how files may have previously been
-    syntax marked.'''
+    syntax marked."""
     for fname, cache_info in file_cache.items():
         for format, lines in cache_info.lines.items():
             if 'plain' == format: continue
@@ -103,15 +141,15 @@ def clear_file_format_cache():
     pass
 
 def cached_files():
-    '''Return an array of cached file names'''
+    """Return an array of cached file names"""
     return list(file_cache.keys())
 
 def checkcache(filename=None, opts=False):
-    '''Discard cache entries that are out of date. If *filename* is *None*
+    """Discard cache entries that are out of date. If *filename* is *None*
     all entries in the file cache *file_cache* are checked.  If we do not
     have stat information about a file it will be kept. Return a list of
     invalidated filenames.  None is returned if a filename was given but
-    not found cached.'''
+    not found cached."""
 
     if isinstance(opts, dict):
         use_linecache_lines = opts['use_linecache_lines']
@@ -146,7 +184,7 @@ def checkcache(filename=None, opts=False):
     return result
 
 def cache_script(script, text, opts={}):
-    '''Cache script if it is not already cached.'''
+    """Cache script if it is not already cached."""
     global script_cache
     if script not in script_cache:
         update_script_cache(script, text, opts)
@@ -154,7 +192,7 @@ def cache_script(script, text, opts={}):
     return script
 
 def uncache_script(script, opts={}):
-    '''remove script from cache.'''
+    """remove script from cache."""
     global script_cache
     if script in script_cache:
         del script_cache[script]
@@ -162,16 +200,16 @@ def uncache_script(script, opts={}):
     return None
 
 def update_script_cache(script, text, opts={}):
-    '''Cache script if it is not already cached.'''
+    """Cache script if it is not already cached."""
     global script_cache
     if script not in script_cache:
         script_cache[script] = text
     return script
 
 def cache_file(filename, reload_on_change=False, opts=default_opts):
-    '''Cache filename if it is not already cached.
+    """Cache filename if it is not already cached.
     Return the expanded filename for it in the cache
-    or nil if we can not find the file.'''
+    or nil if we can not find the file."""
     global file_cache
     filename = pyc2py(filename)
     if filename in file_cache:
@@ -187,9 +225,9 @@ def cache_file(filename, reload_on_change=False, opts=default_opts):
     return  # Not reached
 
 def cache(filename, reload_on_change=False):
-    '''Older routine - for compability.  Cache filename if it is not
+    """Older routine - for compability.  Cache filename if it is not
     already cached.  Return the expanded filename for it in the cache
-    or None if we ca not find the file.'''
+    or None if we ca not find the file."""
     global file_cache
     if filename in file_cache:
         if reload_on_change: checkcache(filename)
@@ -209,7 +247,7 @@ def cache(filename, reload_on_change=False):
     pass
 
 def is_cached(file_or_script):
-    '''Return True if file_or_script is cached'''
+    """Return True if file_or_script is cached"""
     if isinstance(file_or_script, str):
         return unmap_file(file_or_script) in file_cache
     else:
@@ -224,13 +262,13 @@ def is_empty(filename):
     return 0 == len(file_cache[filename].lines['plain'])
 
 def getline(file_or_script, line_number, opts=default_opts):
-    '''Get line *line_number* from file named *file_or_script*. Return None if
+    """Get line *line_number* from file named *file_or_script*. Return None if
     there was a problem or it is not found.
 
     Example:
 
     lines = pyficache.getline("/tmp/myfile.py")
-    '''
+    """
     # Compatibility with older interface
     if not isinstance(opts, dict):
         global default_opts
@@ -253,10 +291,10 @@ def getline(file_or_script, line_number, opts=default_opts):
     return  # Not reached
 
 def getlines(filename, opts=default_opts):
-    '''Read lines of *filename* and cache the results. However, if
+    """Read lines of *filename* and cache the results. However, if
     *filename* was previously cached use the results from the
     cache. Return *None* if we can not get lines
-    '''
+    """
     if get_option('reload_on_change', opts): checkcache(filename)
     fmt = get_option('output', opts)
     highlight_opts = {'bg': fmt}
@@ -313,14 +351,14 @@ def highlight_string(string, bg='light', **options):
     pass
 
 def path(filename):
-    '''Return full filename path for filename'''
+    """Return full filename path for filename"""
     filename = unmap_file(filename)
     if filename not in file_cache:
         return None
     return file_cache[filename].path
 
 def remap_file(from_file, to_file):
-    '''Make *to_file* be a synonym for *from_file*'''
+    """Make *to_file* be a synonym for *from_file*"""
     file2file_remap[to_file] = from_file
     return
 
@@ -340,7 +378,7 @@ def remap_file_lines(from_file, to_file, line_range, start):
     return
 
 def remove_remap_file(filename):
-    '''Remove any mapping for *filename* and return that if it exists'''
+    """Remove any mapping for *filename* and return that if it exists"""
     global file2file_remap
     if filename in file2file_remap:
         retval = file2file_remap[filename]
@@ -349,7 +387,7 @@ def remove_remap_file(filename):
     return None
 
 def sha1(filename):
-    '''Return SHA1 of filename.'''
+    """Return SHA1 of filename."""
     filename = unmap_file(filename)
     if filename not in file_cache:
         cache(filename)
@@ -366,8 +404,8 @@ def sha1(filename):
     return sha1.hexdigest()
 
 def size(filename, use_cache_only=False):
-    '''Return the number of lines in filename. If `use_cache_only' is False,
-    we'll try to fetch the file if it is not cached.'''
+    """Return the number of lines in filename. If `use_cache_only' is False,
+    we'll try to fetch the file if it is not cached."""
     filename = unmap_file(filename)
     if filename not in file_cache:
         if not use_cache_only: cache(filename)
@@ -391,8 +429,8 @@ def maxline(filename, use_cache_only=False):
         return max_lineno
 
 def stat(filename, use_cache_only=False):
-    '''Return stat() info for *filename*. If *use_cache_only* is *False*,
-    we will try to fetch the file if it is not cached.'''
+    """Return stat() info for *filename*. If *use_cache_only* is *False*,
+    we will try to fetch the file if it is not cached."""
     filename = pyc2py(filename)
     if filename not in file_cache:
         if not use_cache_only: cache(filename)
@@ -402,10 +440,10 @@ def stat(filename, use_cache_only=False):
     return file_cache[filename].stat
 
 def trace_line_numbers(filename, reload_on_change=False):
-    '''Return an Array of breakpoints in filename.
+    """Return an Array of breakpoints in filename.
     The list will contain an entry for each distinct line event call
     so it is possible (and possibly useful) for a line number appear more
-    than once.'''
+    than once."""
     fullname = cache(filename, reload_on_change)
     if not fullname: return None
     e = file_cache[filename]
@@ -451,10 +489,10 @@ def unmap_file_line(filename, line):
     return [filename, line]
 
 def update_cache(filename, opts=default_opts, module_globals=None):
-    '''Update a cache entry.  If something is wrong, return
+    """Update a cache entry.  If something is wrong, return
     *None*. Return *True* if the cache was updated and *False* if not.  If
     *use_linecache_lines* is *True*, use an existing cache entry as source
-    for the lines of the file.'''
+    for the lines of the file."""
 
     if not filename: return None
 

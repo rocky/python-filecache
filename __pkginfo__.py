@@ -16,13 +16,21 @@
 
 import sys
 copyright   = '''
-Copyright (C) 2008-2010, 2012-2013, 2015 Rocky Bernstein <rocky@gnu.org>.
+Copyright (C) 2008-2010, 2012-2013, 2015-2016 Rocky Bernstein <rocky@gnu.org>.
 '''
 classifiers =  ['Development Status :: 5 - Production/Stable',
                 'Intended Audience :: Developers',
                 'License :: OSI Approved :: GNU General Public License (GPL)',
                 'Programming Language :: Python',
                 'Topic :: Software Development :: Libraries :: Python Modules',
+                'Programming Language :: Python :: 2.6',
+                'Programming Language :: Python :: 2.7',
+                'Programming Language :: Python :: 3.0',
+                'Programming Language :: Python :: 3.1',
+                'Programming Language :: Python :: 3.2',
+                'Programming Language :: Python :: 3.3',
+                'Programming Language :: Python :: 3.4',
+                'Programming Language :: Python :: 3.5 ',
                 ]
 
 # The rest in alphabetic order

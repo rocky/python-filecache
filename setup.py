@@ -4,7 +4,7 @@ distutils setup (setup.py)
 
 This gets a bit of package info from __pkginfo__.py file
 """
-# Get the required package information 
+# Get the required package information
 from __pkginfo__ import \
     author,           author_email,       classifiers,      ftp_url,      \
     install_requires, license,            long_description, mailing_list, \

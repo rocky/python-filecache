@@ -42,6 +42,10 @@ check-short:
 clean:
 	$(PYTHON) ./setup.py $@
 
+#: Run all tests
+coverage:
+	coverage
+
 #: Create source (tarball) and binary (egg) distribution
 dist:
 	$(PYTHON) ./setup.py sdist bdist_egg

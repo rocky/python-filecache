@@ -1,4 +1,4 @@
-|downloads| |Build Status| |license|
+|Build Status| |License| |Supported Python Versions|
 
 Synopsis
 --------
@@ -78,22 +78,21 @@ Other stuff
 -----------
 
 Author:   Rocky Bernstein <rockyb@rubyforge.net>
-License:  Copyright (c) 2009, 2015 Rocky Bernstein. Released under the GNU GPL 3 license
+License:  Copyright (c) 2009, 2015, 2016 Rocky Bernstein. Released under the GNU GPL 3 license
 
-.. |downloads| image:: https://img.shields.io/pypi/dd/pyficache.svg
-    :target: https://pypi.python.org/pypi/pyficache
-    :alt: Daily PyPI downloads
-.. |license| image:: https://img.shields.io/pypi/l/pyficache.svg
-    :target: https://pypi.python.org/pypi/pyficache
+.. |License| image:: https://img.shields.io/pypi/l/pyficache.svg
+    :target: https://pypi.python.org/pypi/pyfiecache
     :alt: License
 .. _coverage: http://nedbatchelder.com/code/coverage/
 .. _linecache: https://rubygems.org/gems/linecache
 .. _trepan: :target https://pypi.python.org/pypi/trepan
 
 .. |Downloads| image:: https://pypip.in/download/pyficache/badge.svg
-.. |Build Status| image:: https://travis-ci.org/rocky/python2-trepan.svg
-   :target: https://travis-ci.org/rocky/pyficache/
+.. |Build Status| image:: https://travis-ci.org/rocky/python-filecache.svg
+   :target: https://travis-ci.org/rocky/python-filecache/
 .. |Latest Version| image:: https://pypip.in/version/pyficache/badge.svg?text=version
    :target: https://pypi.python.org/pypi/pyficache/
 .. |Supported Python versions| image:: https://pypip.in/py_versions/pyficache/badge.svg
+   :target: https://pypi.python.org/pypi/pyficache/
+.. |Supported Python Versions| image:: https://img.shields.io/pypi/pyversions/pyficache.svg
    :target: https://pypi.python.org/pypi/pyficache/
