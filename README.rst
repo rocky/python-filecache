@@ -1,4 +1,4 @@
-|Build Status| |License| |Supported Python Versions|
+|Linux Build Status| |Windows Build Status| |License| |Supported Python Versions|
 
 Synopsis
 --------
@@ -88,8 +88,10 @@ License:  Copyright (c) 2009, 2015, 2016 Rocky Bernstein. Released under the GNU
 .. _trepan: :target https://pypi.python.org/pypi/trepan
 
 .. |Downloads| image:: https://pypip.in/download/pyficache/badge.svg
-.. |Build Status| image:: https://travis-ci.org/rocky/python-filecache.svg
+.. |Linux Build Status| image:: https://travis-ci.org/rocky/python-filecache.svg
    :target: https://travis-ci.org/rocky/python-filecache/
+.. |Windows Build status| image:: https://img.shields.io/appveyor/ci/rocky/python-filecache/master.svg?label=windows%20build
+   :target: https://ci.appveyor.com/project/rocky/python-filecache/branch/master
 .. |Latest Version| image:: https://pypip.in/version/pyficache/badge.svg?text=version
    :target: https://pypi.python.org/pypi/pyficache/
 .. |Supported Python versions| image:: https://pypip.in/py_versions/pyficache/badge.svg
