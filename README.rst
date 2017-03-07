@@ -6,7 +6,7 @@ Synopsis
 The *pyficache* module allows one to get any line from any file,
 caching lines of the file on first access to the file. Although the
 file may be any file, this package is more tailored to the case
-wherethe file is a Python script.
+where the file is a Python script.
 
 Here, the file is parsed to determine statement bounderies,
 and a copies of the file syntax-highlighted are also saved.
