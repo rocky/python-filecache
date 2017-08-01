@@ -589,9 +589,12 @@ def update_cache(filename, opts=default_opts, module_globals=None):
 
     try:
         mode = 'r' if PYTHON3 else 'rU'
-        with open(path, mode) as fp:
-                lines = {'plain' : fp.readlines()}
-                eols = fp.newlines
+        try:
+            fp = open(path, mode)
+            lines = {'plain' : fp.readlines()}
+            eols = fp.newlines
+        finally:
+            fp.close()
     except:
         return None
 
