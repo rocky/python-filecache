@@ -1,6 +1,47 @@
+2017-08-01  rocky <rocky@gnu.org>
+
+	* __pkginfo__.py: 2.4-2.5 needs an older version of pygments
+
+2017-08-01  rocky <rocky@gnu.org>
+
+	* pyficache.py: Python 2.4-2.5 compatability
+
+2017-03-07  R. Bernstein <rocky@users.noreply.github.com>
+
+	* : Merge pull request #5 from x746e/patch-1 Add missing space in README.rst
+
+2016-11-13  rocky <rocky@gnu.org>
+
+	* pyficache.py: More proper newlines handling.
+
 2016-11-12  rocky <rocky@gnu.org>
 
-	* NEWS, VERSION.py: Get ready for release 0.3.1
+	* pyficache.py: Wrap long line
+
+2016-11-12  rocky <rocky@gnu.org>
+
+	* README.rst: Add Windows status badge
+
+2016-11-12  rocky <rocky@gnu.org>
+
+	* pyficache.py, test/test-pyficache.py: Python 3 compatibility ...  * Use open with newline * Handle fancy python3 compile mangling * handle Python 2 and 3 optimize compiled (.pyo) files
+
+2016-11-12  rocky <rocky@gnu.org>
+
+	* appveyor.yml, pyficache.py, requirements-dev.txt,
+	test/test-pyficache.py: Workaround Windows test problem Also, try any Python 3.5 on windows
+
+2016-11-12  rocky <rocky@gnu.org>
+
+	* .gitignore, appveyor.yml, appveyor/install.ps1,
+	appveyor/run_with_env.cmd, circle.yml, test/.gitignore: CI stuff ...  Try appveyor and bump circle Python build
+
+2016-11-12  rocky <rocky@gnu.org>
+
+	* .coveragerc, .travis.yml, ChangeLog, Makefile, NEWS, README.rst,
+	VERSION.py, __pkginfo__.py, circle.yml, pyficache.py,
+	requirements-dev.txt, setup.py: Get ready for release 0.3.1 Update copyright and add a nosetest option Try circleci (travis is
+	broken right now)
 
 2016-11-12  R. Bernstein <rocky@users.noreply.github.com>
 

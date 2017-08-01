@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 'Unit test for pyficache'
-from __future__ import with_statement
 import os, sys, unittest
 from tempfile import mkstemp
 top_builddir = os.path.join(os.path.dirname(__file__), '..')
@@ -66,17 +65,21 @@ class TestPyFiCache(unittest.TestCase):
         # we get a change when calling getline.
         (fd, path) = mkstemp(prefix="pyfcache", suffix='.txt')
         test_string = "Now is the time.\n"
-        with open(path, 'w') as f:
+        f = open(path, 'w')
+        try:
             f.write(test_string)
+        finally:
             f.close()
             pass
         line = pyficache.getline(path, 1, {'strip_nl': False})
         self.assertEqual(test_string, line,
                          "C'mon - a simple line test like this worked "
                          "before.")
-        with open(path, 'w') as f:
-            test_string = "Now is another time."
+        f = open(path, 'w')
+        test_string = "Now is another time."
+        try:
             f.write(test_string)
+        finally:
             f.close()
             pass
 
