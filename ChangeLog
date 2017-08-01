@@ -1,6 +1,6 @@
 2017-08-01  rocky <rocky@gnu.org>
 
-	* pyficache.py: Python 2.3 tolerance?
+	* ChangeLog, NEWS, pyficache.py: Python 2.3 tolerance?
 
 2017-08-01  rocky <rocky@gnu.org>
 
