@@ -1,6 +1,6 @@
 machine:
     python:
-        version: 2.5.6
+        version: 2.6.9
     environment:
         COMPILE: --compile
 
