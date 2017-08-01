@@ -53,7 +53,7 @@ Synopsis
 
 """
 
-import coverage, hashlib, linecache, os, re, sys
+import hashlib, linecache, os, re, sys
 
 from pygments import highlight
 from pygments.lexers import PythonLexer
@@ -460,12 +460,16 @@ def trace_line_numbers(filename, reload_on_change=False):
     if not fullname: return None
     e = file_cache[filename]
     if not e.line_numbers:
-        if hasattr(coverage.coverage, 'analyze_morf'):
-            e.line_numbers = coverage.the_coverage.analyze_morf(fullname)[1]
-        else:
-            cov = coverage.coverage()
-            cov._warn_no_data = False
-            e.line_numbers = cov.analysis(fullname)[1]
+        try:
+            import coverage
+            if hasattr(coverage.coverage, 'analyze_morf'):
+                e.line_numbers = coverage.the_coverage.analyze_morf(fullname)[1]
+            else:
+                cov = coverage.coverage()
+                cov._warn_no_data = False
+                e.line_numbers = cov.analysis(fullname)[1]
+                pass
+        except ImportError:
             pass
         pass
     return e.line_numbers

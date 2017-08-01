@@ -1,5 +1,14 @@
 2017-08-01  rocky <rocky@gnu.org>
 
+	* pyficache.py: Python 2.3 tolerance?
+
+2017-08-01  rocky <rocky@gnu.org>
+
+	* ChangeLog, NEWS, pyficache.py, test/test-pyficache.py: Python 2.4
+	tolerance
+
+2017-08-01  rocky <rocky@gnu.org>
+
 	* __pkginfo__.py: 2.4-2.5 needs an older version of pygments
 
 2017-08-01  rocky <rocky@gnu.org>
