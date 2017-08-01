@@ -463,7 +463,8 @@ def trace_line_numbers(filename, reload_on_change=False):
         try:
             import coverage
             if hasattr(coverage.coverage, 'analyze_morf'):
-                e.line_numbers = coverage.the_coverage.analyze_morf(fullname)[1]
+                e.line_numbers = coverage.\
+                                 the_coverage.analyze_morf(fullname)[1]
             else:
                 cov = coverage.coverage()
                 cov._warn_no_data = False
