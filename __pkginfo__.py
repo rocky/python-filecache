@@ -16,13 +16,15 @@
 
 import sys
 copyright   = '''
-Copyright (C) 2008-2010, 2012-2013, 2015-2016 Rocky Bernstein <rocky@gnu.org>.
+Copyright (C) 2008-2010, 2012-2013, 2015-2017 Rocky Bernstein <rocky@gnu.org>.
 '''
 classifiers =  ['Development Status :: 5 - Production/Stable',
                 'Intended Audience :: Developers',
                 'License :: OSI Approved :: GNU General Public License (GPL)',
                 'Programming Language :: Python',
                 'Topic :: Software Development :: Libraries :: Python Modules',
+                'Programming Language :: Python :: 2.4',
+                'Programming Language :: Python :: 2.5',
                 'Programming Language :: Python :: 2.6',
                 'Programming Language :: Python :: 2.7',
                 'Programming Language :: Python :: 3.0',
@@ -37,7 +39,7 @@ classifiers =  ['Development Status :: 5 - Production/Stable',
 author             = "Rocky Bernstein"
 author_email       = "rocky@gnu.org"
 ftp_url            = None
-install_requires   = ['coverage', 'pygments >= 2.0']
+install_requires   = ['coverage', 'pygments == 1.4']
 if sys.version_info[0] == 2 and sys.version_info[1] < 5:
     install_requires   += ['hashlib']
     pass
