@@ -1,10 +1,15 @@
-0.3.1 2013-11-12
+0.3.2 2017-07-03
+
+- Extend back to Python 2.4 via branch python-2.4
+- Small administrative changes
+
+0.3.1 2016-11-12
 
 - Be able to distinguish files without EOL
   Changes due to and thanks to John Vandenberg
   See https://github.com/coala/coala-bears/issues/815
 
-0.3.0 2013-11-29 John
+0.3.0 2015-11-29 John
 
 - Allow setting a pygments style and other pygments options.  Requires pygments 2.x
 - Some bugs fixed and doc updated.
