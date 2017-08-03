@@ -39,7 +39,7 @@ classifiers =  ['Development Status :: 5 - Production/Stable',
 author             = "Rocky Bernstein"
 author_email       = "rocky@gnu.org"
 ftp_url            = None
-install_requires   = ['coverage', 'pygments == 1.4']
+install_requires   = ['coverage==3.1', 'pygments == 1.4']
 if sys.version_info[0] == 2 and sys.version_info[1] < 5:
     install_requires   += ['hashlib']
     pass

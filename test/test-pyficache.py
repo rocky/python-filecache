@@ -185,7 +185,10 @@ class TestPyFiCache(unittest.TestCase):
             if 0 == len(line_nums):
                 self.assertEqual([], line_nums)
             else:
-                self.assertEqual([1], line_nums)
+                if sys.version_info[0:4] >= (2, 5):
+                    self.assertEqual([1], line_nums)
+                else:
+                    self.assertEqual([0], line_nums)
                 pass
         test_file = os.path.join(TEST_DIR, 'devious.py')
         line_nums = pyficache.trace_line_numbers(test_file)
