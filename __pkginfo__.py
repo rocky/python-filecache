@@ -14,7 +14,6 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """packaging information"""
 
-import sys
 copyright   = '''
 Copyright (C) 2008-2010, 2012-2013, 2015-2017 Rocky Bernstein <rocky@gnu.org>.
 '''
@@ -40,9 +39,7 @@ author             = "Rocky Bernstein"
 author_email       = "rocky@gnu.org"
 ftp_url            = None
 install_requires   = ['coverage==3.1', 'pygments == 1.4']
-if sys.version_info[0] == 2 and sys.version_info[1] < 5:
-    install_requires   += ['hashlib']
-    pass
+install_requires   += ['hashlib']
 
 license            = 'GPL'
 mailing_list       = None

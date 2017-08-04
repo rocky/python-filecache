@@ -1,3 +1,44 @@
+2017-08-03  rocky <rocky@gnu.org>
+
+	* requirements.txt: Try to fix up appveyor
+
+2017-08-03  rocky <rocky@gnu.org>
+
+	* : commit 2cc86230081a061a94b5a9778ac4bfc2dbdbb62c Author: rocky
+	<rocky@gnu.org> Date:   Thu Aug 3 04:00:04 2017 -0400
+
+2017-08-02  rocky <rocky@gnu.org>
+
+	* __pkginfo__.py: Bump copyright
+
+2017-08-01  rocky <rocky@gnu.org>
+
+	* test/test-pyficache.py: Python 2.4 compatibility
+
+2017-08-01  rocky <rocky@gnu.org>
+
+	* circle.yml: Try circle with 2.6.9
+
+2017-08-01  rocky <rocky@gnu.org>
+
+	* circle.yml: Let's see if Circle can do Python 2.5
+
+2017-08-01  rocky <rocky@gnu.org>
+
+	* .travis.yml: Apparently travis can't handle 2.4 or 2.5
+
+2017-08-01  rocky <rocky@gnu.org>
+
+	* .travis.yml: Limit python-2.4 branch to 2.4,2.5 testing
+
+2017-08-01  rocky <rocky@gnu.org>
+
+	* pyficache.py: Stupid lint stuff
+
+2017-08-01  rocky <rocky@gnu.org>
+
+	* ChangeLog: Get ready for 2.4-2.5 release of 0.3.1
+
 2017-08-01  rocky <rocky@gnu.org>
 
 	* ChangeLog, NEWS, pyficache.py: Python 2.3 tolerance?

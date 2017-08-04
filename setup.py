@@ -6,9 +6,9 @@ This gets a bit of package info from __pkginfo__.py file
 """
 # Get the required package information
 from __pkginfo__ import \
-    author,           author_email,       classifiers,      ftp_url,      \
-    install_requires, license,            long_description, mailing_list, \
-    modname,          py_modules,                                         \
+    author,           author_email,       classifiers,          \
+    install_requires, license,            long_description,     \
+    modname,          py_modules,                               \
     short_desc,       VERSION, web, zip_safe
 
 __import__('pkg_resources')
