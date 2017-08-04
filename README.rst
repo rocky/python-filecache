@@ -71,8 +71,8 @@ Credits
 This is a port of the my Ruby linecache_ module which in turn is based
 on the Python linecache module.
 
-coverage_ provides the cool stuff to figure out lines where there
-statements.
+coverage_ provides the cool stuff to figure out the lines containing
+Python statements.
 
 .. |License| image:: https://img.shields.io/pypi/l/pyficache.svg
     :target: https://pypi.python.org/pypi/pyfiecache
