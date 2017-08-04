@@ -21,7 +21,7 @@ source lines.
 
 A file path can be remapped to another path. This is useful for
 example when debugging remotely and the remote file path may be
-different from the path on a local filesystem. In the `trepan <https://pypi.python.org/pypi/trepan>`_
+different from the path on a local filesystem. In the `trepan2 <https://pypi.python.org/pypi/trepan2>`_
 `debugger <https://pypi.python.org/pypi/trepan3k>`_, *eval* and *exec* strings are
 saved in a temporary file and then the pseudo-filename `<string>` is
 remapped to that temporary file name.
@@ -57,7 +57,7 @@ Summary
     assert None, pyficache.remove_remap_file('another-name')
 
     # Clear cache for __file__
-    pyficache.clear_file_cache(__file__)
+     pyficache.clear_file_cache(__file__)
 
     # Clear all cached files.
     pyficache.clear_file_cache()
@@ -74,18 +74,11 @@ on the Python linecache module.
 coverage_ provides the cool stuff to figure out lines where there
 statements.
 
-Other stuff
------------
-
-Author:   Rocky Bernstein <rockyb@rubyforge.net>
-License:  Copyright (c) 2009, 2015, 2016 Rocky Bernstein. Released under the GNU GPL 3 license
-
 .. |License| image:: https://img.shields.io/pypi/l/pyficache.svg
     :target: https://pypi.python.org/pypi/pyfiecache
     :alt: License
 .. _coverage: http://nedbatchelder.com/code/coverage/
 .. _linecache: https://rubygems.org/gems/linecache
-.. _trepan: :target https://pypi.python.org/pypi/trepan
 
 .. |Downloads| image:: https://pypip.in/download/pyficache/badge.svg
 .. |Linux Build Status| image:: https://travis-ci.org/rocky/python-filecache.svg
