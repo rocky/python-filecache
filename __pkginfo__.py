@@ -13,6 +13,7 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """packaging information"""
+import sys
 
 copyright   = '''
 Copyright (C) 2008-2010, 2012-2013, 2015-2017 Rocky Bernstein <rocky@gnu.org>.
@@ -34,11 +35,19 @@ classifiers =  ['Development Status :: 5 - Production/Stable',
                 'Programming Language :: Python :: 3.5 ',
                 ]
 
+coverage_version = ''
+pygments_version = '>= 2.0'
+SYS_VERSION = sys.version_info[0:2]
+if (3, 0) <= SYS_VERSION == (3, 2):
+    pygments_version = '<= 1.6'
+    coverage_version = '<= 3.7.1'
+
 # The rest in alphabetic order
 author             = "Rocky Bernstein"
 author_email       = "rocky@gnu.org"
 ftp_url            = None
-install_requires   = ['coverage', 'pygments >= 2.0']
+install_requires   = ['coverage' + coverage_version,
+                      'pygments ' + pygments_version]
 
 license            = 'GPL'
 mailing_list       = None
