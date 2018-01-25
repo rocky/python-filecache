@@ -187,10 +187,11 @@ RemapLineEntry = namedtuple("RemapLineEntry", 'mapped_path from_to_pairs')
 # of mapped_file.py since there is nothing to indicate contrary and since that
 # line exists in mapped_file.
 
-# Note that this scheme allows the possibility that several co_filenames can be mapped to a single
-# file. So a templating system could break a single template into several Python files and we
-# can track that. But we not the other way around. That is we don't support tracking
-# several templated files which got built into a single Python module.
+# Note that this scheme allows the possibility that several co_filenames can be
+# mapped to a single file. So a templating system could break a single template
+# into several Python files and we can track that. But we not the other way
+# around. That is we don't support tracking several templated files which got
+# built into a single Python module.
 
 # At such time as the need arises, we will work this.
 
