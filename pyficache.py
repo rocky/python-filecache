@@ -491,7 +491,7 @@ def stat(filename, use_cache_only=False):
     we will try to fetch the file if it is not cached."""
     filename = pyc2py(filename)
     if filename not in file_cache:
-        if not use_cache_only: cache(filename)
+        if not use_cache_only: cache_file(filename)
         if filename not in file_cache:
             return None
         pass
