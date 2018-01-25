@@ -306,27 +306,6 @@ def cache_file(filename, reload_on_change=False, opts=default_opts):
     else: return None
     return  # Not reached
 
-def cache(filename, reload_on_change=False):
-    """Older routine - for compability.  Cache filename if it is not
-    already cached.  Return the expanded filename for it in the cache
-    or None if we ca not find the file."""
-    if filename in file_cache:
-        if reload_on_change: checkcache(filename)
-        pass
-    else:
-        update_cache(filename, {'reload_on_change': True})
-        pass
-    orig_filename = filename
-    filename = pyc2py(filename)
-    if filename in file_cache:
-        if orig_filename != filename:
-            remap_file(orig_filename, file_cache[filename].path)
-            pass
-        return file_cache[filename].path
-    else:
-        return None
-    pass
-
 def is_cached(file_or_script):
     """Return True if file_or_script is cached"""
     if isinstance(file_or_script, str):
