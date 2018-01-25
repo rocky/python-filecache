@@ -724,7 +724,7 @@ if __name__ == '__main__':
     mapped_path = 'test2'
     start_line = 10
     start_mapped = 6
-    remap_file_lines(orig_path, mapped_path, (start_line, start_mapped))
+    remap_file_lines(orig_path, mapped_path, ((start_line, start_mapped),))
     for l in (1,):
         line = getline(mapped_path, l+start_mapped)
     print("Remapped %s line %d should be line %d of %s. line is:\n%s"
