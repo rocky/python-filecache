@@ -293,7 +293,6 @@ def cache_file(filename, reload_on_change=False, opts=default_opts):
     """Cache filename if it is not already cached.
     Return the expanded filename for it in the cache
     or nil if we can not find the file."""
-    global file_cache
     filename = pyc2py(filename)
     if filename in file_cache:
         if reload_on_change: checkcache(filename)
@@ -311,7 +310,6 @@ def cache(filename, reload_on_change=False):
     """Older routine - for compability.  Cache filename if it is not
     already cached.  Return the expanded filename for it in the cache
     or None if we ca not find the file."""
-    global file_cache
     if filename in file_cache:
         if reload_on_change: checkcache(filename)
         pass
