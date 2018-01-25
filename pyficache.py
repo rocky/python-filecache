@@ -446,7 +446,7 @@ def sha1(filename):
     """Return SHA1 of filename."""
     filename = unmap_file(filename)
     if filename not in file_cache:
-        cache(filename)
+        cache_file(filename)
         if filename not in file_cache:
             return None
         pass
@@ -464,7 +464,7 @@ def size(filename, use_cache_only=False):
     we'll try to fetch the file if it is not cached."""
     filename = unmap_file(filename)
     if filename not in file_cache:
-        if not use_cache_only: cache(filename)
+        if not use_cache_only: cache_file(filename)
         if filename not in file_cache:
             return None
         pass
@@ -502,7 +502,7 @@ def trace_line_numbers(filename, reload_on_change=False):
     The list will contain an entry for each distinct line event call
     so it is possible (and possibly useful) for a line number appear more
     than once."""
-    fullname = cache(filename, reload_on_change)
+    fullname = cache_file(filename, reload_on_change)
     if not fullname: return None
     e = file_cache[filename]
     if not e.line_numbers:

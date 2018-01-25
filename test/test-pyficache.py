@@ -166,7 +166,7 @@ class TestPyFiCache(unittest.TestCase):
                          ("path for %s should be None - "
                           "just cleared cache." %
                          __file__))
-        path = pyficache.cache(__file__)
+        path = pyficache.cache_file(__file__)
         self.assertTrue(path, "should have cached path for %s" % __file__)
         self.assertEqual(path, pyficache.path(__file__),
                          ("path %s of %s should be the same as we got "
