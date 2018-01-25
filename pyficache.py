@@ -112,6 +112,7 @@ class LineCacheInfo:
         return
     pass
 
+
 # The file cache. The key is a name as would be given by co_filename
 # or __file__. The value is a LineCacheInfo object.
 file_cache = {}
@@ -137,9 +138,11 @@ file2file_remap = {}
 # keep the associations between the line numbers in the code
 # with line numbers is the recreated source.
 #
-# The key of `file2file_remap_lines` is the tha name of the path as Python
+# The key of `file2file_remap_lines` is the  name of the path as Python
 # sees it. For example it would be the name that would be found inside a code
-# object co_filename. The value of the dictionary is a RemapLineEntry described below
+# object co_filename. The value of the dictionary is a RemapLineEntry
+# described below
+
 file2file_remap_lines = {}
 
 # `RemapLineEntry` is an entry in file2file_remap_lines with fields:
@@ -150,9 +153,9 @@ file2file_remap_lines = {}
 #
 # * `from_to_pairs` is a tuple of integer pairs. For each pair, the first
 #    item is a line number in as Python sees it. The second item is the
-#    line number in corresponding mapped_path. The the first entry of the pair
-#    should always increase from the previous value. The second entry doesn't
-#    have to, although in practice it will.
+#    line number in corresponding mapped_path. The the first entry of the
+#    pair should always increase from the previous value. The second entry
+#    doesn't have to, although in practice it will.
 
 RemapLineEntry = namedtuple("RemapLineEntry", 'mapped_path from_to_pairs')
 
@@ -396,6 +399,7 @@ def highlight_array(array, trailing_nl=True,
     lines = [ line + "\n" for line in fmt_array ]
     if not trailing_nl: lines[-1] = lines[-1].rstrip('\n')
     return lines
+
 
 python_lexer = PythonLexer()
 
@@ -691,6 +695,7 @@ def update_cache(filename, opts=default_opts, module_globals=None):
     file2file_remap[path] = filename
     return True
 
+
 # example usage
 if __name__ == '__main__':
     def yes_no(var):
@@ -746,4 +751,4 @@ if __name__ == '__main__':
         line = getline(mapped_path, l+start_mapped)
     print("Remapped %s line %d should be line %d of %s. line is:\n%s"
           % (mapped_path, start_mapped+l, start_line+l, orig_path, line))
-    print("XXX", file2file_remap_lines)
+    # print("XXX", file2file_remap_lines)
