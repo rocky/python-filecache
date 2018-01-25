@@ -132,11 +132,10 @@ class TestPyFiCache(unittest.TestCase):
         return
 
     def test_remap_lines(self):
-        pyficache.remap_file_lines(__file__, 'test2',
-                                   list(range(10, 12)), 6)
+        pyficache.remap_file_lines(__file__, 'test2', ((6, 10),))
 
         line5 = pyficache.getline(__file__, 5)
-        pyficache.remap_file_lines(__file__, 'test2', 9, 5)
+        pyficache.remap_file_lines(__file__, 'test2', ((5, 9),))
         rline9  = pyficache.getline('test2', 9)
         self.assertEqual(line5, rline9,
                  'lines should be the same via remap_file_line - '
@@ -155,7 +154,7 @@ class TestPyFiCache(unittest.TestCase):
                          'range')
 
         line8 = pyficache.getline(__file__, 8)
-        pyficache.remap_file_lines(__file__, None, 20, 8)
+        pyficache.remap_file_lines(__file__, __file__, ((8, 20),))
         rline20 = pyficache.getline(__file__, 20)
         self.assertEqual(line8, rline20,
                          'lines should be the same via remap_file_line - '

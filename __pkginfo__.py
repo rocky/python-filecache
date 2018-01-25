@@ -16,7 +16,7 @@
 import sys
 
 copyright   = '''
-Copyright (C) 2008-2010, 2012-2013, 2015-2017 Rocky Bernstein <rocky@gnu.org>.
+Copyright (C) 2008-2010, 2012-2013, 2015-2018 Rocky Bernstein <rocky@gnu.org>.
 '''
 classifiers =  ['Development Status :: 5 - Production/Stable',
                 'Intended Audience :: Developers',
@@ -33,6 +33,7 @@ classifiers =  ['Development Status :: 5 - Production/Stable',
                 'Programming Language :: Python :: 3.3',
                 'Programming Language :: Python :: 3.4',
                 'Programming Language :: Python :: 3.5 ',
+                'Programming Language :: Python :: 3.6 ',
                 ]
 
 coverage_version = ''
