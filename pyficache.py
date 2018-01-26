@@ -159,7 +159,7 @@ file2file_remap_lines = {}
 
 RemapLineEntry = namedtuple("RemapLineEntry", 'mapped_path from_to_pairs')
 
-# Example. File "foo.template" contains:
+# Example. File "unmapped.template" contains:
 
 #  x = 1; y = 2       # line 1
 #  # a comment        # line 2
