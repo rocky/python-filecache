@@ -528,7 +528,7 @@ def unmap_file(filename):
     # FIXME: this is wrong?
     return file2file_remap.get(filename, filename)
 
-def unmap_file_line(filename, line_number):
+def unmap_file_line(filename, line_number, reverse=False):
     remap_line_entry = file2file_remap_lines.get(filename)
     mapped_line_number = line_number
     if remap_line_entry:
@@ -545,6 +545,8 @@ def unmap_file_line(filename, line_number):
         # entry for line numbers greater than it.
         # Find the closest mapped line number equal or before line_number.
         for t in remap_line_entry.from_to_pairs + ((large_int, line_max),):
+            if reverse:
+                t = list(reversed(t))
             if t[1] == line_number:
                 mapped_line_number = t[0]
                 break
