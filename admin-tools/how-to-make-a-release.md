@@ -18,7 +18,7 @@ git pull
     $ make check
     $ git commit --amend .
     $ git push   # get CI testing going early
-    $ make check-full
+    $ make check
 
 # Make sure pyenv is running and check newer versions
 
