@@ -1,3 +1,69 @@
+2018-01-26  rocky <rocky@gnu.org>
+
+	* admin-tools/check-newer-versions.sh,
+	admin-tools/check-older-versions.sh,
+	admin-tools/how-to-make-a-release.md,
+	admin-tools/make-dist-newer.sh, admin-tools/make-dist-older.sh,
+	admin-tools/pyenv-newer-versions, admin-tools/pyenv-older-versions,
+	admin-tools/pyenv-oldest-versions, admin-tools/setup-master.sh,
+	admin-tools/setup-python-2.4.sh: Administrivia on how to build a
+	release
+
+2018-01-26  rocky <rocky@gnu.org>
+
+	* pyficache.py: Add reverse option on unmap_file_line...  To allow retriving line number in the other direction.
+
+2018-01-25  rocky <rocky@gnu.org>
+
+	* pyficache.py, test/mapped.py, test/test-remap.py,
+	test/unmapped.py: Add file remapping test
+
+2018-01-25  rocky <rocky@gnu.org>
+
+	* pyficache.py: Small demo datatype fix
+
+2018-01-25  rocky <rocky@gnu.org>
+
+	* pyficache.py: Fix breakage from commit before last
+
+2018-01-25  rocky <rocky@gnu.org>
+
+	* pyficache.py, test/test-pyficache.py: Fix breakage from last
+	commit
+
+2018-01-25  rocky <rocky@gnu.org>
+
+	* pyficache.py: Remove older compatability routine "cache()"
+
+2018-01-25  rocky <rocky@gnu.org>
+
+	* pyficache.py: Remove some unused globals
+
+2018-01-25  rocky <rocky@gnu.org>
+
+	* pyficache.py: More lint
+
+2018-01-25  rocky <rocky@gnu.org>
+
+	* pyficache.py, tox.ini: Correct lint errors.
+
+2018-01-25  rocky <rocky@gnu.org>
+
+	* VERSION.py, __pkginfo__.py, pyficache.py, test/test-pyficache.py: 
+	Reworked file/line mappings...  1st cut
+
+2017-08-11  rocky <rocky@gnu.org>
+
+	* __pkginfo__.py: Python 3.2 tolerance
+
+2017-08-03  rocky <rocky@gnu.org>
+
+	* README.rst: README.rst grammar tweak
+
+2017-08-03  rocky <rocky@gnu.org>
+
+	* NEWS, README.rst: RsT format bugs; Merge 2.4 NEWS
+
 2017-08-03  rocky <rocky@gnu.org>
 
 	* ChangeLog, NEWS, VERSION.py, __pkginfo__.py, setup.py: Get ready
