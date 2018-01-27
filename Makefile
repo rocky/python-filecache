@@ -16,7 +16,7 @@ all: check
 
 #: style and warning check
 lint:
-	flake8 pyficache.py
+	flake8 pyficache/pyficache.py
 
 PHONY=check clean dist distclean test rmChangeLog
 
