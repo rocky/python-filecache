@@ -66,22 +66,16 @@ class TestPyFiCache(unittest.TestCase):
         (fd, path) = mkstemp(prefix="pyfcache", suffix='.txt')
         test_string = "Now is the time.\n"
         f = open(path, 'w')
-        try:
-            f.write(test_string)
-        finally:
-            f.close()
-            pass
+        f.write(test_string)
+        f.close()
         line = pyficache.getline(path, 1, {'strip_nl': False})
         self.assertEqual(test_string, line,
                          "C'mon - a simple line test like this worked "
                          "before.")
         f = open(path, 'w')
         test_string = "Now is another time."
-        try:
-            f.write(test_string)
-        finally:
-            f.close()
-            pass
+        f.write(test_string)
+        f.close()
 
         pyficache.checkcache()
         line = pyficache.getline(path, 1)
@@ -170,7 +164,6 @@ class TestPyFiCache(unittest.TestCase):
                           "just cleared cache." %
                          __file__))
         path = pyficache.cache_file(__file__)
-        from trepan.api import debug; debug()
         self.assertTrue(path, "should have cached path for %s" % __file__)
         self.assertEqual(path, pyficache.path(__file__),
                          ("path %s of %s should be the same as we got "
@@ -181,35 +174,30 @@ class TestPyFiCache(unittest.TestCase):
     def test_trace_line_numbers(self):
         test_file = os.path.join(TEST_DIR, 'short-file')
         line_nums = pyficache.trace_line_numbers(test_file)
-        if line_nums:
-            if 0 == len(line_nums):
-                self.assertEqual([], line_nums)
-            else:
-                if sys.version_info[0:4] >= (2, 5):
-                    self.assertEqual([1], line_nums)
-                else:
-                    self.assertEqual([0], line_nums)
-                pass
+        if 0 == len(line_nums):
+            self.assertEqual([], line_nums)
+        else:
+            self.assertEqual([0], line_nums)
+            pass
         test_file = os.path.join(TEST_DIR, 'devious.py')
-        line_nums = pyficache.trace_line_numbers(test_file)
-        if line_nums:
-            self.assertEqual([2, 5, 7, 9], line_nums)
+        self.assertEqual([2, 5, 7, 9],
+                         pyficache.trace_line_numbers(test_file))
         return
 
-    def test_universal_new_lines(self):
-        test_file = os.path.join(TEST_DIR, 'dos-file')
-        lines = pyficache.getlines(test_file)
-        self.assertEqual(lines, ['Foo\n', 'bar\n', 'baz\n'])
-        self.assertTrue(test_file in pyficache.file_cache)
-        file_obj = pyficache.file_cache[test_file]
-        self.assertEqual('\r\n', file_obj.eols)
+    # def test_universal_new_lines(self):
+    #     test_file = os.path.join(TEST_DIR, 'dos-file')
+    #     lines = pyficache.getlines(test_file)
+    #     self.assertEqual(lines, ['Foo\n', 'bar\n', 'baz\n'])
+    #     self.assertTrue(test_file in pyficache.file_cache)
+    #     file_obj = pyficache.file_cache[test_file]
+    #     self.assertEqual('\r\n', file_obj.eols)
 
-        test_file = os.path.join(TEST_DIR, 'mixed-eol-file')
-        lines = pyficache.getlines(test_file)
-        self.assertEqual(lines, ['Unix\n', 'DOS\n', 'unix\n'])
-        self.assertTrue(test_file in pyficache.file_cache)
-        file_obj = pyficache.file_cache[test_file]
-        self.assertEqual(('\n', '\r\n'), file_obj.eols)
+    #     test_file = os.path.join(TEST_DIR, 'mixed-eol-file')
+    #     lines = pyficache.getlines(test_file)
+    #     self.assertEqual(lines, ['Unix\n', 'DOS\n', 'unix\n'])
+    #     self.assertTrue(test_file in pyficache.file_cache)
+    #     file_obj = pyficache.file_cache[test_file]
+    #     self.assertEqual(('\n', '\r\n'), file_obj.eols)
 
     def test_sha1(self):
         global TEST_DIR
