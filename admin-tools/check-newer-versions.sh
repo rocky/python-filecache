@@ -16,6 +16,7 @@ if ! source ./setup-master.sh ; then
 fi
 cd ..
 for version in $PYVERSIONS; do
+    echo "============ $version ============"
     if ! pyenv local $version ; then
 	exit $?
     fi
