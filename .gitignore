@@ -1,8 +1,8 @@
 /*.bak
 /*.egg
 /*.egg-info
-/*.pyc
-/*~
+*.pyc
+*~
 /.coverage
 /.eggs
 /.python-version
@@ -10,4 +10,5 @@
 /how-to-make-a-release.txt
 __pycache__
 build
+ChangeLog
 dist

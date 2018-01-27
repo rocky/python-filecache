@@ -13,9 +13,10 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """packaging information"""
+import sys
 
 copyright   = '''
-Copyright (C) 2008-2010, 2012-2013, 2015-2017 Rocky Bernstein <rocky@gnu.org>.
+Copyright (C) 2008-2010, 2012-2013, 2015-2018 Rocky Bernstein <rocky@gnu.org>.
 '''
 classifiers =  ['Development Status :: 5 - Production/Stable',
                 'Intended Audience :: Developers',
@@ -32,7 +33,11 @@ classifiers =  ['Development Status :: 5 - Production/Stable',
                 'Programming Language :: Python :: 3.3',
                 'Programming Language :: Python :: 3.4',
                 'Programming Language :: Python :: 3.5 ',
+                'Programming Language :: Python :: 3.6 ',
                 ]
+
+coverage_version = ''
+pygments_version = '>= 2.0'
 
 # The rest in alphabetic order
 author             = "Rocky Bernstein"
@@ -52,8 +57,8 @@ short_desc = \
 # VERSION.py sets variable VERSION.
 import os.path
 exec(compile(open(os.path.join(os.path.dirname(__file__),
-                               'VERSION.py')).read(),
-             os.path.join(os.path.dirname(__file__), 'VERSION.py'), 'exec'))
+                               'pyficache/VERSION.py')).read(),
+             os.path.join(os.path.dirname(__file__), 'pyficache/VERSION.py'), 'exec'))
 
 web = 'http://github.com/rocky/python-filecache'
 
