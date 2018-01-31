@@ -43,7 +43,7 @@ pygments_version = '>= 2.0'
 author             = "Rocky Bernstein"
 author_email       = "rocky@gnu.org"
 ftp_url            = None
-install_requires   = ['coverage==3.1', 'pygments == 1.4']
+install_requires   = ['coverage==3.4', 'pygments == 1.4']
 install_requires   += ['hashlib']
 
 license            = 'GPL'
