@@ -37,7 +37,7 @@ classifiers =  ['Development Status :: 5 - Production/Stable',
                 ]
 
 coverage_version = ''
-pygments_version = '>= 2.0'
+pygments_version = '>= 1.4'
 SYS_VERSION = sys.version_info[0:2]
 if (3, 0) <= SYS_VERSION == (3, 2):
     pygments_version = '<= 1.6'
