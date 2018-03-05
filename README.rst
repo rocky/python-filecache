@@ -85,7 +85,6 @@ Python statements.
    :target: https://travis-ci.org/rocky/python-filecache/
 .. |Windows Build status| image:: https://img.shields.io/appveyor/ci/rocky/python-filecache/master.svg?label=windows%20build
    :target: https://ci.appveyor.com/project/rocky/python-filecache/branch/master
-.. |Latest Version| image:: https://img.shields.io/pypi/v/pyficache.svg?label=version
    :target: https://pypi.python.org/pypi/pyficache/
 .. |Supported Python versions| image:: https://img.shields.io/pypi/pyversions/pyficache.svg
    :target: https://pypi.python.org/pypi/pyficache/
