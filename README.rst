@@ -80,14 +80,14 @@ Python statements.
 .. _coverage: http://nedbatchelder.com/code/coverage/
 .. _linecache: https://rubygems.org/gems/linecache
 
-.. |Downloads| image:: https://pypip.in/download/pyficache/badge.svg
+.. |Downloads| image:: https://img.shields.io/pypi/dm/pyficache.svg
 .. |Linux Build Status| image:: https://travis-ci.org/rocky/python-filecache.svg
    :target: https://travis-ci.org/rocky/python-filecache/
 .. |Windows Build status| image:: https://img.shields.io/appveyor/ci/rocky/python-filecache/master.svg?label=windows%20build
    :target: https://ci.appveyor.com/project/rocky/python-filecache/branch/master
-.. |Latest Version| image:: https://pypip.in/version/pyficache/badge.svg?text=version
+.. |Latest Version| image:: https://img.shields.io/pypi/v/pyficache.svg?label=version
    :target: https://pypi.python.org/pypi/pyficache/
-.. |Supported Python versions| image:: https://pypip.in/py_versions/pyficache/badge.svg
+.. |Supported Python versions| image:: https://img.shields.io/pypi/pyversions/pyficache.svg
    :target: https://pypi.python.org/pypi/pyficache/
 .. |Supported Python Versions| image:: https://img.shields.io/pypi/pyversions/pyficache.svg
    :target: https://pypi.python.org/pypi/pyficache/
