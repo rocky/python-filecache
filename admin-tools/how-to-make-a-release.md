@@ -2,8 +2,8 @@ git pull
 
 # Change version in VERSION.py
 
-    $ emacs VERSION.py
-    $ source VERSION.py
+    $ emacs pyficache/VERSION.py
+    $ source pyficache/VERSION.py
     $ echo $VERSION
     $ git commit -m"Get ready for release $VERSION" .
 

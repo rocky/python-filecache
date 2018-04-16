@@ -13,7 +13,6 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """packaging information"""
-import sys
 
 copyright   = '''
 Copyright (C) 2008-2010, 2012-2013, 2015-2018 Rocky Bernstein <rocky@gnu.org>.
@@ -36,14 +35,11 @@ classifiers =  ['Development Status :: 5 - Production/Stable',
                 'Programming Language :: Python :: 3.6 ',
                 ]
 
-coverage_version = ''
-pygments_version = '>= 2.0'
-
 # The rest in alphabetic order
 author             = "Rocky Bernstein"
 author_email       = "rocky@gnu.org"
 ftp_url            = None
-install_requires   = ['coverage==3.4', 'pygments == 1.4']
+install_requires   = ['coverage==3.4', 'pygments==1.4']
 install_requires   += ['hashlib']
 
 license            = 'GPL'
