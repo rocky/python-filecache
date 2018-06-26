@@ -2,12 +2,14 @@
 'Unit test for pyficache'
 import os, sys, unittest
 from tempfile import mkstemp
-top_builddir = os.path.join(os.path.dirname(__file__), '..')
-if top_builddir[-1] != os.path.sep:
-    top_builddir += os.path.sep
-sys.path.insert(0, top_builddir)
 
-TEST_DIR = os.path.dirname(__file__)
+import os.path as osp
+TEST_DIR = osp.abspath(osp.dirname(__file__))
+
+top_builddir = osp.join(TEST_DIR, '..')
+if top_builddir[-1] != osp.sep:
+    top_builddir += osp.sep
+sys.path.insert(0, top_builddir)
 
 import pyficache
 from pyficache import PYVER, PYTHON3
@@ -191,6 +193,9 @@ class TestPyFiCache(unittest.TestCase):
     #     self.assertTrue(test_file in pyficache.file_cache)
     #     file_obj = pyficache.file_cache[test_file]
     #     self.assertEqual('\r\n', file_obj.eols)
+    #     # self.assertTrue(test_file in pyficache.file_cache)
+    #     file_obj = pyficache.file_cache[test_file]
+    #     # self.assertEqual('\r\n', file_obj.eols)
 
     #     test_file = os.path.join(TEST_DIR, 'mixed-eol-file')
     #     lines = pyficache.getlines(test_file)

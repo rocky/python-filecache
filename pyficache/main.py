@@ -57,6 +57,8 @@ import hashlib, linecache, os, re, sys
 
 from pyficache.namedtuple24 import namedtuple
 
+from collections import namedtuple
+
 from pygments import highlight
 from pygments.lexers import PythonLexer
 from pygments.formatters import TerminalFormatter, Terminal256Formatter

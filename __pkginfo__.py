@@ -13,6 +13,7 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """packaging information"""
+import sys
 
 copyright   = '''
 Copyright (C) 2008-2010, 2012-2013, 2015-2018 Rocky Bernstein <rocky@gnu.org>.
@@ -35,12 +36,24 @@ classifiers =  ['Development Status :: 5 - Production/Stable',
                 'Programming Language :: Python :: 3.6 ',
                 ]
 
+coverage_version = ''
+pygments_version = '>= 1.4'
+SYS_VERSION = sys.version_info[0:2]
+if (3, 0) <= SYS_VERSION == (3, 2):
+    pygments_version = '<= 1.6'
+    coverage_version = '<= 3.7.1'
+
 # The rest in alphabetic order
 author             = "Rocky Bernstein"
 author_email       = "rocky@gnu.org"
 ftp_url            = None
+<<<<<<< HEAD
 install_requires   = ['coverage==3.4', 'pygments==1.4']
 install_requires   += ['hashlib']
+=======
+install_requires   = ['coverage' + coverage_version,
+                      'pygments ' + pygments_version]
+>>>>>>> master
 
 license            = 'GPL'
 mailing_list       = None
@@ -52,9 +65,9 @@ short_desc = \
 
 # VERSION.py sets variable VERSION.
 import os.path
-exec(compile(open(os.path.join(os.path.dirname(__file__),
-                               'pyficache/VERSION.py')).read(),
-             os.path.join(os.path.dirname(__file__), 'pyficache/VERSION.py'), 'exec'))
+exec(compile(open(os.path.join(os.path.dirname(__file__), 'pyficache',
+                               'version.py')).read(),
+             os.path.join(os.path.dirname(__file__), 'version.py'), 'exec'))
 
 web = 'http://github.com/rocky/python-filecache'
 

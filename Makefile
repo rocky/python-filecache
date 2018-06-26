@@ -9,7 +9,6 @@ PHONY=check check-short  clean dist distclean test lint
 
 GIT2CL ?= git2cl
 PYTHON ?= python
-PYTHON3 ?= python3
 
 #: the default target - same as running "check"
 all: check
