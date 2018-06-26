@@ -4,6 +4,11 @@ from __future__ import with_statement
 import os, sys, unittest
 from tempfile import mkstemp
 
+top_builddir = os.path.join(os.path.dirname(__file__), '..', 'pyficache')
+if top_builddir[-1] != os.path.sep:
+    top_builddir += os.path.sep
+sys.path.insert(0, top_builddir)
+
 TEST_DIR = os.path.dirname(__file__)
 
 import pyficache
