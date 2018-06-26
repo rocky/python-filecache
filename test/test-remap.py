@@ -2,12 +2,12 @@
 'Unit test for remapping lines pyficache'
 import os, re, sys, unittest
 
-top_builddir = os.path.join(os.path.dirname(__file__), '..', 'pyficache')
-if top_builddir[-1] != os.path.sep:
-    top_builddir += os.path.sep
+import os.path as osp
+TEST_DIR = osp.abspath(osp.dirname(__file__))
+top_builddir = osp.join(TEST_DIR, '..')
+if top_builddir[-1] != osp.sep:
+    top_builddir += osp.sep
 sys.path.insert(0, top_builddir)
-
-TEST_DIR = os.path.dirname(__file__)
 
 from pyficache import remap_file_lines, getline
 
