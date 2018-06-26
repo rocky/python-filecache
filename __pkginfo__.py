@@ -37,23 +37,14 @@ classifiers =  ['Development Status :: 5 - Production/Stable',
                 ]
 
 coverage_version = ''
-pygments_version = '>= 1.4'
 SYS_VERSION = sys.version_info[0:2]
-if (3, 0) <= SYS_VERSION == (3, 2):
-    pygments_version = '<= 1.6'
-    coverage_version = '<= 3.7.1'
 
 # The rest in alphabetic order
 author             = "Rocky Bernstein"
 author_email       = "rocky@gnu.org"
 ftp_url            = None
-<<<<<<< HEAD
 install_requires   = ['coverage==3.4', 'pygments==1.4']
 install_requires   += ['hashlib']
-=======
-install_requires   = ['coverage' + coverage_version,
-                      'pygments ' + pygments_version]
->>>>>>> master
 
 license            = 'GPL'
 mailing_list       = None

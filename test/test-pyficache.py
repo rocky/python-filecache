@@ -152,9 +152,9 @@ class TestPyFiCache(unittest.TestCase):
                          'lines should be the same via remap_file_line - '
                          'range')
 
-        line8 = pyficache.getline(__file__, 8)
-        pyficache.remap_file_lines(__file__, __file__, ((8, 20),))
-        rline20 = pyficache.getline(__file__, 20)
+        # line8 = pyficache.getline(__file__, 8)
+        # pyficache.remap_file_lines(__file__, __file__, ((8, 20),))
+        # rline20 = pyficache.getline(__file__, 20)
         # self.assertEqual(line8, rline20,
         #                  'lines should be the same via remap_file_line - '
         #                  'None file')
@@ -167,10 +167,10 @@ class TestPyFiCache(unittest.TestCase):
                          __file__))
         path = pyficache.cache_file(__file__)
         self.assertTrue(path, "should have cached path for %s" % __file__)
-        # self.assertEqual(path, pyficache.path(__file__),
-        #                  ("path %s of %s should be the same as we got "
-        #                   "before (%s)" %
-        #                  (path, __file__, pyficache.path(__file__))))
+        self.assertEqual(path, pyficache.path(__file__),
+                         ("path %s of %s should be the same as we got "
+                          "before (%s)" %
+                         (path, __file__, pyficache.path(__file__))))
         return
 
     def test_trace_line_numbers(self):
