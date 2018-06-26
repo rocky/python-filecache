@@ -60,9 +60,9 @@ short_desc = \
 
 # VERSION.py sets variable VERSION.
 import os.path
-exec(compile(open(os.path.join(os.path.dirname(__file__),
-                               'VERSION.py')).read(),
-             os.path.join(os.path.dirname(__file__), 'VERSION.py'), 'exec'))
+exec(compile(open(os.path.join(os.path.dirname(__file__), 'pyficache',
+                               'version.py')).read(),
+             os.path.join(os.path.dirname(__file__), 'version.py'), 'exec'))
 
 web = 'http://github.com/rocky/python-filecache'
 
