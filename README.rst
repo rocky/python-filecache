@@ -1,4 +1,4 @@
-|Linux Build Status| |Windows Build Status| |License| |Supported Python Versions|
+|Linux Build Status| |License|
 
 Synopsis
 --------
@@ -83,10 +83,3 @@ Python statements.
 .. |Downloads| image:: https://img.shields.io/pypi/dm/pyficache.svg
 .. |Linux Build Status| image:: https://travis-ci.org/rocky/python-filecache.svg
    :target: https://travis-ci.org/rocky/python-filecache/
-.. |Windows Build status| image:: https://img.shields.io/appveyor/ci/rocky/python-filecache/master.svg?label=windows%20build
-   :target: https://ci.appveyor.com/project/rocky/python-filecache/branch/master
-   :target: https://pypi.python.org/pypi/pyficache/
-.. |Supported Python versions| image:: https://img.shields.io/pypi/pyversions/pyficache.svg
-   :target: https://pypi.python.org/pypi/pyficache/
-.. |Supported Python Versions| image:: https://img.shields.io/pypi/pyversions/pyficache.svg
-   :target: https://pypi.python.org/pypi/pyficache/
