@@ -61,7 +61,9 @@ from pygments import highlight
 from pygments.lexers import PythonLexer
 from pygments.formatters import TerminalFormatter, Terminal256Formatter
 
-PYTHON3 = (sys.version_info >= (3, 0))
+from xdis import PYTHON3
+from pyficache.line_numbers import code_linenumbers_in_file
+
 PYVER = "%s%s" % sys.version_info[0:2]
 
 if PYTHON3:
@@ -71,14 +73,15 @@ else:
 
 
 default_opts = {
-    'reload_on_change'    : False,   # Check if file has changed since last
-                                     # time
-    'use_linecache_lines' : True,
-    'strip_nl'            : True,    # Strip trailing \n on line returned
-    'output'              : 'plain'  # To we want plain output?
-                                     # Set to 'terminal'
-                                     # for terminal syntax-colored output
-    }
+    "reload_on_change": False,  # Check if file has changed since last
+    # time
+    "use_linecache_lines": True,
+    "strip_nl": True,  # Strip trailing \n on line returned
+    "output": "plain"  # To we want plain output?
+    # Set to 'terminal'
+    # for terminal syntax-colored output
+}
+
 
 def get_option(key, options):
     global default_opts
@@ -88,8 +91,10 @@ def get_option(key, options):
         return options[key]
     return None  # Not reached
 
+
 def has_trailing_nl(string):
-    return len(string) > 0 and '\n' == string[-1]
+    return len(string) > 0 and "\n" == string[-1]
+
 
 def pyc2py(filename):
     """
@@ -97,12 +102,15 @@ def pyc2py(filename):
     """
     if re.match(".*py[co]$", filename):
         if PYTHON3:
-            return re.sub(r'(.*)__pycache__/(.+)\.cpython-%s.py[co]$' % PYVER,
-                          '\\1\\2.py',
-                          filename)
+            return re.sub(
+                r"(.*)__pycache__/(.+)\.cpython-%s.py[co]$" % PYVER,
+                "\\1\\2.py",
+                filename,
+            )
         else:
             return filename[:-1]
     return filename
+
 
 class LineCacheInfo:
     def __init__(self, stat, line_numbers, lines, path, sha1, eols=None):
@@ -110,6 +118,7 @@ class LineCacheInfo:
         self.line_numbers = line_numbers
         self.eols = eols
         return
+
     pass
 
 
@@ -157,7 +166,7 @@ file2file_remap_lines = {}
 #    pair should always increase from the previous value. The second entry
 #    doesn't have to, although in practice it will.
 
-RemapLineEntry = namedtuple("RemapLineEntry", 'mapped_path from_to_pairs')
+RemapLineEntry = namedtuple("RemapLineEntry", "mapped_path from_to_pairs")
 
 # Example. File "unmapped.template" contains:
 
@@ -195,6 +204,7 @@ RemapLineEntry = namedtuple("RemapLineEntry", 'mapped_path from_to_pairs')
 
 # At such time as the need arises, we will work this.
 
+
 def clear_file_cache(filename=None):
     """Clear the file cache. If no filename is given clear it entirely.
     if a filename is given, clear just that filename."""
@@ -210,6 +220,7 @@ def clear_file_cache(filename=None):
         pass
     return
 
+
 def clear_file_format_cache():
     """Remove syntax-formatted lines in the cache. Use this
     when you change the Pygments syntax or Token formatting
@@ -217,15 +228,18 @@ def clear_file_format_cache():
     syntax marked."""
     for fname, cache_info in file_cache.items():
         for format, lines in cache_info.lines.items():
-            if 'plain' == format: continue
+            if "plain" == format:
+                continue
             file_cache[fname].lines[format] = None
             pass
         pass
     pass
 
+
 def cached_files():
     """Return an array of cached file names"""
     return list(file_cache.keys())
+
 
 def checkcache(filename=None, opts=False):
     """Discard cache entries that are out of date. If *filename* is *None*
@@ -235,7 +249,7 @@ def checkcache(filename=None, opts=False):
     not found cached."""
 
     if isinstance(opts, dict):
-        use_linecache_lines = opts['use_linecache_lines']
+        use_linecache_lines = opts["use_linecache_lines"]
     else:
         use_linecache_lines = opts
         pass
@@ -249,14 +263,16 @@ def checkcache(filename=None, opts=False):
 
     result = []
     for filename in filenames:
-        if filename not in file_cache: continue
+        if filename not in file_cache:
+            continue
         path = file_cache[filename].path
         if os.path.exists(path):
             cache_info = file_cache[filename].stat
             stat = os.stat(path)
-            if stat and \
-                    (cache_info.st_size != stat.st_size or
-                         cache_info.st_mtime != stat.st_mtime):
+            if stat and (
+                cache_info.st_size != stat.st_size
+                or cache_info.st_mtime != stat.st_mtime
+            ):
                 result.append(filename)
                 update_cache(filename, use_linecache_lines)
             else:
@@ -266,6 +282,7 @@ def checkcache(filename=None, opts=False):
         pass
     return result
 
+
 def cache_script(script, text, opts={}):
     """Cache script if it is not already cached."""
     global script_cache
@@ -273,6 +290,7 @@ def cache_script(script, text, opts={}):
         update_script_cache(script, text, opts)
         pass
     return script
+
 
 def uncache_script(script, opts={}):
     """remove script from cache."""
@@ -282,6 +300,7 @@ def uncache_script(script, opts={}):
         return script
     return None
 
+
 def update_script_cache(script, text, opts={}):
     """Cache script if it is not already cached."""
     global script_cache
@@ -289,22 +308,26 @@ def update_script_cache(script, text, opts={}):
         script_cache[script] = text
     return script
 
+
 def cache_file(filename, reload_on_change=False, opts=default_opts):
     """Cache filename if it is not already cached.
     Return the expanded filename for it in the cache
     or nil if we can not find the file."""
     filename = pyc2py(filename)
     if filename in file_cache:
-        if reload_on_change: checkcache(filename)
+        if reload_on_change:
+            checkcache(filename)
         pass
     else:
-        opts['use_linecache_lines'] = True
+        opts["use_linecache_lines"] = True
         update_cache(filename, opts)
         pass
     if filename in file_cache:
         return file_cache[filename].path
-    else: return None
+    else:
+        return None
     return  # Not reached
+
 
 def is_cached(file_or_script):
     """Return True if file_or_script is cached"""
@@ -314,12 +337,15 @@ def is_cached(file_or_script):
         return is_cached_script(file_or_script)
     return
 
+
 def is_cached_script(filename):
     return unmap_file(filename) in list(script_cache.keys())
 
+
 def is_empty(filename):
-    filename=unmap_file(filename)
-    return 0 == len(file_cache[filename].lines['plain'])
+    filename = unmap_file(filename)
+    return 0 == len(file_cache[filename].lines["plain"])
+
 
 def getline(file_or_script, line_number, opts=default_opts):
     """Get line *line_number* from file named *file_or_script*. Return None if
@@ -332,10 +358,10 @@ def getline(file_or_script, line_number, opts=default_opts):
     filename = unmap_file(file_or_script)
     filename, line_number = unmap_file_line(filename, line_number)
     lines = getlines(filename, opts)
-    if lines and line_number >=1 and line_number <= maxline(filename):
-        line = lines[line_number-1]
-        if get_option('strip_nl', opts):
-            return line.rstrip('\n')
+    if lines and line_number >= 1 and line_number <= maxline(filename):
+        line = lines[line_number - 1]
+        if get_option("strip_nl", opts):
+            return line.rstrip("\n")
         else:
             return line
         pass
@@ -343,39 +369,42 @@ def getline(file_or_script, line_number, opts=default_opts):
         return None
     return  # Not reached
 
+
 def getlines(filename, opts=default_opts):
     """Read lines of *filename* and cache the results. However, if
     *filename* was previously cached use the results from the
     cache. Return *None* if we can not get lines
     """
-    if get_option('reload_on_change', opts): checkcache(filename)
-    fmt = get_option('output', opts)
-    highlight_opts = {'bg': fmt}
-    cs = opts.get('style')
+    if get_option("reload_on_change", opts):
+        checkcache(filename)
+    fmt = get_option("output", opts)
+    highlight_opts = {"bg": fmt}
+    cs = opts.get("style")
 
     # Colorstyle of Terminal255Formatter takes precidence over
     # light/dark colorthemes of TerminalFormatter
     if cs:
-        highlight_opts['style'] = cs
+        highlight_opts["style"] = cs
         fmt = cs
 
     if filename not in file_cache:
         update_cache(filename, opts)
         filename = pyc2py(filename)
-        if filename not in file_cache: return None
+        if filename not in file_cache:
+            return None
         pass
     lines = file_cache[filename].lines
     if fmt not in lines.keys():
-        lines[fmt] = highlight_array(lines['plain'], **highlight_opts)
+        lines[fmt] = highlight_array(lines["plain"], **highlight_opts)
         pass
     return lines[fmt]
 
-def highlight_array(array, trailing_nl=True,
-                    bg='light', **options):
-    fmt_array = highlight_string(''.join(array),
-                                 bg, **options).split('\n')
-    lines = [ line + "\n" for line in fmt_array ]
-    if not trailing_nl: lines[-1] = lines[-1].rstrip('\n')
+
+def highlight_array(array, trailing_nl=True, bg="light", **options):
+    fmt_array = highlight_string("".join(array), bg, **options).split("\n")
+    lines = [line + "\n" for line in fmt_array]
+    if not trailing_nl:
+        lines[-1] = lines[-1].rstrip("\n")
     return lines
 
 
@@ -383,26 +412,24 @@ python_lexer = PythonLexer()
 
 # TerminalFormatter uses a colorTHEME with light and dark pairs.
 # But Terminal256Formatter uses a colorSTYLE.  Ugh
-dark_terminal_formatter = TerminalFormatter(bg = 'dark')
-light_terminal_formatter = TerminalFormatter(bg = 'light')
+dark_terminal_formatter = TerminalFormatter(bg="dark")
+light_terminal_formatter = TerminalFormatter(bg="light")
 terminal_256_formatter = Terminal256Formatter()
 
-def highlight_string(string, bg='light', **options):
+
+def highlight_string(string, bg="light", **options):
     global terminal_256_formatter
-    if options.get('style'):
-        if terminal_256_formatter.style != options['style']:
-            terminal_256_formatter = \
-              Terminal256Formatter(style=options['style'])
-            del options['style']
-        return highlight(string, python_lexer, terminal_256_formatter,
-                         **options)
-    elif 'light' == bg:
-        return highlight(string, python_lexer, light_terminal_formatter,
-                         **options)
+    if options.get("style"):
+        if terminal_256_formatter.style != options["style"]:
+            terminal_256_formatter = Terminal256Formatter(style=options["style"])
+            del options["style"]
+        return highlight(string, python_lexer, terminal_256_formatter, **options)
+    elif "light" == bg:
+        return highlight(string, python_lexer, light_terminal_formatter, **options)
     else:
-        return highlight(string, python_lexer, dark_terminal_formatter,
-                         **options)
+        return highlight(string, python_lexer, dark_terminal_formatter, **options)
     pass
+
 
 def path(filename):
     """Return full filename path for filename"""
@@ -411,10 +438,12 @@ def path(filename):
         return None
     return file_cache[filename].path
 
+
 def remap_file(from_file, to_file):
     """Make *to_file* be a synonym for *from_file*"""
     file2file_remap[to_file] = from_file
     return
+
 
 def remap_file_lines(from_path, to_path, line_map_list):
     """Adds line_map list to the list of association of from_file to
@@ -428,10 +457,10 @@ def remap_file_lines(from_path, to_path, line_map_list):
         new_list = line_map_list
     # FIXME: look for duplicates ?
     file2file_remap_lines[to_path] = RemapLineEntry(
-        from_path,
-        tuple(sorted(new_list, key=lambda t: t[0]))
-        )
+        from_path, tuple(sorted(new_list, key=lambda t: t[0]))
+    )
     return
+
 
 def remove_remap_file(filename):
     """Remove any mapping for *filename* and return that if it exists"""
@@ -441,6 +470,7 @@ def remove_remap_file(filename):
         del file2file_remap[filename]
         return retval
     return None
+
 
 def sha1(filename):
     """Return SHA1 of filename."""
@@ -453,22 +483,25 @@ def sha1(filename):
     if file_cache[filename].sha1:
         return file_cache[filename].sha1.hexdigest()
     sha1 = hashlib.sha1()
-    for line in file_cache[filename].lines['plain']:
-        sha1.update(line.encode('utf-8'))
+    for line in file_cache[filename].lines["plain"]:
+        sha1.update(line.encode("utf-8"))
         pass
     file_cache[filename].sha1 = sha1
     return sha1.hexdigest()
+
 
 def size(filename, use_cache_only=False):
     """Return the number of lines in filename. If `use_cache_only' is False,
     we'll try to fetch the file if it is not cached."""
     filename = unmap_file(filename)
     if filename not in file_cache:
-        if not use_cache_only: cache_file(filename)
+        if not use_cache_only:
+            cache_file(filename)
         if filename not in file_cache:
             return None
         pass
-    return len(file_cache[filename].lines['plain'])
+    return len(file_cache[filename].lines["plain"])
+
 
 def maxline(filename, use_cache_only=False):
     """Return the maximum line number filename after taking into account
@@ -486,16 +519,19 @@ def maxline(filename, use_cache_only=False):
     else:
         return max_lineno
 
+
 def stat(filename, use_cache_only=False):
     """Return stat() info for *filename*. If *use_cache_only* is *False*,
     we will try to fetch the file if it is not cached."""
     filename = pyc2py(filename)
     if filename not in file_cache:
-        if not use_cache_only: cache_file(filename)
+        if not use_cache_only:
+            cache_file(filename)
         if filename not in file_cache:
             return None
         pass
     return file_cache[filename].stat
+
 
 def trace_line_numbers(filename, reload_on_change=False):
     """Return an Array of breakpoints in filename.
@@ -503,30 +539,28 @@ def trace_line_numbers(filename, reload_on_change=False):
     so it is possible (and possibly useful) for a line number appear more
     than once."""
     fullname = cache_file(filename, reload_on_change)
-    if not fullname: return None
+    if not fullname:
+        return None
     e = file_cache[filename]
     if not e.line_numbers:
-        if hasattr(coverage.coverage, 'analyze_morf'):
-            e.line_numbers = coverage.the_coverage.analyze_morf(fullname)[1]
-        else:
-            cov = coverage.coverage()
-            cov._warn_no_data = False
-            e.line_numbers = cov.analysis(fullname)[1]
-            pass
+        e.line_numbers = code_linenumbers_in_file(fullname)
         pass
     return e.line_numbers
 
+
 def is_mapped_file(filename):
-    if filename in file2file_remap :
-        return 'file'
+    if filename in file2file_remap:
+        return "file"
     elif file2file_remap_lines.get(filename):
-        return 'file_line'
+        return "file_line"
     else:
         return None
+
 
 def unmap_file(filename):
     # FIXME: this is wrong?
     return file2file_remap.get(filename, filename)
+
 
 def unmap_file_line(filename, line_number, reverse=False):
     remap_line_entry = file2file_remap_lines.get(filename)
@@ -551,11 +585,12 @@ def unmap_file_line(filename, line_number, reverse=False):
                 mapped_line_number = t[0]
                 break
             elif t[1] > line_number:
-                mapped_line_number = last_t[0] + (line_number - last_t[1] )
+                mapped_line_number = last_t[0] + (line_number - last_t[1])
                 break
             last_t = t
         pass
     return (filename, mapped_line_number)
+
 
 def update_cache(filename, opts=default_opts, module_globals=None):
     """Update a cache entry.  If something is wrong, return
@@ -563,14 +598,16 @@ def update_cache(filename, opts=default_opts, module_globals=None):
     *use_linecache_lines* is *True*, use an existing cache entry as source
     for the lines of the file."""
 
-    if not filename: return None
+    if not filename:
+        return None
 
     orig_filename = filename
     filename = pyc2py(filename)
-    if filename in file_cache: del file_cache[filename]
+    if filename in file_cache:
+        del file_cache[filename]
     path = os.path.abspath(filename)
     stat = None
-    if get_option('use_linecache_lines', opts):
+    if get_option("use_linecache_lines", opts):
         fname_list = [filename]
         mapped_path = file2file_remap.get(path)
         if mapped_path:
@@ -581,10 +618,9 @@ def update_cache(filename, opts=default_opts, module_globals=None):
                     plain_lines = linecache.getlines(filename)
                     trailing_nl = has_trailing_nl(plain_lines[-1])
                     lines = {
-                        'plain'   : plain_lines,
-                        }
-                    file_cache[filename] = LineCacheInfo(stat, None, lines,
-                                                         path, None)
+                        "plain": plain_lines,
+                    }
+                    file_cache[filename] = LineCacheInfo(stat, None, lines, path, None)
                 except:
                     pass
                 pass
@@ -599,10 +635,10 @@ def update_cache(filename, opts=default_opts, module_globals=None):
 
     if os.path.exists(path):
         stat = os.stat(path)
-    elif module_globals and '__loader__' in module_globals:
-        name = module_globals.get('__name__')
-        loader = module_globals['__loader__']
-        get_source = getattr(loader, 'get_source', None)
+    elif module_globals and "__loader__" in module_globals:
+        name = module_globals.get("__name__")
+        loader = module_globals["__loader__"]
+        get_source = getattr(loader, "get_source", None)
         if name and get_source:
             try:
                 data = get_source(name)
@@ -614,20 +650,20 @@ def update_cache(filename, opts=default_opts, module_globals=None):
                     # for this module.
                     return None
                 # FIXME: DRY with code below
-                lines = {'plain' : data.splitlines()}
-                raw_string        = ''.join(lines['plain'])
-                trailing_nl       = has_trailing_nl(raw_string)
-                if 'style' in opts:
-                    key = opts['style']
-                    highlight_opts = {'style': key}
+                lines = {"plain": data.splitlines()}
+                raw_string = "".join(lines["plain"])
+                trailing_nl = has_trailing_nl(raw_string)
+                if "style" in opts:
+                    key = opts["style"]
+                    highlight_opts = {"style": key}
                 else:
-                    key = 'terminal'
+                    key = "terminal"
                     highlight_opts = {}
 
-                lines[key] = highlight_array(raw_string.split('\n'),
-                                    trailing_nl, **highlight_opts)
-                file_cache[filename] = \
-                  LineCacheInfo(None, None, lines, filename, None)
+                lines[key] = highlight_array(
+                    raw_string.split("\n"), trailing_nl, **highlight_opts
+                )
+                file_cache[filename] = LineCacheInfo(None, None, lines, filename, None)
                 file2file_remap[path] = filename
                 return True
             pass
@@ -642,29 +678,29 @@ def update_cache(filename, opts=default_opts, module_globals=None):
                 stat = os.stat(path)
                 break
             pass
-        if not stat: return False
+        if not stat:
+            return False
         pass
 
     try:
-        mode = 'r' if PYTHON3 else 'rU'
+        mode = "r" if PYTHON3 else "rU"
         with open(path, mode) as fp:
-                lines = {'plain' : fp.readlines()}
-                eols = fp.newlines
+            lines = {"plain": fp.readlines()}
+            eols = fp.newlines
     except:
         return None
 
     # FIXME: DRY with code above
-    raw_string        = ''.join(lines['plain'])
-    trailing_nl       = has_trailing_nl(raw_string)
-    if 'style' in opts:
-        key = opts['style'] or 'default'
-        highlight_opts = {'style': key}
+    raw_string = "".join(lines["plain"])
+    trailing_nl = has_trailing_nl(raw_string)
+    if "style" in opts:
+        key = opts["style"] or "default"
+        highlight_opts = {"style": key}
     else:
-        key = 'terminal'
+        key = "terminal"
         highlight_opts = {}
 
-    lines[key] = highlight_array(raw_string.split('\n'),
-                                 trailing_nl, **highlight_opts)
+    lines[key] = highlight_array(raw_string.split("\n"), trailing_nl, **highlight_opts)
     if orig_filename != filename:
         file2file_remap[orig_filename] = filename
         file2file_remap[os.path.abspath(orig_filename)] = filename
@@ -677,10 +713,13 @@ def update_cache(filename, opts=default_opts, module_globals=None):
 
 
 # example usage
-if __name__ == '__main__':
+if __name__ == "__main__":
+
     def yes_no(var):
-        if var: return ""
-        else: return "not "
+        if var:
+            return ""
+        else:
+            return "not "
         return  # Not reached
 
     # print(getline(__file__, 1, {'output': 'dark'}))
@@ -691,8 +730,9 @@ if __name__ == '__main__':
     # update_cache('os')
 
     # lines = getlines(__file__)
-    # print("%s has %s lines" % (__file__, len(lines['plain'])))
+    # print("%s has %s lines" % (__file__, len(lines)))
     # lines = getlines(__file__, {'output': 'light'})
+
     # i = 0
     # for line in lines:
     #     i += 1
@@ -723,12 +763,14 @@ if __name__ == '__main__':
     # line = getline(__file__, 7)
     # print("The 7th line is\n%s" % line)
     orig_path = __file__
-    mapped_path = 'test2'
+    mapped_path = "test2"
     start_line = 10
     start_mapped = 6
     remap_file_lines(orig_path, mapped_path, ((start_line, start_mapped),))
     for l in (1,):
-        line = getline(mapped_path, l+start_mapped)
-    print("Remapped %s line %d should be line %d of %s. line is:\n%s"
-          % (mapped_path, start_mapped+l, start_line+l, orig_path, line))
+        line = getline(mapped_path, l + start_mapped)
+    print(
+        "Remapped %s line %d should be line %d of %s. line is:\n%s"
+        % (mapped_path, start_mapped + l, start_line + l, orig_path, line)
+    )
     # print("XXX", file2file_remap_lines)
