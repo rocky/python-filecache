@@ -12,8 +12,11 @@ jobs:
       - python/install-deps
       - python/save-cache
       - run:
-          command: ./manage.py test
-          name: Test
+          command: pip install -e . && pip install -r requirements-dev.txt
+          name: Install dependencies
+      - run:
+          command: make check
+          name: Run Tests
 
 workflows:
   main:

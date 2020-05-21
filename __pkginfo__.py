@@ -49,7 +49,10 @@ else:
 author = "Rocky Bernstein"
 author_email = "rocky@gnu.org"
 ftp_url = None
-install_requires = ["pygments " + pygments_version]
+install_requires = [
+    "pygments " + pygments_version,
+    "xdis >= 4.6.0, < 4.7.0"
+]
 
 license = "GPL"
 mailing_list = None
