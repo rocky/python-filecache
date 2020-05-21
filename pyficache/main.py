@@ -53,7 +53,7 @@ Synopsis
 
 """
 
-import coverage, hashlib, linecache, os, re, sys
+import hashlib, linecache, os, re, sys
 
 from collections import namedtuple
 
