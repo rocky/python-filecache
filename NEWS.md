@@ -8,6 +8,11 @@
   use resolve names if that is available. This is why we need to bump from 1.0 to 2.0
 * blacken some buffers and regularize imports
 
+1.0.1 2018-04-16
+=================
+
+- Pygments needs to be 1.4 on Python 2.4 branch.
+
 1.0.0 2018-01-26
 ================
 
