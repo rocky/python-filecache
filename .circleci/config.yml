@@ -6,7 +6,7 @@ orbs:
 jobs:
   build-and-test:
     executor: python/default
-      - tag: 2.6
+    tag: 2.6
     steps:
       - checkout
       - python/load-cache
