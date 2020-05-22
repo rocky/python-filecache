@@ -67,26 +67,14 @@
     $ git tag release-python-2.4-$VERSION
 
     $ . ./admin-tools/make-dist-newer.sh
-    $ git tag release-$VERSION
 
-# Upload single package and look at Rst Formating
+# Make packages and check
 
-    $ twine upload dist/pyficache-${VERSION}-py3.3.egg
+    $ ./admin-tools/make-dist.sh
+	$ twine check dist/trepanxpy-$VERSION*
 
-# Upload rest of versions
+# Get on PyPy
 
-    $ twine upload dist/pyficache-${VERSION}*
+Goto https://github.com/rocky/pyficache/releases/new
 
-# Push tags:
-
-    $ git push --tags
-
-# Check on a VM
-
-    $ cd /virtual/vagrant/virtual/vagrant/ubuntu-zesty
-	$ vagrant up
-	$ vagrant ssh
-	$ pyenv local 3.5.2
-	$ pip install --upgrade pyficache
-	$ exit
-	$ vagrant halt
+	$ twine upload dist/trepanxpy-${VERSION}*
