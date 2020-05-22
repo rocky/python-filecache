@@ -39,7 +39,7 @@ classifiers = [
     "Programming Language :: Python :: 3.8 ",
 ]
 
-pygments_version = ">=14, <= 1.6"
+pygments_version = "<= 1.6"
 
 # The rest in alphabetic order
 author = "Rocky Bernstein"
