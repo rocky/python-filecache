@@ -44,7 +44,7 @@ Summary
      # return all lines of filename as an array
     lines = pyficache.getlines(filename)
 
-     # return line 6, and reload all lines if the file has changed.
+    # return line 6, and reload all lines if the file has changed.
     line = pyficache.getline(filename, 6, {'reload_on_change': True})
 
     # return line 6 syntax highlighted via pygments using style 'emacs'
@@ -59,7 +59,7 @@ Summary
     assert None, pyficache.remove_remap_file('another-name')
 
     # Clear cache for __file__
-     pyficache.clear_file_cache(__file__)
+    pyficache.clear_file_cache(__file__)
 
     # Clear all cached files.
     pyficache.clear_file_cache()

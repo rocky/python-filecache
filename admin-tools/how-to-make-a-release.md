@@ -70,11 +70,10 @@
 
 # Make packages and check
 
-    $ ./admin-tools/make-dist.sh
-	$ twine check dist/trepanxpy-$VERSION*
+	$ twine check dist/pyficache-$VERSION*
 
 # Get on PyPy
 
 Goto https://github.com/rocky/pyficache/releases/new
 
-	$ twine upload dist/trepanxpy-${VERSION}*
+	$ twine upload dist/pyficache-${VERSION}*
