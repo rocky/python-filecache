@@ -1,4 +1,6 @@
-|TravisCI| |CircleCI| |License|
+|TravisCI| |CircleCI| |Pypi Installs| |License| |Supported Python Versions|
+
+|packagestatus|
 
 Synopsis
 --------
@@ -75,7 +77,7 @@ xdis_ provides the cool stuff to figure out the lines containing
 Python statements.
 
 .. |License| image:: https://img.shields.io/pypi/l/pyficache.svg
-    :target: https://pypi.python.org/pypi/pyfiecache
+    :target: https://pypi.python.org/pypi/pyficache
     :alt: License
 .. _xdis: https://pypi.org/project/xdis/
 .. _linecache: https://rubygems.org/gems/linecache
@@ -85,3 +87,7 @@ Python statements.
    :target: https://travis-ci.org/rocky/python-filecache/
 .. |CircleCI| image:: https://circleci.com/gh/rocky/python-filecache.svg?style=svg
     :target: https://circleci.com/gh/rocky/python-filecache
+.. |Supported Python Versions| image:: https://img.shields.io/pypi/pyversions/pyficache.svg
+.. |Pypi Installs| image:: https://pepy.tech/badge/pyficache/month
+.. |packagestatus| image:: https://repology.org/badge/vertical-allrepos/python:pyficache.svg
+		 :target: https://repology.org/project/python:pyficache/versions
