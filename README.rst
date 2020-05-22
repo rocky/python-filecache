@@ -37,11 +37,11 @@ a debugger or profiler.
 Summary
 -------
 
-.. code:: python
+::
 
     import pyficache
     filename = __file__ # e.g. '/tmp/myprogram'
-     # return all lines of filename as an array
+    # return all lines of filename as an array
     lines = pyficache.getlines(filename)
 
     # return line 6, and reload all lines if the file has changed.
