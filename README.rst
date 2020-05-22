@@ -1,4 +1,4 @@
-|Linux Build Status| |License|
+|TravisCI| |CircleCI| |License|
 
 Synopsis
 --------
@@ -71,15 +71,17 @@ Credits
 This is a port of the my Ruby linecache_ module which in turn is based
 on the Python linecache module.
 
-coverage_ provides the cool stuff to figure out the lines containing
+xdis_ provides the cool stuff to figure out the lines containing
 Python statements.
 
 .. |License| image:: https://img.shields.io/pypi/l/pyficache.svg
     :target: https://pypi.python.org/pypi/pyfiecache
     :alt: License
-.. _coverage: http://nedbatchelder.com/code/coverage/
+.. _xdis: https://pypi.org/project/xdis/
 .. _linecache: https://rubygems.org/gems/linecache
 
 .. |Downloads| image:: https://img.shields.io/pypi/dm/pyficache.svg
-.. |Linux Build Status| image:: https://travis-ci.org/rocky/python-filecache.svg
+.. |TravisCI| image:: https://travis-ci.org/rocky/python-filecache.svg
    :target: https://travis-ci.org/rocky/python-filecache/
+.. |CircleCI| image:: https://circleci.com/gh/rocky/python-filecache.svg?style=svg
+    :target: https://circleci.com/gh/rocky/python-filecache
