@@ -207,10 +207,16 @@ class TestPyFiCache(unittest.TestCase):
         if 0 == len(line_nums):
             self.assertEqual({}, line_nums)
         else:
-            self.assertEqual(set([1]), line_nums)
+            if PYTHON_VERSION in (2.5, 2.6):
+                self.assertEqual(set([1]), line_nums)
+            else:
+                self.assertEqual(set([0]), line_nums)
             pass
         test_file = osp.join(TEST_DIR, "devious.py")
-        expected = [9, 2, 5, 7]
+        if PYTHON_VERSION in (2.5, 2.6):
+            expected = [8, 9, 4, 6]
+        else:
+            expected = [9, 2, 5, 7]
         self.assertEqual(set(expected), pyficache.trace_line_numbers(test_file))
         return
 
