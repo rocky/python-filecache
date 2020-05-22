@@ -1,3 +1,8 @@
+2.0.1 2018-01-26
+================
+
+Fix botched 2.0.0 release; setup.py file was broken (missing the `packages` parameter)
+
 2.0.0 2018-01-26
 ================
 

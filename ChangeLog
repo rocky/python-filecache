@@ -1,7 +1,49 @@
 2020-05-22  rocky <rocky@gnu.org>
 
-	* admin-tools/how-to-make-a-release.md, pyficache/version.py: Get
-	ready for release 2.0.0
+	* ChangeLog, MANIFEST.in, admin-tools/how-to-make-a-release.md,
+	pyficache/__init__.py, pyficache/version.py, setup.py: Get ready for
+	release 2.0.1
+
+2020-05-22  rocky <rocky@gnu.org>
+
+	* admin-tools/how-to-make-a-release.md: Administrivia
+
+2020-05-22  rocky <rocky@gnu.org>
+
+	* admin-tools/setup-python-2.4.sh: Administrivia
+
+2020-05-22  rocky <rocky@gnu.org>
+
+	* Makefile, admin-tools/check-newer-versions.sh,
+	admin-tools/setup-master.sh: Administrivia
+
+2020-05-22  rocky <rocky@gnu.org>
+
+	* NEWS.md: Update NEWS
+
+2020-05-22  rocky <rocky@gnu.org>
+
+	* admin-tools/setup-master.sh, admin-tools/setup-python-2.4.sh: 
+	Revise setup programs for xdis dependency
+
+2020-05-22  rocky <rocky@gnu.org>
+
+	* README.rst: See above.
+
+2020-05-22  rocky <rocky@gnu.org>
+
+	* README.rst: Go over README.rst before release
+
+2020-05-22  rocky <rocky@gnu.org>
+
+	* __pkginfo__.py, test/test-pyficache.py: Go over tests before
+	release
+
+2020-05-22  rocky <rocky@gnu.org>
+
+	* ChangeLog, MANIFEST.in, NEWS => NEWS.md,
+	admin-tools/how-to-make-a-release.md, pyficache/version.py,
+	test/test-pyficache.py: Get ready for release 2.0.0
 
 2020-05-22  rocky <rocky@gnu.org>
 
