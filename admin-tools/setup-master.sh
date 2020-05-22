@@ -6,4 +6,5 @@ if [[ $0 == $${BASH_SOURCE[0]} ]] ; then
     exit 1
 fi
 
-git checkout master && git pull && pyenv local $PYTHON_VERSION
+(cd ../python-xdis && git checkout master && pyenv local $PYTHON_VERSION) && git pull && \
+    git checkout master && git pull && pyenv local $PYTHON_VERSION
