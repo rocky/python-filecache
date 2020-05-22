@@ -575,10 +575,18 @@ def stat(filename, use_cache_only=False):
 
 
 def trace_line_numbers(filename, reload_on_change=False):
-    """Return an Array of breakpoints in filename.
-    The list will contain an entry for each distinct line event call
-    so it is possible (and possibly useful) for a line number appear more
-    than once."""
+    """Return the line numbers that are (or would be) stored in
+    co_linenotab for `filename`.
+
+    These are places setting a breakpoint could conceivably
+    trigger. On other lines, a breakpoint would never occur, because
+    only the Python interpreter only stops at bytecode offsets
+    that have a line number.
+
+    The line in the source file could be empty because the line is
+    blank, inside a string or comment, in the middle of some long
+    construct or is something of that ilk.
+    """
     fullname = cache_file(filename, reload_on_change)
     if not fullname:
         return None
