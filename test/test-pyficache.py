@@ -207,7 +207,7 @@ class TestPyFiCache(unittest.TestCase):
         if 0 == len(line_nums):
             self.assertEqual({}, line_nums)
         else:
-            if PYTHON_VERSION in (2.5, 2.6):
+            if PYTHON_VERSION in (2.5, 2.6, 2.7):
                 self.assertEqual(set([1]), line_nums)
             else:
                 self.assertEqual(set([0]), line_nums)
