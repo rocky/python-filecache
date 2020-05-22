@@ -23,8 +23,8 @@
 
 # Change version in VERSION.py
 
-    $ emacs VERSION.py
-    $ source VERSION.py
+    $ emacs pyficache/version.py
+    $ source pyficache/version.py
     $ echo $VERSION
     $ git commit -m"Get ready for release $VERSION" .
 
@@ -35,7 +35,7 @@
 
 #  Update NEWS from ChangeLog. Then:
 
-    $ emacs NEWS
+    $ emacs NEWS.md
     $ make check
     $ git commit --amend .
     $ git push   # get CI testing going early

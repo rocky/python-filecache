@@ -1,3 +1,2 @@
 nose
-coverage == 3.1
-pygments >= 2.0
+xdis >= 4.6.0, < 4.7.0

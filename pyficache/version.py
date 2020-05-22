@@ -2,6 +2,6 @@
 # shell which "execfile" or "source" it respectively.
 
 # This file should define a variable VERSION which we use as the
-# debugger version number.
+# package version number.
 
-VERSION='1.0.2'
+VERSION="2.0.0"  # noqa

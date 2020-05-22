@@ -71,9 +71,6 @@ Credits
 This is a port of the my Ruby linecache_ module which in turn is based
 on the Python linecache module.
 
-coverage_ provides the cool stuff to figure out lines where there
-statements.
-
 Other stuff
 -----------
 
@@ -116,10 +113,10 @@ from pyficache.main import (
     light_terminal_formatter,
     maxline,
     path,
-    pyc2py,
     remap_file,
     remap_file_lines,
     remove_remap_file,
+    resolve_name_to_path,
     sha1,
     size,
     stat,

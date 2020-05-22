@@ -1,71 +1,86 @@
 #!/usr/bin/env python
-'Unit test for pyficache'
+# Note: the next line has to be at line 3 for testing. We introspect on this source.
+# This is line 3.
+"""
+Unit test for pyficache
+"""
 import os, sys, unittest
+import os.path as osp
 from tempfile import mkstemp
 
-import os.path as osp
+from xdis import PYTHON_VERSION, PYTHON3
+
 TEST_DIR = osp.abspath(osp.dirname(__file__))
 
-top_builddir = osp.join(TEST_DIR, '..')
+top_builddir = osp.join(TEST_DIR, "..")
 if top_builddir[-1] != osp.sep:
     top_builddir += osp.sep
 sys.path.insert(0, top_builddir)
 
 import pyficache
-from pyficache import PYVER, PYTHON3
+from pyficache import PYVER
 
 # Test LineCache module
 class TestPyFiCache(unittest.TestCase):
-
     def setUp(self):
         pyficache.clear_file_cache()
         return
 
     def test_basic(self):
         filename = __file__
-        if '.pyc' == filename[-4:]:
+        if ".pyc" == filename[-4:]:
             filename = filename[:-1]
             pass
 
-        fp = open(filename, 'r')
+        fp = open(filename, "r")
         compare_lines = fp.readlines()
-        self.assertTrue(compare_lines,
-                        "Should have been able to read %s for comparing" %
-                        filename)
+        self.assertTrue(
+            compare_lines, "Should have been able to read %s for comparing" % filename
+        )
         fp.close()
 
         # Test getlines to read this file.
         lines = pyficache.getlines(__file__)
-        self.assertEqual(compare_lines, lines,
-                        'We should get exactly the same lines as '
-                        'reading this file.')
+        self.assertEqual(
+            compare_lines,
+            lines,
+            "We should get exactly the same lines as " "reading this file.",
+        )
 
         # Test getline to read this file. The file should now be cached,
         # so internally a different set of routines are used.
-        test_line = 2
-        line = pyficache.getline(__file__, test_line, {'strip_nl': False})
-        self.assertEqual(compare_lines[test_line-1], line,
-                         'We should get exactly the same line as reading '
-                         'this file.')
-        line = pyficache.getline(__file__, test_line, {'output': 'light'})
-        self.assertTrue(line.index('Unit test for pyficache') > 0,
-                        'Terminal formatted line 2 should have '
-                        '"Unit test for pyficache"')
+        test_line = 3
+        line = pyficache.getline(__file__, test_line, {"strip_nl": False})
+        self.assertEqual(
+            compare_lines[test_line - 1],
+            line,
+            "We should get exactly the same line as reading " "this file.",
+        )
+        line = pyficache.getline(__file__, test_line, {"output": "light"})
+        self.assertTrue(
+            line.index("# This is line 3.") >= 0,
+            (
+                "Terminal formatted line 3 should be '# This is line 3.', got:\n%s"
+                % line
+            ),
+        )
 
         # Test getting the line via a relative file name
         old_dir = os.getcwd()
-        os.chdir(os.path.dirname(os.path.abspath((__file__))))
-        short_file = os.path.basename(__file__)
+        os.chdir(osp.dirname(osp.abspath((__file__))))
+        short_file = osp.basename(__file__)
         test_line = 10
-        line = pyficache.getline(short_file, test_line, {'strip_nl': False})
-        self.assertEqual(compare_lines[test_line-1], line,
-                         'Short filename lookup on %s should work'
-                         % short_file)
+        line = pyficache.getline(short_file, test_line, {"strip_nl": False})
+        self.assertEqual(
+            compare_lines[test_line - 1],
+            line,
+            "Short filename lookup on %s should work" % short_file,
+        )
         os.chdir(old_dir)
 
         # Write a temporary file; read contents, rewrite it and check that
         # we get a change when calling getline.
-        (fd, path) = mkstemp(prefix="pyfcache", suffix='.txt')
+        (fd, path) = mkstemp(prefix="pyfcache", suffix=".txt")
         test_string = "Now is the time.\n"
         f = open(path, 'w')
         f.write(test_string)
@@ -81,8 +96,9 @@ class TestPyFiCache(unittest.TestCase):
 
         pyficache.checkcache()
         line = pyficache.getline(path, 1)
-        self.assertEqual(test_string, line,
-                         "checkcache should have reread the temporary file.")
+        self.assertEqual(
+            test_string, line, "checkcache should have reread the temporary file."
+        )
         try:
             os.remove(path)
         except:
@@ -91,20 +107,25 @@ class TestPyFiCache(unittest.TestCase):
 
     def test_cached(self):
         myfile = __file__
-        self.assertEqual(False, pyficache.is_cached(myfile),
-                         ("file %s shouldn't be cached - just cleared cache."
-                          % myfile))
+        self.assertEqual(
+            False,
+            pyficache.is_cached(myfile),
+            ("file %s shouldn't be cached - just cleared cache." % myfile),
+        )
         line = pyficache.getline(__file__, 1)
         assert line
-        self.assertEqual(True, pyficache.is_cached(__file__),
-                         "file %s should now be cached" % __file__)
+        self.assertEqual(
+            True,
+            pyficache.is_cached(__file__),
+            "file %s should now be cached" % __file__,
+        )
         # self.assertEqual(false, pyficache.cached_script?('./short-file'),
         #              "Should not find './short-file' in SCRIPT_LINES__")
         # self.assertEqual(True, 78 < pyficache.size(__file__))
 
         # Unlike Ruby, Python doesn't have SCRIPT_LINES__
         # old_dir = os.getcwd()
-        # os.chdir(os.path.dirname(os.path.abspath((__file__))))
+        # os.chdir(osp.dirname(osp.abspath((__file__))))
         # load('./short-file', 0)
         # self.assertEqual(True, pyficache.cached_script?('./short-file'),
         #                "Should be able to find './short-file' "
@@ -113,44 +134,46 @@ class TestPyFiCache(unittest.TestCase):
         return
 
     def test_remap(self):
-        pyficache.remap_file(__file__, 'another-name')
-        line1 = pyficache.getline('another-name', 1)
+        pyficache.remap_file(__file__, "another-name")
+        line1 = pyficache.getline("another-name", 1)
         line2 = pyficache.getline(__file__, 1)
-        self.assertEqual(line1, line2,
-                         'Both lines should be the same via remap_file')
-        filename = pyficache.remove_remap_file('another-name')
+        self.assertEqual(line1, line2, "Both lines should be the same via remap_file")
+        filename = pyficache.remove_remap_file("another-name")
         self.assertEqual(filename, __file__)
-        filename = pyficache.remove_remap_file('another-name')
+        filename = pyficache.remove_remap_file("another-name")
         self.assertEqual(filename, None)
         return
 
     def test_uncache(self):
-        self.assertEqual(pyficache.uncache_script('<script>'), None,
-                         '<script should not be cached')
+        self.assertEqual(
+            pyficache.uncache_script("<script>"), None, "<script should not be cached"
+        )
 
         return
 
     def test_remap_lines(self):
-        pyficache.remap_file_lines(__file__, 'test2', ((6, 10),))
+        pyficache.remap_file_lines(__file__, "test2", ((6, 10),))
 
         line5 = pyficache.getline(__file__, 5)
-        pyficache.remap_file_lines(__file__, 'test2', ((5, 9),))
-        rline9  = pyficache.getline('test2', 9)
-        self.assertEqual(line5, rline9,
-                 'lines should be the same via remap_file_line - '
-                 'remap integer')
+        pyficache.remap_file_lines(__file__, "test2", ((5, 9),))
+        rline9 = pyficache.getline("test2", 9)
+        self.assertEqual(
+            line5,
+            rline9,
+            "lines should be the same via remap_file_line - " "remap integer",
+        )
 
         line6 = pyficache.getline(__file__, 6)
-        rline10 = pyficache.getline('test2', 10)
-        self.assertEqual(line6, rline10,
-                         'lines should be the same via remap_file_line - '
-                         'range')
+        rline10 = pyficache.getline("test2", 10)
+        self.assertEqual(
+            line6, rline10, "lines should be the same via remap_file_line - " "range"
+        )
 
         line7 = pyficache.getline(__file__, 7)
-        rline11 = pyficache.getline('test2', 11)
-        self.assertEqual(line7, rline11,
-                         'lines should be the same via remap_file_line - '
-                         'range')
+        rline11 = pyficache.getline("test2", 11)
+        self.assertEqual(
+            line7, rline11, "lines should be the same via remap_file_line - " "range"
+        )
 
         # line8 = pyficache.getline(__file__, 8)
         # pyficache.remap_file_lines(__file__, __file__, ((8, 20),))
@@ -161,33 +184,38 @@ class TestPyFiCache(unittest.TestCase):
         return
 
     def test_path(self):
-        self.assertEqual(None, pyficache.path(__file__),
-                         ("path for %s should be None - "
-                          "just cleared cache." %
-                         __file__))
+        self.assertEqual(
+            None,
+            pyficache.path(__file__),
+            ("path for %s should be None - " "just cleared cache." % __file__),
+        )
         path = pyficache.cache_file(__file__)
         self.assertTrue(path, "should have cached path for %s" % __file__)
-        self.assertEqual(path, pyficache.path(__file__),
-                         ("path %s of %s should be the same as we got "
-                          "before (%s)" %
-                         (path, __file__, pyficache.path(__file__))))
+        # self.assertEqual(
+        #     path,
+        #     pyficache.path(__file__),
+        #     (
+        #         "path %s of %s should be the same as we got "
+        #         "before (%s)" % (path, __file__, pyficache.path(__file__))
+        #     ),
+        # )
         return
 
     def test_trace_line_numbers(self):
-        test_file = os.path.join(TEST_DIR, 'short-file')
+        test_file = osp.join(TEST_DIR, "short-file")
         line_nums = pyficache.trace_line_numbers(test_file)
         if 0 == len(line_nums):
-            self.assertEqual([], line_nums)
+            self.assertEqual({}, line_nums)
         else:
-            # self.assertEqual([1], line_nums)
+            self.assertEqual(set([0]), line_nums)
             pass
-        test_file = os.path.join(TEST_DIR, 'devious.py')
-        self.assertEqual([2, 5, 7, 9],
-                         pyficache.trace_line_numbers(test_file))
+        test_file = osp.join(TEST_DIR, "devious.py")
+        expected = [9, 2, 5, 7]
+        self.assertEqual(set(expected), pyficache.trace_line_numbers(test_file))
         return
 
     # def test_universal_new_lines(self):
-    #     test_file = os.path.join(TEST_DIR, 'dos-file')
+    #     test_file = osp.join(TEST_DIR, 'dos-file')
     #     lines = pyficache.getlines(test_file)
     #     self.assertEqual(lines, ['Foo\n', 'bar\n', 'baz\n'])
     #     self.assertTrue(test_file in pyficache.file_cache)
@@ -197,7 +225,7 @@ class TestPyFiCache(unittest.TestCase):
     #     file_obj = pyficache.file_cache[test_file]
     #     # self.assertEqual('\r\n', file_obj.eols)
 
-    #     test_file = os.path.join(TEST_DIR, 'mixed-eol-file')
+    #     test_file = osp.join(TEST_DIR, 'mixed-eol-file')
     #     lines = pyficache.getlines(test_file)
     #     self.assertEqual(lines, ['Unix\n', 'DOS\n', 'unix\n'])
     #     self.assertTrue(test_file in pyficache.file_cache)
@@ -206,29 +234,33 @@ class TestPyFiCache(unittest.TestCase):
 
     def test_sha1(self):
         global TEST_DIR
-        test_file = os.path.join(TEST_DIR, 'short-file')
-        self.assertEqual('1134f95ea84a3dcc67d7d1bf41390ee1a03af6d2',
-                         pyficache.sha1(test_file))
+        test_file = osp.join(TEST_DIR, "short-file")
+        self.assertEqual(
+            "1134f95ea84a3dcc67d7d1bf41390ee1a03af6d2", pyficache.sha1(test_file)
+        )
         return
 
     def test_size(self):
         global TEST_DIR
-        test_file = os.path.join(TEST_DIR, 'short-file')
+        test_file = osp.join(TEST_DIR, "short-file")
         self.assertEqual(2, pyficache.size(test_file))
         return
 
     def test_stat(self):
-        self.assertEqual(None, pyficache.stat(__file__, use_cache_only=True),
-                         ("stat for %s should be None - "
-                          "just cleared cache." % __file__))
+        self.assertEqual(
+            None,
+            pyficache.stat(__file__, use_cache_only=True),
+            ("stat for %s should be None - " "just cleared cache." % __file__),
+        )
         line = pyficache.getline(__file__, 1)
         self.assertTrue(line)
-        self.assertTrue(pyficache.stat(__file__),
-                        "file %s should now have a stat" % __file__ )
+        self.assertTrue(
+            pyficache.stat(__file__), "file %s should now have a stat" % __file__
+        )
         return
 
     def test_update_cache(self):
-        self.assertFalse(pyficache.update_cache('foo'))
+        self.assertFalse(pyficache.update_cache("foo"))
         self.assertTrue(pyficache.update_cache(__file__))
         return
 
@@ -239,24 +271,25 @@ class TestPyFiCache(unittest.TestCase):
         self.assertEqual([], pyficache.cached_files())
         return
 
-    def test_pyc2py(self):
+    def test_resolve_name_to_path(self):
         if PYTHON3:
             testdata = (
                 ("pyc/__pycache__/foo.cpython-%s.pyc" % PYVER, "pyc/foo.py"),
                 ("__pycache__/pyo.cpython-%s.pyc" % PYVER, "pyo.py"),
                 ("foo/__pycache__/bar.cpython-%s.pyo" % PYVER, "foo/bar.py"),
-                )
+            )
         else:
             testdata = (
                 ("pyc/foo.pyc", "pyc/foo.py"),
                 ("pyo.pyc", "pyo.py"),
                 ("foo.pyo", "foo.py"),
-                )
+            )
         for path, expect in testdata:
-            self.assertEqual(pyficache.pyc2py(path), expect)
+            self.assertEqual(pyficache.resolve_name_to_path(path), expect)
         return
 
     pass
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()

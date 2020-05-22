@@ -1,4 +1,4 @@
-# Copyright (C) 2009, 2010, 2013, 2015, 2017 Rocky Bernstein <rocky@gnu.org>
+# Copyright (C) 2009-2010, 2013, 2015, 2017, 2020 Rocky Bernstein <rocky@gnu.org>
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -15,55 +15,66 @@
 """packaging information"""
 import sys
 
-copyright   = '''
-Copyright (C) 2008-2010, 2012-2013, 2015-2018 Rocky Bernstein <rocky@gnu.org>.
-'''
-classifiers =  ['Development Status :: 5 - Production/Stable',
-                'Intended Audience :: Developers',
-                'License :: OSI Approved :: GNU General Public License (GPL)',
-                'Programming Language :: Python',
-                'Topic :: Software Development :: Libraries :: Python Modules',
-                'Programming Language :: Python :: 2.4',
-                'Programming Language :: Python :: 2.5',
-                'Programming Language :: Python :: 2.6',
-                'Programming Language :: Python :: 2.7',
-                'Programming Language :: Python :: 3.0',
-                'Programming Language :: Python :: 3.1',
-                'Programming Language :: Python :: 3.2',
-                'Programming Language :: Python :: 3.3',
-                'Programming Language :: Python :: 3.4',
-                'Programming Language :: Python :: 3.5 ',
-                'Programming Language :: Python :: 3.6 ',
-                ]
+copyright = """
+Copyright (C) 2008-2010, 2012-2013, 2015-2018, 2020 Rocky Bernstein <rocky@gnu.org>.
+"""
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: GNU General Public License (GPL)",
+    "Programming Language :: Python",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Programming Language :: Python :: 2.4",
+    "Programming Language :: Python :: 2.5",
+    "Programming Language :: Python :: 2.6",
+    "Programming Language :: Python :: 2.7",
+    "Programming Language :: Python :: 3.0",
+    "Programming Language :: Python :: 3.1",
+    "Programming Language :: Python :: 3.2",
+    "Programming Language :: Python :: 3.3",
+    "Programming Language :: Python :: 3.4",
+    "Programming Language :: Python :: 3.5 ",
+    "Programming Language :: Python :: 3.6 ",
+    "Programming Language :: Python :: 3.7 ",
+    "Programming Language :: Python :: 3.8 ",
+]
 
-coverage_version = ''
-SYS_VERSION = sys.version_info[0:2]
+pygments_version = ">=14, <= 1.6"
 
 # The rest in alphabetic order
-author             = "Rocky Bernstein"
-author_email       = "rocky@gnu.org"
-ftp_url            = None
-install_requires   = ['coverage==3.4', 'pygments==1.4']
-install_requires   += ['hashlib']
+author = "Rocky Bernstein"
+author_email = "rocky@gnu.org"
+ftp_url = None
+install_requires = [
+    "pygments " + pygments_version,
+    "xdis >= 4.6.0, < 4.7.0"
+]
 
-license            = 'GPL'
-mailing_list       = None
-modname            = 'pyficache'
+license = "GPL"
+mailing_list = None
+modname = "pyficache"
 py_modules = [modname]
 
-short_desc = \
-'Cache lines and file information which are generally Python programs'
+short_desc = "Cache lines and file information which are generally Python programs"
 
 # VERSION.py sets variable VERSION.
-import os.path
-exec(compile(open(os.path.join(os.path.dirname(__file__), 'pyficache',
-                               'version.py')).read(),
-             os.path.join(os.path.dirname(__file__), 'version.py'), 'exec'))
+import os.path as osp
 
-web = 'http://github.com/rocky/python-filecache'
+exec(
+    compile(
+        open(osp.join(osp.dirname(__file__), "pyficache", "version.py")).read(),
+        osp.join(osp.dirname(__file__), "version.py"),
+        "exec",
+    )
+)
 
-zip_safe = False # tracebacks in zip files are funky and not debuggable
+web = "http://github.com/rocky/python-filecache"
+
+zip_safe = False  # tracebacks in zip files are funky and not debuggable
+
 
 def read(*rnames):
-    return open(os.path.join(os.path.dirname(__file__), *rnames)).read()
-long_description   = ( read("README.rst") + '\n' )
+    return open(osp.join(osp.dirname(__file__), *rnames)).read()
+
+
+long_description = read("README.rst") + "\n"
