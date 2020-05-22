@@ -1,8 +1,3 @@
-<<<<<<< HEAD:NEWS
-1.0.1 2018-04-16
-
-- Pygments needs to be 1.4.
-=======
 2.0.0 2018-01-26
 ================
 
@@ -12,7 +7,11 @@
 * `py2pyc()` renamed to `resolve_name_to_path()`, and use `importlib` to help
   use resolve names if that is available. This is why we need to bump from 1.0 to 2.0
 * blacken some buffers and regularize imports
->>>>>>> master:NEWS.md
+
+1.0.1 2018-04-16
+=================
+
+- Pygments needs to be 1.4.
 
 1.0.0 2018-01-26
 ================
