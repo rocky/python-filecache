@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#   Copyright (C) 2008-2009, 2012-2013, 2015-2016, 2018
+#   Copyright (C) 2008-2009, 2012-2013, 2015-2016, 2018, 2020
 #   Rocky Bernstein <rocky@gnu.org>
 #
 #   This program is free software: you can redistribute it and/or modify
@@ -54,6 +54,7 @@ Synopsis
 """
 
 import hashlib, linecache, os, re, sys
+import os.path as osp
 
 from collections import namedtuple
 
@@ -61,7 +62,7 @@ from pygments import highlight
 from pygments.lexers import PythonLexer
 from pygments.formatters import TerminalFormatter, Terminal256Formatter
 
-from xdis import PYTHON3
+from xdis import PYTHON3, PYTHON_VERSION
 from pyficache.line_numbers import code_linenumbers_in_file
 
 PYVER = "%s%s" % sys.version_info[0:2]
@@ -95,21 +96,61 @@ def get_option(key, options):
 def has_trailing_nl(string):
     return len(string) > 0 and "\n" == string[-1]
 
+if PYTHON_VERSION >= 3.4:
+    from importlib.util import source_from_cache, resolve_name, find_spec
+else:
+    source_from_cache = resulve_name, find_spec = None
 
-def pyc2py(filename):
+def resolve_name_to_path(path_or_name):
+    """Try to "resolve" `path_or_name` info its constituent file path.
+
+    `path_or_name` could be either a
+
+    * a bytecode file path,
+    * a module
+    * a Python source path already (in which nothing is done)
+
+    We use 3.3, 3.4 importlib routines if these are available.
+    If not we'll try other hacky methods.
+
+    If all fails, we'll just return `path_or_name` unchanged.
     """
-    Find corresponding .py name given a .pyc or .pyo
-    """
-    if re.match(".*py[co]$", filename):
+    if path_or_name.endswith(".py"):
+        # Assume Python source code
+        return path_or_name
+
+    if source_from_cache:
+        try:
+            source_path = source_from_cache(path_or_name)
+        except:
+            pass
+        else:
+            if source_path:
+                return source_path
+            pass
+
+    if find_spec:
+        try:
+            spec = find_spec(path_or_name)
+        except:
+            spec = None
+        else:
+            if spec and spec.origin:
+                return spec.origin
+            pass
+
+    if re.match(".*py[co]$", path_or_name):
         if PYTHON3:
             return re.sub(
                 r"(.*)__pycache__/(.+)\.cpython-%s.py[co]$" % PYVER,
                 "\\1\\2.py",
-                filename,
+                path_or_name,
             )
         else:
-            return filename[:-1]
-    return filename
+            return path_or_name[:-1]
+
+    # If none of the fancy things above happened
+    return path_or_name
 
 
 class LineCacheInfo:
@@ -266,7 +307,7 @@ def checkcache(filename=None, opts=False):
         if filename not in file_cache:
             continue
         path = file_cache[filename].path
-        if os.path.exists(path):
+        if osp.exists(path):
             cache_info = file_cache[filename].stat
             stat = os.stat(path)
             if stat and (
@@ -313,7 +354,7 @@ def cache_file(filename, reload_on_change=False, opts=default_opts):
     """Cache filename if it is not already cached.
     Return the expanded filename for it in the cache
     or nil if we can not find the file."""
-    filename = pyc2py(filename)
+    filename = resolve_name_to_path(filename)
     if filename in file_cache:
         if reload_on_change:
             checkcache(filename)
@@ -389,7 +430,7 @@ def getlines(filename, opts=default_opts):
 
     if filename not in file_cache:
         update_cache(filename, opts)
-        filename = pyc2py(filename)
+        filename = resolve_name_to_path(filename)
         if filename not in file_cache:
             return None
         pass
@@ -448,7 +489,7 @@ def remap_file(from_file, to_file):
 def remap_file_lines(from_path, to_path, line_map_list):
     """Adds line_map list to the list of association of from_file to
        to to_file"""
-    from_path = pyc2py(from_path)
+    from_path = resolve_name_to_path(from_path)
     cache_file(to_path)
     remap_entry = file2file_remap_lines.get(to_path)
     if remap_entry:
@@ -523,7 +564,7 @@ def maxline(filename, use_cache_only=False):
 def stat(filename, use_cache_only=False):
     """Return stat() info for *filename*. If *use_cache_only* is *False*,
     we will try to fetch the file if it is not cached."""
-    filename = pyc2py(filename)
+    filename = resolve_name_to_path(filename)
     if filename not in file_cache:
         if not use_cache_only:
             cache_file(filename)
@@ -602,10 +643,10 @@ def update_cache(filename, opts=default_opts, module_globals=None):
         return None
 
     orig_filename = filename
-    filename = pyc2py(filename)
+    filename = resolve_name_to_path(filename)
     if filename in file_cache:
         del file_cache[filename]
-    path = os.path.abspath(filename)
+    path = osp.abspath(filename)
     stat = None
     if get_option("use_linecache_lines", opts):
         fname_list = [filename]
@@ -626,14 +667,14 @@ def update_cache(filename, opts=default_opts, module_globals=None):
                 pass
             if orig_filename != filename:
                 file2file_remap[orig_filename] = filename
-                file2file_remap[os.path.abspath(orig_filename)] = filename
+                file2file_remap[osp.abspath(orig_filename)] = filename
                 pass
             file2file_remap[path] = filename
             return filename
         pass
     pass
 
-    if os.path.exists(path):
+    if osp.exists(path):
         stat = os.stat(path)
     elif module_globals and "__loader__" in module_globals:
         name = module_globals.get("__name__")
@@ -668,13 +709,13 @@ def update_cache(filename, opts=default_opts, module_globals=None):
                 return True
             pass
         pass
-    if not os.path.isabs(filename):
+    if not osp.isabs(filename):
         # Try looking through the module search path, which is only useful
         # when handling a relative filename.
         stat = None
         for dirname in sys.path:
-            path = os.path.join(dirname, filename)
-            if os.path.exists(path):
+            path = osp.join(dirname, filename)
+            if osp.exists(path):
                 stat = os.stat(path)
                 break
             pass
@@ -703,7 +744,7 @@ def update_cache(filename, opts=default_opts, module_globals=None):
     lines[key] = highlight_array(raw_string.split("\n"), trailing_nl, **highlight_opts)
     if orig_filename != filename:
         file2file_remap[orig_filename] = filename
-        file2file_remap[os.path.abspath(orig_filename)] = filename
+        file2file_remap[osp.abspath(orig_filename)] = filename
         pass
     pass
 
@@ -722,46 +763,47 @@ if __name__ == "__main__":
             return "not "
         return  # Not reached
 
-    # print(getline(__file__, 1, {'output': 'dark'}))
-    # print(getline(__file__, 2, {'output': 'light'}))
-    # from pygments.styles import STYLE_MAP
-    # opts = {'style': list(STYLE_MAP.keys())[0]}
-    # print(getline(__file__, 1, opts))
-    # update_cache('os')
+    print(resolve_name_to_path("os"))
+    print(getline(__file__, 1, {'output': 'dark'}))
+    print(getline(__file__, 2, {'output': 'light'}))
+    from pygments.styles import STYLE_MAP
+    opts = {'style': list(STYLE_MAP.keys())[0]}
+    print(getline(__file__, 1, opts))
+    update_cache('os')
 
-    # lines = getlines(__file__)
-    # print("%s has %s lines" % (__file__, len(lines)))
-    # lines = getlines(__file__, {'output': 'light'})
+    lines = getlines(__file__)
+    print("%s has %s lines" % (__file__, len(lines)))
+    lines = getlines(__file__, {'output': 'light'})
 
-    # i = 0
-    # for line in lines:
-    #     i += 1
-    #     print(line.rstrip('\n').rstrip('\n'))
-    #     if i > 20: break
-    #     pass
-    # line = getline(__file__, 6)
-    # print("The 6th line is\n%s" % line)
-    # line = remap_file(__file__, 'another_name')
-    # print(getline('another_name', 7))
+    i = 0
+    for line in lines:
+        i += 1
+        print(line.rstrip('\n').rstrip('\n'))
+        if i > 20: break
+        pass
+    line = getline(__file__, 6)
+    print("The 6th line is\n%s" % line)
+    line = remap_file(__file__, 'another_name')
+    print(getline('another_name', 7))
 
-    # print("Files cached: %s" % cached_files())
-    # update_cache(__file__)
-    # checkcache(__file__)
-    # print("%s has %s lines" % (__file__, size(__file__)))
-    # print("%s trace line numbers:\n" % __file__)
-    # print("%s " % repr(trace_line_numbers(__file__)))
-    # print("%s is %scached." % (__file__,
-    #                            yes_no(is_cached(__file__))))
-    # print(stat(__file__))
-    # print("Full path: %s" % path(__file__))
-    # checkcache()  # Check all files in the cache
-    # clear_file_format_cache()
-    # clear_file_cache()
-    # print(("%s is now %scached." % (__file__, yes_no(is_cached(__file__)))))
-    # #   # digest = SCRIPT_LINES__.select{|k,v| k =~ /digest.rb$/}
-    # #   # if digest is not None: print digest.first[0]
-    # line = getline(__file__, 7)
-    # print("The 7th line is\n%s" % line)
+    print("Files cached: %s" % cached_files())
+    update_cache(__file__)
+    checkcache(__file__)
+    print("%s has %s lines" % (__file__, size(__file__)))
+    print("%s trace line numbers:\n" % __file__)
+    print("%s " % repr(trace_line_numbers(__file__)))
+    print("%s is %scached." % (__file__,
+                               yes_no(is_cached(__file__))))
+    print(stat(__file__))
+    print("Full path: %s" % path(__file__))
+    checkcache()  # Check all files in the cache
+    clear_file_format_cache()
+    clear_file_cache()
+    print(("%s is now %scached." % (__file__, yes_no(is_cached(__file__)))))
+    #   # digest = SCRIPT_LINES__.select{|k,v| k =~ /digest.rb$/}
+    #   # if digest is not None: print digest.first[0]
+    line = getline(__file__, 7)
+    print("The 7th line is\n%s" % line)
     orig_path = __file__
     mapped_path = "test2"
     start_line = 10

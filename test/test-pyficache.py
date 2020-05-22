@@ -5,7 +5,7 @@
 Unit test for pyficache
 """
 from __future__ import with_statement
-from xdis import PYTHON_VERSION
+from xdis import PYTHON_VERSION, PYTHON3
 import os, sys, unittest
 from tempfile import mkstemp
 
@@ -19,7 +19,7 @@ if top_builddir[-1] != osp.sep:
 sys.path.insert(0, top_builddir)
 
 import pyficache
-from pyficache import PYVER, PYTHON3
+from pyficache import PYVER
 
 # Test LineCache module
 class TestPyFiCache(unittest.TestCase):
@@ -276,7 +276,7 @@ class TestPyFiCache(unittest.TestCase):
         self.assertEqual([], pyficache.cached_files())
         return
 
-    def test_pyc2py(self):
+    def test_resolve_name_to_path(self):
         if PYTHON3:
             testdata = (
                 ("pyc/__pycache__/foo.cpython-%s.pyc" % PYVER, "pyc/foo.py"),
@@ -290,7 +290,7 @@ class TestPyFiCache(unittest.TestCase):
                 ("foo.pyo", "foo.py"),
             )
         for path, expect in testdata:
-            self.assertEqual(pyficache.pyc2py(path), expect)
+            self.assertEqual(pyficache.resolve_name_to_path(path), expect)
         return
 
     pass
