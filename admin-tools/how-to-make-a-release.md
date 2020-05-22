@@ -2,7 +2,7 @@
 **Table of Contents**
 
 - [Get latest sources:](#get-latest-sources)
-- [Change version in VERSION.py](#change-version-in-versionpy)
+- [Change version in version.py](#change-version-in-versionpy)
 - [Update ChangeLog:](#update-changelog)
 - [Update NEWS from ChangeLog. Then:](#update-news-from-changelog-then)
 - [Make sure pyenv is running and check newer versions](#make-sure-pyenv-is-running-and-check-newer-versions)
@@ -10,10 +10,8 @@
 - [Update NEWS from master branch](#update-news-from-master-branch)
 - [Check against all versions](#check-against-all-versions)
 - [Make packages and tag](#make-packages-and-tag)
-- [Upload single package and look at Rst Formating](#upload-single-package-and-look-at-rst-formating)
-- [Upload rest of versions](#upload-rest-of-versions)
-- [Push tags:](#push-tags)
-- [Check on a VM](#check-on-a-vm)
+- [Check packages](#check-packages)
+- [Get on PyPy](#get-on-pypy)
 
 <!-- markdown-toc end -->
 
@@ -21,7 +19,7 @@
 
     git pull
 
-# Change version in VERSION.py
+# Change version in version.py
 
     $ emacs pyficache/version.py
     $ source pyficache/version.py
@@ -68,12 +66,12 @@
 
     $ . ./admin-tools/make-dist-newer.sh
 
-# Make packages and check
+# Check packages
 
 	$ twine check dist/pyficache-$VERSION*
 
 # Get on PyPy
 
-Goto https://github.com/rocky/pyficache/releases/new
+Goto https://github.com/rocky/python-filecache/releases/new
 
 	$ twine upload dist/pyficache-${VERSION}*

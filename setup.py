@@ -21,7 +21,9 @@ from __pkginfo__ import (
 )
 
 __import__("pkg_resources")
-from setuptools import setup
+from setuptools import setup, find_packages
+
+packages = find_packages()
 
 setup(
     author=author,
@@ -32,6 +34,7 @@ setup(
     license=license,
     long_description=long_description,
     name=modname,
+    packages=packages,
     py_modules=py_modules,
     test_suite="nose.collector",
     url=web,
