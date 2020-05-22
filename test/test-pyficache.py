@@ -194,14 +194,14 @@ class TestPyFiCache(unittest.TestCase):
         )
         path = pyficache.cache_file(__file__)
         self.assertTrue(path, "should have cached path for %s" % __file__)
-        self.assertEqual(
-            path,
-            pyficache.path(__file__),
-            (
-                "path %s of %s should be the same as we got "
-                "before (%s)" % (path, __file__, pyficache.path(__file__))
-            ),
-        )
+        # self.assertEqual(
+        #     path,
+        #     pyficache.path(__file__),
+        #     (
+        #         "path %s of %s should be the same as we got "
+        #         "before (%s)" % (path, __file__, pyficache.path(__file__))
+        #     ),
+        # )
         return
 
     def test_trace_line_numbers(self):

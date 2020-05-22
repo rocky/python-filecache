@@ -1,3 +1,145 @@
+2020-05-22  rocky <rocky@gnu.org>
+
+	* admin-tools/how-to-make-a-release.md, pyficache/version.py: Get
+	ready for release 2.0.0
+
+2020-05-22  rocky <rocky@gnu.org>
+
+	* .gitignore, pyficache/.gitignore: Administrivia
+
+2020-05-22  rocky <rocky@gnu.org>
+
+	* pyficache/main.py: Update a comment.
+
+2020-05-22  rocky <rocky@gnu.org>
+
+	* pyficache/main.py: bug in 2.x-branch handling
+
+2020-05-21  rocky <rocky@gnu.org>
+
+	* pyficache/__init__.py, pyficache/main.py, pyficache/version.py,
+	test/test-pyficache.py: pyc2py -> resolve_name_to_path...  And use importlib to resolve imports if that's available.
+
+2020-05-21  rocky <rocky@gnu.org>
+
+	* requirements.txt: A more accurate requirements.txt CircleCI seems to need this in its default configuration.  Until I
+	figure out how to aviod this, we'll duplicate the config.
+
+2020-05-21  rocky <rocky@gnu.org>
+
+	* requirements.txt: See if this fixes CircleCI
+
+2020-05-21  rocky <rocky@gnu.org>
+
+	* pyficache/__init__.py, pyficache/main.py, requirements.txt: 
+	Travis-related stuff
+
+2020-05-21  rocky <rocky@gnu.org>
+
+	* .travis.yml: Try TravisCI fixup
+
+2020-05-21  rocky <rocky@gnu.org>
+
+	* .circleci/config.yml, __pkginfo__.py: See if this works
+
+2020-05-21  R. Bernstein <rocky@users.noreply.github.com>
+
+	* .circleci/config.yml: Add .circleci/config.yml
+
+2020-05-21  rocky <rocky@gnu.org>
+
+	* .circleci/config.yml, requirements-dev.txt: CircleCI woes
+
+2020-05-21  rocky <rocky@gnu.org>
+
+	* .coveragerc, .gitignore, __pkginfo__.py,
+	admin-tools/pyenv-newer-versions, admin-tools/pyenv-older-versions,
+	pyficache/.gitignore, pyficache/line_numbers.py, pyficache/main.py,
+	pyficache/version.py, setup.py, test/__init__.py,
+	test/test-pyficache.py: Compute line numbers using xdis ...  Coverage now creates a .coverage file. Our use was not really its
+	focus and its API has changed which we had to detect and code
+	around.  And with xdis we can support filecache for bytecode.
+
+2018-11-30  rocky <rocky@gnu.org>
+
+	* README.rst: Remove supported versions. Fixes #7
+
+2018-06-26  rocky <rocky@gnu.org>
+
+	* circle.yml: Remove CircleCI 1.1
+
+2018-06-26  rocky <rocky@gnu.org>
+
+	* admin-tools/setup-master.sh, pyficache/__init__.py: Sync with
+	python-2.4 branch
+
+2018-06-26  rocky <rocky@gnu.org>
+
+	* .circleci/config.yml: Try CircleCI 2.0
+
+2018-06-26  rocky <rocky@gnu.org>
+
+	* test/test-pyficache.py: Disable some tests
+
+2018-06-26  rocky <rocky@gnu.org>
+
+	* pyficache/main.py: Forgot to add main
+
+2018-06-26  rocky <rocky@gnu.org>
+
+	* test/test-pyficache.py, test/test-remap.py: More file path futzing
+
+2018-06-26  rocky <rocky@gnu.org>
+
+	* test/test-pyficache.py, test/test-remap.py: Add paths for tests
+
+2018-06-26  rocky <rocky@gnu.org>
+
+	* Makefile: Reinstate lint
+
+2018-06-26  rocky <rocky@gnu.org>
+
+	* pyficache/__init__.py: Add main exports
+
+2018-06-26  rocky <rocky@gnu.org>
+
+	* MANIFEST.in, __pkginfo__.py, pyficache.py, __init__.py =>
+	pyficache/__init__.py, VERSION.py => pyficache/version.py,
+	test/test-pyficache.py, test/test-remap.py: Redo packaging
+
+2018-03-05  rocky <rocky@gnu.org>
+
+	* README.rst, admin-tools/how-to-make-a-release.md: Remove "Latest
+	Version"
+
+2018-03-05  R. Bernstein <rocky@users.noreply.github.com>
+
+	* : Merge pull request #6 from movermeyer/fix_badges Switched broken pypip.in badges to shields.io
+
+2018-02-17  rocky <rocky@gnu.org>
+
+	* __pkginfo__.py: Lower pygments requirement
+
+2018-01-26  rocky <rocky@gnu.org>
+
+	* admin-tools/make-dist-newer.sh: More admnistrivia
+
+2018-01-26  rocky <rocky@gnu.org>
+
+	* .gitignore: One more adminstrive change
+
+2018-01-26  rocky <rocky@gnu.org>
+
+	* admin-tools/check-newer-versions.sh: More Administrivia
+
+2018-01-26  rocky <rocky@gnu.org>
+
+	* admin-tools/how-to-make-a-release.md: Administrivia
+
+2018-01-26  rocky <rocky@gnu.org>
+
+	* ChangeLog, NEWS: Get ready for release 1.0.0
+
 2018-01-26  rocky <rocky@gnu.org>
 
 	* admin-tools/check-newer-versions.sh,

@@ -4,4 +4,4 @@
 # This file should define a variable VERSION which we use as the
 # package version number.
 
-VERSION = "2.0.0"  # noqa
+VERSION="2.0.0"  # noqa
