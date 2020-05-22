@@ -20,6 +20,7 @@ for version in $PYVERSIONS; do
     if ! pyenv local $version ; then
 	exit $?
     fi
+    pwd
     make clean && pip install -e .
     if ! make check; then
 	exit $?

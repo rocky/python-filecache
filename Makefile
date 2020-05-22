@@ -42,7 +42,7 @@ check-short:
 clean:
 	$(PYTHON) ./setup.py $@
 
-#: Run all tests
+#: Run coverage
 coverage:
 	coverage
 
