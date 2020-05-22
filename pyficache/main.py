@@ -99,7 +99,7 @@ def has_trailing_nl(string):
 if PYTHON_VERSION >= 3.4:
     from importlib.util import source_from_cache, resolve_name, find_spec
 else:
-    source_from_cache = resulve_name, find_spec = None
+    source_from_cache = resolve_name = find_spec = None
 
 def resolve_name_to_path(path_or_name):
     """Try to "resolve" `path_or_name` info its constituent file path.
