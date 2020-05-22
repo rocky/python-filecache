@@ -213,7 +213,7 @@ class TestPyFiCache(unittest.TestCase):
                 self.assertEqual(set([0]), line_nums)
             pass
         test_file = osp.join(TEST_DIR, "devious.py")
-        if PYTHON_VERSION in (2.5, 2.6):
+        if PYTHON_VERSION in (2.5, 2.6, 2.7):
             expected = [8, 9, 4, 6]
         else:
             expected = [9, 2, 5, 7]
