@@ -1,5 +1,6 @@
 *.bak
 *.egg
+.mypy_cache
 *.pyc
 *~
 /*.egg-info
