@@ -12,7 +12,10 @@ jobs:
       - python/install-deps
       - python/save-cache
       - run:
-          command: pip install -e . && pip install -r requirements-dev.txt
+          command: sudo pip install git+git://github.com/rocky/python-xdis.git#egg=xdis
+          name: install from github until next xdis release
+      - run:
+          command: sudo pip install -e . && pip install -r requirements-dev.txt
           name: Install dependencies
       - run:
           command: make check
