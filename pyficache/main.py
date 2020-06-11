@@ -576,7 +576,7 @@ def stat(filename, use_cache_only=False):
     return file_cache[filename].stat
 
 
-def trace_line_numbers(filename, reload_on_change=False):
+def trace_line_numbers(filename, reload_on_change=False, toplevel_only=False):
     """Return the line numbers that are (or would be) stored in
     co_linenotab for `filename`.
 
@@ -599,7 +599,7 @@ def trace_line_numbers(filename, reload_on_change=False):
     return e.line_numbers
 
 
-def trace_line_offsets(filename, reload_on_change=False):
+def code_lines(filename, reload_on_change=False, toplevel_only=False):
     """Return the line numbers, bytecode offsets, and code object that are
     (or would be) stored in the bytecode for `filename`.
 
@@ -618,9 +618,24 @@ def trace_line_offsets(filename, reload_on_change=False):
         return None
     e = file_cache[filename]
     if not e.line_numbers:
-        e.line_offsets = lineoffsets_in_file(fullname)
+        code_info = lineoffsets_in_file(fullname, toplevel_only=toplevel_only)
+        e.line_numbers = code_info.line_numbers(include_offsets=True, include_children=True)
         pass
-    return e.line_offsets
+    return e.line_numbers
+
+
+def code_line_info(filename, line_number, reload_on_change=False, toplevel_only=False):
+    """Return the bytecode information that is associated with
+    `line_number` the the bytecode for `filename`. This is
+    a list of xdis.LineOffsets. Each entry is a line number
+    list of instruction offests associated with that line number
+    and a code object where this can be found.
+
+    Internally the co_lineno table in the code to get this. But here,
+    you don't need to know that. xdis does the heavy lifting.
+    """
+    lineoffset_info = code_lines(filename, toplevel_only=toplevel_only)
+    return [li for li in lineoffset_info if li.line_number == line_number]
 
 
 def is_mapped_file(filename):
@@ -791,10 +806,13 @@ def update_cache(filename, opts=default_opts, module_globals=None):
 if __name__ == "__main__":
 
     def yes_no(var):
+        # NOTE: for testing, we want the next line to contain 2 statements on a
+        # single line
+        prefix1 = ""; prefix2 = "not "
         if var:
-            return ""
+            return prefix1
         else:
-            return "not "
+            return prefix2
         return  # Not reached
 
     # print(resolve_name_to_path("os"))
@@ -827,8 +845,13 @@ if __name__ == "__main__":
     update_cache(__file__)
     checkcache(__file__)
     print("%s has %s lines" % (__file__, size(__file__)))
-    print("%s trace line numbers:\n" % __file__)
-    print("%s " % trace_line_offsets(__file__))
+    print("%s code_lines data:\n" % __file__)
+
+    line_info = code_lines(__file__)
+    for line_num, li in line_info.items():
+        print("\tline: %4d: %s" % (line_num, ", ".join([str(i.offsets) for i in li])))
+    print("=" * 30)
+
     # print("%s is %scached." % (__file__, yes_no(is_cached(__file__))))
     # print(stat(__file__))
     # print("Full path: %s" % path(__file__))
