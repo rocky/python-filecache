@@ -805,6 +805,7 @@ def update_cache(filename, opts=default_opts, module_globals=None):
 # example usage
 if __name__ == "__main__":
 
+    z = lambda x, y: x + y
     def yes_no(var):
         # NOTE: for testing, we want the next line to contain 2 statements on a
         # single line
