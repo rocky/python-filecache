@@ -635,7 +635,7 @@ def code_line_info(filename, line_number, reload_on_change=False, toplevel_only=
     you don't need to know that. xdis does the heavy lifting.
     """
     lineoffset_info = code_lines(filename, toplevel_only=toplevel_only)
-    return [li for li in lineoffset_info if li.line_number == line_number]
+    return lineoffset_info.get(line_number, None)
 
 
 def is_mapped_file(filename):
