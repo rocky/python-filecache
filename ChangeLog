@@ -1,8 +1,32 @@
+2020-06-12  rocky <rocky@gnu.org>
+
+	* .travis.yml, ChangeLog, NEWS.md: Get ready for release 2.1.0
+
+2020-06-12  rocky <rocky@gnu.org>
+
+	* admin-tools/how-to-make-a-release.md, pyficache/main.py: Get ready
+	for release 2.1.0
+
+2020-06-11  rocky <rocky@gnu.org>
+
+	* pyficache/__init__.py, pyficache/main.py: Add line routines:
+	code_lines and code_line_info
+
+2020-06-11  rocky <rocky@gnu.org>
+
+	* .circleci/config.yml, pyficache/main.py: Try newer xdis line API
+
+2020-06-07  rocky <rocky@gnu.org>
+
+	* .circleci/config.yml, .travis.yml, __pkginfo__.py, appveyor.yml,
+	pyficache/main.py, pyficache/version.py, requirements.txt: Try new
+	xdis lineoffset module
+
 2020-05-22  rocky <rocky@gnu.org>
 
-	* ChangeLog, MANIFEST.in, admin-tools/how-to-make-a-release.md,
-	pyficache/__init__.py, pyficache/version.py, setup.py: Get ready for
-	release 2.0.1
+	* ChangeLog, MANIFEST.in, NEWS.md,
+	admin-tools/how-to-make-a-release.md, pyficache/__init__.py,
+	pyficache/version.py, setup.py: Get ready for release 2.0.1
 
 2020-05-22  rocky <rocky@gnu.org>
 
