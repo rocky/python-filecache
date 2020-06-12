@@ -1,7 +1,15 @@
-2.0.1 2018-01-26
+2.1.0 2018-01-26
 ================
 
-Fix botched 2.0.0 release; setup.py file was broken (missing the `packages` parameter)
+This shifts responsibility of getting line offset info to xdis. But we have routines here
+since we manage file objects and cache them.
+
+To this end routines `code_lines()` and and `code_line_info()` were added.
+
+Line information now contains all offsets for a given line number in
+the module or function that the offset is relative to. There are various options
+for indicting whether you want the offset informaiton or just the line numbers,
+nnd if you want to note which line numbers are dups.
 
 2.0.0 2018-01-26
 ================

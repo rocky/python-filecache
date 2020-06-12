@@ -13,7 +13,6 @@ jobs:
       - python/save-cache
       - run:
           command: | # use pip install to install dependencis
-            sudo pip install git+git://github.com/rocky/python-xdis.git#egg=xdis
             sudo pip install -e . && pip install -r requirements-dev.txt
           name: Install dependencies
       - run:
