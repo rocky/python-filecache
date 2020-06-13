@@ -1,4 +1,119 @@
-2018-11-30  rocky <rocky@gnu.org>
+2020-06-12  rocky <rocky@gnu.org>
+
+	* .travis.yml, ChangeLog, NEWS.md: Get ready for release 2.1.0
+
+2020-06-12  rocky <rocky@gnu.org>
+
+	* admin-tools/how-to-make-a-release.md, pyficache/main.py: Get ready
+	for release 2.1.0
+
+2020-06-11  rocky <rocky@gnu.org>
+
+	* pyficache/__init__.py, pyficache/main.py: Add line routines:
+	code_lines and code_line_info
+
+2020-06-11  rocky <rocky@gnu.org>
+
+	* .circleci/config.yml, pyficache/main.py: Try newer xdis line API
+
+2020-06-07  rocky <rocky@gnu.org>
+
+	* .circleci/config.yml, .travis.yml, __pkginfo__.py, appveyor.yml,
+	pyficache/main.py, pyficache/version.py, requirements.txt: Try new
+	xdis lineoffset module
+
+2020-05-22  rocky <rocky@gnu.org>
+
+	* ChangeLog, MANIFEST.in, NEWS.md,
+	admin-tools/how-to-make-a-release.md, pyficache/__init__.py,
+	pyficache/version.py, setup.py: Get ready for release 2.0.1
+
+2020-05-22  rocky <rocky@gnu.org>
+
+	* admin-tools/how-to-make-a-release.md: Administrivia
+
+2020-05-22  rocky <rocky@gnu.org>
+
+	* admin-tools/setup-python-2.4.sh: Administrivia
+
+2020-05-22  rocky <rocky@gnu.org>
+
+	* Makefile, admin-tools/check-newer-versions.sh,
+	admin-tools/setup-master.sh: Administrivia
+
+2020-05-22  rocky <rocky@gnu.org>
+
+	* NEWS.md: Update NEWS
+
+2020-05-22  rocky <rocky@gnu.org>
+
+	* admin-tools/setup-master.sh, admin-tools/setup-python-2.4.sh:
+	Revise setup programs for xdis dependency
+
+2020-05-22  rocky <rocky@gnu.org>
+
+	* README.rst: See above.
+
+2020-05-22  rocky <rocky@gnu.org>
+
+	* README.rst: Go over README.rst before release
+
+2020-05-22  rocky <rocky@gnu.org>
+
+	* __pkginfo__.py, test/test-pyficache.py: Go over tests before
+	release
+
+2020-05-22  rocky <rocky@gnu.org>
+
+	* ChangeLog, MANIFEST.in, NEWS => NEWS.md,
+	admin-tools/how-to-make-a-release.md, pyficache/version.py,
+	test/test-pyficache.py: Get ready for release 2.0.0
+
+2020-05-22  rocky <rocky@gnu.org>
+
+	* .gitignore, pyficache/.gitignore: Administrivia
+
+2020-05-22  rocky <rocky@gnu.org>
+
+	* pyficache/main.py: Update a comment.
+
+2020-05-22  rocky <rocky@gnu.org>
+
+	* pyficache/main.py: bug in 2.x-branch handling
+
+2020-05-21  rocky <rocky@gnu.org>
+
+	* pyficache/__init__.py, pyficache/main.py, pyficache/version.py,
+	test/test-pyficache.py: pyc2py -> resolve_name_to_path...  And use importlib to resolve imports if that's available.
+
+2020-05-21  rocky <rocky@gnu.org>
+
+	* requirements.txt: A more accurate requirements.txt CircleCI seems to need this in its default configuration.  Until I
+	figure out how to aviod this, we'll duplicate the config.
+
+2020-05-21  rocky <rocky@gnu.org>
+
+	* requirements.txt: See if this fixes CircleCI
+
+2020-05-21  rocky <rocky@gnu.org>
+
+	* pyficache/__init__.py, pyficache/main.py, requirements.txt:
+	Travis-related stuff
+
+2020-05-21  rocky <rocky@gnu.org>
+
+	* .travis.yml: Try TravisCI fixup
+
+2020-05-21  rocky <rocky@gnu.org>
+
+	* .circleci/config.yml, __pkginfo__.py: See if this works
+
+2020-05-21  R. Bernstein <rocky@users.noreply.github.com>
+
+	* .circleci/config.yml: Add .circleci/config.yml
+
+2020-05-21  rocky <rocky@gnu.org>
+>>>>>>> master
 
 	* : commit 60709ccd837ef5df001faf3cb02d4979ba342a23 Author: rocky
 	<rocky@gnu.org> Date:   Fri Nov 30 07:17:36 2018 -0500
@@ -184,7 +299,7 @@
 
 2018-01-25  rocky <rocky@gnu.org>
 
-	* VERSION.py, __pkginfo__.py, pyficache.py, test/test-pyficache.py: 
+	* VERSION.py, __pkginfo__.py, pyficache.py, test/test-pyficache.py:
 	Reworked file/line mappings...  1st cut
 
 2017-08-11  rocky <rocky@gnu.org>
@@ -732,4 +847,3 @@
 
 	* Initial directory structure.  git-svn-id: https://pyficache.googlecode.com/svn/trunk@1
 	928b09c6-f64b-11dd-aa46-671127399dce
-

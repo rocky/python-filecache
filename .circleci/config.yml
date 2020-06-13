@@ -9,7 +9,8 @@ jobs:
     steps:
       - checkout
       - run:
-          command: pip install -e . && pip install -r requirements-dev.txt
+          command: | # use pip install to install dependencis
+            sudo pip install -e . && pip install -r requirements-dev.txt
           name: Install dependencies
       - run:
           command: make check

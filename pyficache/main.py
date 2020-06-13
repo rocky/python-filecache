@@ -62,7 +62,7 @@ from pygments import highlight
 from pygments.lexers import PythonLexer
 from pygments.formatters import TerminalFormatter, Terminal256Formatter
 
-from xdis import PYTHON3, PYTHON_VERSION
+from xdis import PYTHON3, PYTHON_VERSION, lineoffsets_in_file
 from pyficache.line_numbers import code_linenumbers_in_file
 
 PYVER = "%s%s" % sys.version_info[0:2]
@@ -96,10 +96,12 @@ def get_option(key, options):
 def has_trailing_nl(string):
     return len(string) > 0 and "\n" == string[-1]
 
+
 if PYTHON_VERSION >= 3.4:
     from importlib.util import source_from_cache, resolve_name, find_spec
 else:
     source_from_cache = resolve_name = find_spec = None
+
 
 def resolve_name_to_path(path_or_name):
     """Try to "resolve" `path_or_name` info its constituent file path.
@@ -574,7 +576,7 @@ def stat(filename, use_cache_only=False):
     return file_cache[filename].stat
 
 
-def trace_line_numbers(filename, reload_on_change=False):
+def trace_line_numbers(filename, reload_on_change=False, toplevel_only=False):
     """Return the line numbers that are (or would be) stored in
     co_linenotab for `filename`.
 
@@ -595,6 +597,45 @@ def trace_line_numbers(filename, reload_on_change=False):
         e.line_numbers = code_linenumbers_in_file(fullname)
         pass
     return e.line_numbers
+
+
+def code_lines(filename, reload_on_change=False, toplevel_only=False):
+    """Return the line numbers, bytecode offsets, and code object that are
+    (or would be) stored in the bytecode for `filename`.
+
+    These are places setting a breakpoint could conceivably
+    trigger. On other lines, a breakpoint would never occur, because
+    only the Python interpreter only stops at bytecode offsets
+    that have a line number.
+
+    The line in the source file could be empty because the line is
+    blank, inside a string or comment, in the middle of some long
+    construct or is something of that ilk.
+
+    """
+    fullname = cache_file(filename, reload_on_change)
+    if not fullname:
+        return None
+    e = file_cache[filename]
+    if not e.line_numbers:
+        code_info = lineoffsets_in_file(fullname, toplevel_only=toplevel_only)
+        e.line_numbers = code_info.line_numbers(include_offsets=True, include_children=True)
+        pass
+    return e.line_numbers
+
+
+def code_line_info(filename, line_number, reload_on_change=False, toplevel_only=False):
+    """Return the bytecode information that is associated with
+    `line_number` the the bytecode for `filename`. This is
+    a list of xdis.LineOffsets. Each entry is a line number
+    list of instruction offests associated with that line number
+    and a code object where this can be found.
+
+    Internally the co_lineno table in the code to get this. But here,
+    you don't need to know that. xdis does the heavy lifting.
+    """
+    lineoffset_info = code_lines(filename, toplevel_only=toplevel_only)
+    return lineoffset_info.get(line_number, None)
 
 
 def is_mapped_file(filename):
@@ -767,63 +808,74 @@ def update_cache(filename, opts=default_opts, module_globals=None):
 # example usage
 if __name__ == "__main__":
 
+    z = lambda x, y: x + y
     def yes_no(var):
+        # NOTE: for testing, we want the next line to contain 2 statements on a
+        # single line
+        prefix1 = ""; prefix2 = "not "
         if var:
-            return ""
+            return prefix1
         else:
-            return "not "
+            return prefix2
         return  # Not reached
 
-    print(resolve_name_to_path("os"))
-    print(getline(__file__, 1, {'output': 'dark'}))
-    print(getline(__file__, 2, {'output': 'light'}))
-    from pygments.styles import STYLE_MAP
-    opts = {'style': list(STYLE_MAP.keys())[0]}
-    print(getline(__file__, 1, opts))
-    update_cache('os')
+    # print(resolve_name_to_path("os"))
+    # print(getline(__file__, 1, {"output": "dark"}))
+    # print(getline(__file__, 2, {"output": "light"}))
+    # from pygments.styles import STYLE_MAP
 
-    lines = getlines(__file__)
-    print("%s has %s lines" % (__file__, len(lines)))
-    lines = getlines(__file__, {'output': 'light'})
+    # opts = {"style": list(STYLE_MAP.keys())[0]}
+    # print(getline(__file__, 1, opts))
+    # update_cache("os")
 
-    i = 0
-    for line in lines:
-        i += 1
-        print(line.rstrip('\n').rstrip('\n'))
-        if i > 20: break
-        pass
-    line = getline(__file__, 6)
-    print("The 6th line is\n%s" % line)
-    line = remap_file(__file__, 'another_name')
-    print(getline('another_name', 7))
+    # lines = getlines(__file__)
+    # print("%s has %s lines" % (__file__, len(lines)))
+    # lines = getlines(__file__, {"output": "light"})
 
-    print("Files cached: %s" % cached_files())
+    # i = 0
+    # for line in lines:
+    #     i += 1
+    #     print(line.rstrip("\n").rstrip("\n"))
+    #     if i > 20:
+    #         break
+    #     pass
+    # line = getline(__file__, 6)
+    # print("The 6th line is\n%s" % line)
+    # line = remap_file(__file__, "another_name")
+    # print(getline("another_name", 7))
+
+    # print("Files cached: %s" % cached_files())
+
     update_cache(__file__)
     checkcache(__file__)
     print("%s has %s lines" % (__file__, size(__file__)))
-    print("%s trace line numbers:\n" % __file__)
-    print("%s " % repr(trace_line_numbers(__file__)))
-    print("%s is %scached." % (__file__,
-                               yes_no(is_cached(__file__))))
-    print(stat(__file__))
-    print("Full path: %s" % path(__file__))
-    checkcache()  # Check all files in the cache
-    clear_file_format_cache()
-    clear_file_cache()
-    print(("%s is now %scached." % (__file__, yes_no(is_cached(__file__)))))
-    #   # digest = SCRIPT_LINES__.select{|k,v| k =~ /digest.rb$/}
-    #   # if digest is not None: print digest.first[0]
-    line = getline(__file__, 7)
-    print("The 7th line is\n%s" % line)
-    orig_path = __file__
-    mapped_path = "test2"
-    start_line = 10
-    start_mapped = 6
-    remap_file_lines(orig_path, mapped_path, ((start_line, start_mapped),))
-    for l in (1,):
-        line = getline(mapped_path, l + start_mapped)
-    print(
-        "Remapped %s line %d should be line %d of %s. line is:\n%s"
-        % (mapped_path, start_mapped + l, start_line + l, orig_path, line)
-    )
+    print("%s code_lines data:\n" % __file__)
+
+    line_info = code_lines(__file__)
+    for line_num, li in line_info.items():
+        print("\tline: %4d: %s" % (line_num, ", ".join([str(i.offsets) for i in li])))
+    print("=" * 30)
+
+    # print("%s is %scached." % (__file__, yes_no(is_cached(__file__))))
+    # print(stat(__file__))
+    # print("Full path: %s" % path(__file__))
+    # checkcache()  # Check all files in the cache
+    # clear_file_format_cache()
+    # clear_file_cache()
+    # print(("%s is now %scached." % (__file__, yes_no(is_cached(__file__)))))
+    # #   # digest = SCRIPT_LINES__.select{|k,v| k =~ /digest.rb$/}
+    # #   # if digest is not None: print digest.first[0]
+    # line = getline(__file__, 7)
+    # print("The 7th line is\n%s" % line)
+    # orig_path = __file__
+    # mapped_path = "test2"
+    # start_line = 10
+    # start_mapped = 6
+    # remap_file_lines(orig_path, mapped_path, ((start_line, start_mapped),))
+    # for l in (1,):
+    #     line = getline(mapped_path, l + start_mapped)
+    # print(
+    #     "Remapped %s line %d should be line %d of %s. line is:\n%s"
+    #     % (mapped_path, start_mapped + l, start_line + l, orig_path, line)
+    # )
     # print("XXX", file2file_remap_lines)

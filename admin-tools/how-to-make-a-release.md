@@ -7,11 +7,13 @@
 - [Update NEWS from ChangeLog. Then:](#update-news-from-changelog-then)
 - [Make sure pyenv is running and check newer versions](#make-sure-pyenv-is-running-and-check-newer-versions)
 - [Switch to python-2.4, sync that up and build that first since it creates a tarball which we don't want.](#switch-to-python-24-sync-that-up-and-build-that-first-since-it-creates-a-tarball-which-we-dont-want)
-- [Update NEWS from master branch](#update-news-from-master-branch)
+- [Update NEWS from master branch. Then..](#update-news-from-master-branch-then)
 - [Check against all versions](#check-against-all-versions)
 - [Make packages and tag](#make-packages-and-tag)
-- [Check packages](#check-packages)
+- [Release on Github](#release-on-github)
 - [Get on PyPy](#get-on-pypy)
+- [Push tags:](#push-tags)
+- [Move dist files to uploaded](#move-dist-files-to-uploaded)
 
 <!-- markdown-toc end -->
 
@@ -48,7 +50,7 @@
     $ source admin-tools/setup-python-2.4.sh
     $ git merge master
 
-# Update NEWS from master branch
+# Update NEWS from master branch. Then..
 
     $ git commit -m"Get ready for release $VERSION" .
 
@@ -62,16 +64,39 @@
 # Make packages and tag
 
     $ . ./admin-tools/make-dist-older.sh
+	$ pyenv local 3.8.3
+	$ twine check dist/xdis-$VERSION*
     $ git tag release-python-2.4-$VERSION
-
     $ . ./admin-tools/make-dist-newer.sh
+	$ twine check dist/xdis-$VERSION*
 
-# Check packages
+# Release on Github
+
+Goto https://github.com/rocky/python-filecache/releases/new
+
+Now check the *tagged* release. (Checking the untagged release was previously done).
+
+Todo: turn this into a script in `admin-tools`
+
+	$ pushd /tmp/gittest
+	$ pip install -e git://github.com/rocky/python-filecache@$VERSION.git#egg=pyficache
+	$ pip uninstall pyficache
+	$ popd
+
 
 	$ twine check dist/pyficache-$VERSION*
 
 # Get on PyPy
 
-Goto https://github.com/rocky/python-filecache/releases/new
-
 	$ twine upload dist/pyficache-${VERSION}*
+
+Check on https://pypi.org/project/pyficache/
+
+# Push tags:
+
+    $ git push --tags
+    $ git pull --tags
+
+# Move dist files to uploaded
+
+	$ mv -v dist/xdis-${VERSION}* dist/uploaded
