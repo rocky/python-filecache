@@ -156,9 +156,10 @@ def resolve_name_to_path(path_or_name):
 
 
 class LineCacheInfo:
-    def __init__(self, stat, line_numbers, lines, path, sha1, eols=None):
+    def __init__(self, stat, line_numbers, linestarts, lines, path, sha1, eols=None):
         self.stat, self.lines, self.path, self.sha1 = (stat, lines, path, sha1)
         self.line_numbers = line_numbers
+        self.linestarts = linestarts
         self.eols = eols
         return
 
@@ -599,10 +600,10 @@ def trace_line_numbers(filename, reload_on_change=False, toplevel_only=False):
     return e.line_numbers
 
 
-def code_lines(
+def cache_code_lines(
     filename, reload_on_change=False, toplevel_only=False, include_offsets=True
 ):
-    """Return the line numbers, bytecode offsets, and code object that are
+    """Cache line numbers, bytecode offsets, and code object that are
     (or would be) stored in the bytecode for `filename`.
 
     These are places setting a breakpoint could conceivably
@@ -614,16 +615,30 @@ def code_lines(
     blank, inside a string or comment, in the middle of some long
     construct or is something of that ilk.
 
+    Internally the co_lineno table in the code to get this. But here,
+    you don't need to know that. xdis does the heavy lifting.
     """
     fullname = cache_file(filename, reload_on_change)
     if not fullname:
         return None
-    e = file_cache[filename]
-    if not e.line_numbers:
+    file_info = file_cache[filename]
+    if not file_info.line_numbers:
         code_info = lineoffsets_in_file(fullname, toplevel_only=toplevel_only)
-        e.line_numbers = code_info.line_numbers(include_offsets=include_offsets)
+        file_info.line_numbers = code_info.line_numbers(include_offsets=include_offsets)
+        file_info.linestarts = code_info.linestarts
         pass
-    return e.line_numbers
+    return file_info
+
+def code_lines(
+    filename, reload_on_change=False, toplevel_only=False, include_offsets=True
+):
+    """Return the line numbers, bytecode offsets, and code object that are
+    (or would be) stored in the bytecode for `filename`.
+    """
+    file_info = cache_code_lines(filename, toplevel_only, include_offsets)
+    if not file_info:
+        return None
+    return file_info
 
 
 def code_line_info(
@@ -634,18 +649,39 @@ def code_line_info(
     include_offsets=True,
 ):
     """Return the bytecode information that is associated with
-    `line_number` the the bytecode for `filename`. This is
-    a list of xdis.LineOffsets. Each entry is a line number
-    list of instruction offests associated with that line number
-    and a code object where this can be found.
-
-    Internally the co_lineno table in the code to get this. But here,
-    you don't need to know that. xdis does the heavy lifting.
+    `line_number` in the bytecode for `filename`.
     """
-    lineoffset_info = code_lines(
-        filename, toplevel_only=toplevel_only, include_offsets=include_offsets
+    file_info = cache_code_lines(filename, toplevel_only, include_offsets)
+    if not file_info:
+        return None
+    return file_info.line_numbers.get(line_number, None)
+
+
+def code_offset_info(
+    filename,
+    offset,
+    reload_on_change=False,
+):
+    """Return the bytecode information that is associated with
+    `offset` in the bytecode for `filename`.
+
+    Each entry is a line number list of instruction offests associated
+    with that line number and a code object where this can be found.
+
+    This comes from findlinestarts() from xdis which is the same
+    as findlinestarts() in xdis.
+    """
+
+    # THINK ABOUT:
+    # We set toplevel_only to False, because we cache
+    # information and want to cache information about the entire file,
+    # even though we accept offsets for only toplevel.
+    # Perhaps we should revise the API
+    file_info = code_lines(
+        filename, toplevel_only=False, include_offsets=True
     )
-    return lineoffset_info.get(line_number, None)
+
+    return file_info.linestarts.get(offset, None)
 
 
 def is_mapped_file(filename):
@@ -720,7 +756,13 @@ def update_cache(filename, opts=default_opts, module_globals=None):
                     lines = {
                         "plain": plain_lines,
                     }
-                    file_cache[filename] = LineCacheInfo(stat, None, lines, path, None)
+                    file_cache[filename] = LineCacheInfo(
+                        stat=stat,
+                        line_numbers=None,
+                        linestarts=None,
+                        lines=lines,
+                        path=path,
+                        sha1=None)
                 except:
                     pass
                 pass
@@ -763,7 +805,13 @@ def update_cache(filename, opts=default_opts, module_globals=None):
                 lines[key] = highlight_array(
                     raw_string.split("\n"), trailing_nl, **highlight_opts
                 )
-                file_cache[filename] = LineCacheInfo(None, None, lines, filename, None)
+                file_cache[filename] = LineCacheInfo(
+                    stat=None,
+                    lines=lines,
+                    linestarts=None,
+                    path=filename,
+                    sha1=None
+                )
                 file2file_remap[path] = filename
                 return True
             pass
@@ -807,7 +855,14 @@ def update_cache(filename, opts=default_opts, module_globals=None):
         pass
     pass
 
-    file_cache[filename] = LineCacheInfo(stat, None, lines, path, None, eols)
+    file_cache[filename] = LineCacheInfo(
+        stat=stat,
+        line_numbers=None,
+        linestarts=None,
+        lines=lines,
+        path=path,
+        sha1=None,
+        eols=eols)
     file2file_remap[path] = filename
     return True
 
@@ -860,7 +915,9 @@ if __name__ == "__main__":
     print("%s has %s lines" % (__file__, size(__file__)))
     print("%s code_lines data:\n" % __file__)
 
-    line_info = code_lines(__file__)
+    line_info = code_offset_info(__file__, 0)
+    print("Starting line for file (bytecode offset 0) is %s" % line_info)
+    line_info = code_lines(__file__).line_numbers
     for line_num, li in line_info.items():
         print("\tline: %4d: %s" % (line_num, ", ".join([str(i.offsets) for i in li])))
     print("=" * 30)

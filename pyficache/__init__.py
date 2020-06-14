@@ -26,6 +26,7 @@ from pyficache.main import (
     clear_file_format_cache,
     code_line_info,
     code_lines,
+    code_offset_info,
     dark_terminal_formatter,
     file_cache,
     file2file_remap,
