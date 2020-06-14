@@ -599,7 +599,9 @@ def trace_line_numbers(filename, reload_on_change=False, toplevel_only=False):
     return e.line_numbers
 
 
-def code_lines(filename, reload_on_change=False, toplevel_only=False):
+def code_lines(
+    filename, reload_on_change=False, toplevel_only=False, include_offsets=True
+):
     """Return the line numbers, bytecode offsets, and code object that are
     (or would be) stored in the bytecode for `filename`.
 
@@ -619,12 +621,18 @@ def code_lines(filename, reload_on_change=False, toplevel_only=False):
     e = file_cache[filename]
     if not e.line_numbers:
         code_info = lineoffsets_in_file(fullname, toplevel_only=toplevel_only)
-        e.line_numbers = code_info.line_numbers(include_offsets=True, include_children=True)
+        e.line_numbers = code_info.line_numbers(include_offsets=include_offsets)
         pass
     return e.line_numbers
 
 
-def code_line_info(filename, line_number, reload_on_change=False, toplevel_only=False):
+def code_line_info(
+    filename,
+    line_number,
+    reload_on_change=False,
+    toplevel_only=False,
+    include_offsets=True,
+):
     """Return the bytecode information that is associated with
     `line_number` the the bytecode for `filename`. This is
     a list of xdis.LineOffsets. Each entry is a line number
@@ -634,7 +642,9 @@ def code_line_info(filename, line_number, reload_on_change=False, toplevel_only=
     Internally the co_lineno table in the code to get this. But here,
     you don't need to know that. xdis does the heavy lifting.
     """
-    lineoffset_info = code_lines(filename, toplevel_only=toplevel_only)
+    lineoffset_info = code_lines(
+        filename, toplevel_only=toplevel_only, include_offsets=include_offsets
+    )
     return lineoffset_info.get(line_number, None)
 
 
@@ -806,10 +816,12 @@ def update_cache(filename, opts=default_opts, module_globals=None):
 if __name__ == "__main__":
 
     z = lambda x, y: x + y
+
     def yes_no(var):
         # NOTE: for testing, we want the next line to contain 2 statements on a
         # single line
-        prefix1 = ""; prefix2 = "not "
+        prefix1 = ""
+        prefix2 = "not "
         if var:
             return prefix1
         else:
