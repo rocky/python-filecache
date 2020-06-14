@@ -629,6 +629,7 @@ def cache_code_lines(
         pass
     return file_info
 
+
 def code_lines(
     filename, reload_on_change=False, toplevel_only=False, include_offsets=True
 ):
@@ -638,7 +639,7 @@ def code_lines(
     file_info = cache_code_lines(filename, toplevel_only, include_offsets)
     if not file_info:
         return None
-    return file_info.line_numbers
+    return file_info
 
 
 def code_line_info(
@@ -654,13 +655,11 @@ def code_line_info(
     file_info = cache_code_lines(filename, toplevel_only, include_offsets)
     if not file_info:
         return None
-    return file_info.linestarts.get(line_number, None)
+    return file_info.line_numbers.get(line_number, None)
 
 
 def code_offset_info(
-    filename,
-    offset,
-    reload_on_change=False,
+    filename, offset, reload_on_change=False,
 ):
     """Return the bytecode information that is associated with
     `offset` in the bytecode for `filename`.
@@ -677,12 +676,9 @@ def code_offset_info(
     # information and want to cache information about the entire file,
     # even though we accept offsets for only toplevel.
     # Perhaps we should revise the API
-    lineoffset_info = code_lines(
-        filename, toplevel_only=False, include_offsets=True
-    )
+    file_info = code_lines(filename, toplevel_only=False, include_offsets=True)
 
-    # FIXME: This is temporary
-    return lineoffset_info.get(offset, None)
+    return file_info.linestarts.get(offset, None)
 
 
 def is_mapped_file(filename):
@@ -763,7 +759,8 @@ def update_cache(filename, opts=default_opts, module_globals=None):
                         linestarts=None,
                         lines=lines,
                         path=path,
-                        sha1=None)
+                        sha1=None,
+                    )
                 except:
                     pass
                 pass
@@ -807,11 +804,7 @@ def update_cache(filename, opts=default_opts, module_globals=None):
                     raw_string.split("\n"), trailing_nl, **highlight_opts
                 )
                 file_cache[filename] = LineCacheInfo(
-                    stat=None,
-                    lines=lines,
-                    linestarts=None,
-                    path=filename,
-                    sha1=None
+                    stat=None, lines=lines, linestarts=None, path=filename, sha1=None
                 )
                 file2file_remap[path] = filename
                 return True
@@ -863,7 +856,8 @@ def update_cache(filename, opts=default_opts, module_globals=None):
         lines=lines,
         path=path,
         sha1=None,
-        eols=eols)
+        eols=eols,
+    )
     file2file_remap[path] = filename
     return True
 
@@ -917,8 +911,8 @@ if __name__ == "__main__":
     print("%s code_lines data:\n" % __file__)
 
     line_info = code_offset_info(__file__, 0)
-    print("Line info for offset 0: %s" % line_info)
-    line_info = code_lines(__file__)
+    print("Starting line for file (bytecode offset 0) is %s" % line_info)
+    line_info = code_lines(__file__).line_numbers
     for line_num, li in line_info.items():
         print("\tline: %4d: %s" % (line_num, ", ".join([str(i.offsets) for i in li])))
     print("=" * 30)
