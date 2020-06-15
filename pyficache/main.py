@@ -629,6 +629,7 @@ def cache_code_lines(
         pass
     return file_info
 
+
 def code_lines(
     filename, reload_on_change=False, toplevel_only=False, include_offsets=True
 ):
@@ -661,9 +662,7 @@ def code_line_info(
 
 
 def code_offset_info(
-    filename,
-    offset,
-    reload_on_change=False,
+    filename, offset, reload_on_change=False,
 ):
     """Return the bytecode information that is associated with
     `offset` in the bytecode for `filename`.
@@ -680,9 +679,7 @@ def code_offset_info(
     # information and want to cache information about the entire file,
     # even though we accept offsets for only toplevel.
     # Perhaps we should revise the API
-    file_info = code_lines(
-        filename, toplevel_only=False, include_offsets=True
-    )
+    file_info = code_lines(filename, toplevel_only=False, include_offsets=True)
 
     return file_info.linestarts.get(offset, None)
 
@@ -765,7 +762,8 @@ def update_cache(filename, opts=default_opts, module_globals=None):
                         linestarts=None,
                         lines=lines,
                         path=path,
-                        sha1=None)
+                        sha1=None,
+                    )
                 except:
                     pass
                 pass
@@ -809,11 +807,7 @@ def update_cache(filename, opts=default_opts, module_globals=None):
                     raw_string.split("\n"), trailing_nl, **highlight_opts
                 )
                 file_cache[filename] = LineCacheInfo(
-                    stat=None,
-                    lines=lines,
-                    linestarts=None,
-                    path=filename,
-                    sha1=None
+                    stat=None, lines=lines, linestarts=None, path=filename, sha1=None
                 )
                 file2file_remap[path] = filename
                 return True
@@ -865,7 +859,8 @@ def update_cache(filename, opts=default_opts, module_globals=None):
         lines=lines,
         path=path,
         sha1=None,
-        eols=eols)
+        eols=eols,
+    )
     file2file_remap[path] = filename
     return True
 
