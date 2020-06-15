@@ -651,7 +651,10 @@ def code_line_info(
     """Return the bytecode information that is associated with
     `line_number` in the bytecode for `filename`.
     """
-    file_info = cache_code_lines(filename, toplevel_only, include_offsets)
+    file_info = cache_code_lines(filename,
+                                 reload_on_change=reload_on_change,
+                                 toplevel_only=toplevel_only,
+                                 include_offsets=include_offsets)
     if not file_info:
         return None
     return file_info.line_numbers.get(line_number, None)
