@@ -82,7 +82,7 @@ Now check the *tagged* release. (Checking the untagged release was previously do
 Todo: turn this into a script in `admin-tools`
 
 	$ pushd /tmp/gittest
-	$ pip install -e git://github.com/rocky/python-filecache@$VERSION.git#egg=pyficache
+	$ pip install -e git://github.com/rocky/python-filecache.git@$VERSION#egg=pyficache
 	$ pip uninstall pyficache
 	$ popd
 
