@@ -102,4 +102,4 @@ Check on https://pypi.org/project/pyficache/
 
 # Move dist files to uploaded
 
-	$ mv -v dist/xdis-${VERSION}* dist/uploaded
+	$ mv -v dist/pyficache-${VERSION}* dist/uploaded
