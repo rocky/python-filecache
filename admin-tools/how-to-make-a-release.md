@@ -53,6 +53,7 @@
 # Update NEWS from master branch. Then..
 
     $ git commit -m"Get ready for release $VERSION" .
+    $ git push origin HEAD
 
 # Check against all versions
 
@@ -61,11 +62,11 @@
     $ source admin-tools/check-newer-versions.sh
 	$ echo $SHLVL ; exit
 
-# Make packages and tag
+# Make packages, check, and tag
 
     $ . ./admin-tools/make-dist-older.sh
 	$ pyenv local 3.8.3
-	$ twine check dist/xdis-$VERSION*
+	$ twine check dist/pyficache-$VERSION*
     $ git tag release-python-2.4-$VERSION
     $ . ./admin-tools/make-dist-newer.sh
 	$ twine check dist/xdis-$VERSION*
@@ -73,6 +74,8 @@
 # Release on Github
 
 Goto https://github.com/rocky/python-filecache/releases/new
+
+Set version, copy in `NEWS.md` item, upload binaries.
 
 Now check the *tagged* release. (Checking the untagged release was previously done).
 
@@ -86,13 +89,13 @@ Todo: turn this into a script in `admin-tools`
 
 	$ twine check dist/pyficache-$VERSION*
 
-# Get on PyPy
+# Get on PyPI
 
 	$ twine upload dist/pyficache-${VERSION}*
 
 Check on https://pypi.org/project/pyficache/
 
-# Push tags:
+# Push and Pull tags:
 
     $ git push --tags
     $ git pull --tags

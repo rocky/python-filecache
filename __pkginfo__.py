@@ -47,7 +47,7 @@ author_email = "rocky@gnu.org"
 ftp_url = None
 install_requires = [
     "Pygments " + pygments_version,
-    "xdis >= 4.7.0, < 4.8.0"
+    "xdis >= 5.0.0, < 5.1.0"
 ]
 
 license = "GPL"
