@@ -1,5 +1,11 @@
-2.1.0 2018-01-26
+2.2.0 2020-06-27
 ================
+
+Uses revised `xdis`. Export `cache_code_lines()` which is needed in upcoming `trepan3k`
+Added  `cache_offset_info()`.
+
+2.1.0 2020-06-12 Fleetwood 66
+==============================
 
 This shifts responsibility of getting line offset info to `xdis`. But we have routines here
 since we manage file objects and cache them.
@@ -11,7 +17,12 @@ the module or function that the offset is relative to. There are various options
 for indicting whether you want the offset informaiton or just the line numbers,
 nnd if you want to note which line numbers are dups.
 
-2.0.0 2018-01-26
+2.0.1 2018-04-22
+================
+
+2.0.0's setup.py was missing the package parameter and this botched the whole release.
+
+2.0.0 2018-04-22
 ================
 
 * We remove dependency on coverage which was writing .coverage files. Fixes #25

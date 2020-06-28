@@ -1,6 +1,41 @@
+2020-06-27  rocky <rocky@gnu.org>
+
+	* ChangeLog, __pkginfo__.py, pyficache/version.py: Get ready for
+	release 2.1.1
+
+2020-06-23  rocky <rocky@gnu.org>
+
+	* __pkginfo__.py: Bump min version
+
+2020-06-17  rocky <rocky@gnu.org>
+
+	* pyficache/__init__.py: export cache_code_lines()...  is needed in python3_trepan
+
+2020-06-15  rocky <rocky@gnu.org>
+
+	* : commit acdbf11c3e8948a52151999d1d22bc0a94863138 Author: rocky
+	<rocky@gnu.org> Date:   Mon Jun 15 11:28:45 2020 -0400
+
+2020-06-14  rocky <rocky@gnu.org>
+
+	* : commit da2950154e8fe59d9a22cc994f9d0359773682a8 Author: rocky
+	<rocky@gnu.org> Date:   Sun Jun 14 11:29:57 2020 -0400
+
+2020-06-14  rocky <rocky@gnu.org>
+
+	* pyficache/__init__.py, pyficache/main.py: Add code_offset_info()
+	...  To get a line number by its offset in the top-level offset FIXME: Not quite right because we should be able to pass in a module
+	or file name.
+
+2020-06-13  rocky <rocky@gnu.org>
+
+	* admin-tools/how-to-make-a-release.md, pyficache/main.py: API
+	changed slightly
+
 2020-06-12  rocky <rocky@gnu.org>
 
-	* .travis.yml, ChangeLog, NEWS.md: Get ready for release 2.1.0
+	* .circleci/config.yml, .travis.yml, ChangeLog, NEWS.md,
+	admin-tools/pyenv-newer-versions: Get ready for release 2.1.0
 
 2020-06-12  rocky <rocky@gnu.org>
 
