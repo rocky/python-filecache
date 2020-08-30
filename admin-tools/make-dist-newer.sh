@@ -18,7 +18,7 @@ if ! source ./setup-master.sh ; then
 fi
 
 cd ..
-source VERSION.py
+source pyficache/version.py
 echo $VERSION
 
 for pyversion in $PYVERSIONS; do
