@@ -90,7 +90,7 @@ Todo: turn this into a script in `admin-tools`
 
 # Get on PyPI
 
-	$ twine upload dist/pyficache-${VERSION}*
+	$ twine upload --verbose dist/pyficache-${VERSION}*
 
 Check on https://pypi.org/project/pyficache/
 
