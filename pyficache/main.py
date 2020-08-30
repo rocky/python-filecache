@@ -494,11 +494,13 @@ def remap_file(from_file, to_file):
 # something else beause it may be mounted, so the prefix changes.
 remap_re_hash = {}
 
-def add_remap_pat(pat, replace):
+def add_remap_pat(pat, replace, clear_remap=True):
     global remap_file_re
     remap_re_hash[re.compile(pat)] = (pat, replace)
+    if clear_remap:
+        file2file_remap = {}
 
-def remap_file_pat(from_file):
+def remap_file_pat(from_file, remap_re_hash=remap_re_hash):
     """If *from_file* matches remap_patterns do the replacement"""
     for pat, replace_tup in remap_re_hash.items():
         match = pat.match(from_file)
