@@ -18,6 +18,7 @@ __docformat__ = 'restructuredtext'
 from pyficache.main import (
     PYTHON3,
     PYVER,
+    add_remap_pat,
     cache_code_lines,
     cache_file,
     cache_script,
@@ -43,6 +44,7 @@ from pyficache.main import (
     path,
     remap_file,
     remap_file_lines,
+    remap_file_pat,
     remove_remap_file,
     resolve_name_to_path,
     sha1,

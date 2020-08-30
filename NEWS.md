@@ -1,3 +1,15 @@
+2.2.1 2020-08-30
+================
+
+Add the ability to remap filenames by file pattern. Here is a scenario:
+I am doing remote debugging so that the files seen by the debugger issuing commands is
+in a different location than where the core parts of the debugger get run.
+
+While it may be the case that most of the time you expect that
+_debugger_, not the this module, need to handle the remap, library routines
+here like `add_remap_pat()` and `remap_file_pat()` can be useful.
+
+
 2.2.0 2020-06-27
 ================
 

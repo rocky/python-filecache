@@ -1,7 +1,42 @@
+2020-08-30  rocky <rocky@gnu.org>
+
+	* pyficache/main.py, pyficache/version.py: Get ready for release
+	2.2.1
+
+2020-08-30  rocky <rocky@gnu.org>
+
+	* pyficache/main.py: Adjust remap_file_pat for external use In trepan{2,3k} we would like to use this.
+
+2020-08-29  rocky <rocky@gnu.org>
+
+	* pyficache/main.py: Hook in filename pattern remapping to
+	unmap_file
+
+2020-08-29  rocky <rocky@gnu.org>
+
+	* pyficache/__init__.py, pyficache/main.py, test/test-remap.py: Add
+	ability to remap by file patterns Add "add_remap_pat" and "remap_file_pat" functions
+
+2020-07-25  rocky <rocky@gnu.org>
+
+	* pyficache/main.py: Store code map
+
 2020-06-27  rocky <rocky@gnu.org>
 
-	* ChangeLog, __pkginfo__.py, pyficache/version.py: Get ready for
-	release 2.1.1
+	* admin-tools/how-to-make-a-release.md: Administrivia
+
+2020-06-27  rocky <rocky@gnu.org>
+
+	* admin-tools/how-to-make-a-release.md: Administrivia
+
+2020-06-27  rocky <rocky@gnu.org>
+
+	* admin-tools/how-to-make-a-release.md: Administrivia
+
+2020-06-27  rocky <rocky@gnu.org>
+
+	* ChangeLog, NEWS.md, __pkginfo__.py, pyficache/version.py: Get
+	ready for release 2.1.1
 
 2020-06-23  rocky <rocky@gnu.org>
 
