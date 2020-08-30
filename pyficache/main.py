@@ -495,7 +495,7 @@ def remap_file(from_file, to_file):
 remap_re_hash = {}
 
 def add_remap_pat(pat, replace, clear_remap=True):
-    global remap_file_re
+    global file2file_remap
     remap_re_hash[re.compile(pat)] = (pat, replace)
     if clear_remap:
         file2file_remap = {}
