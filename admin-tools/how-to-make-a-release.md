@@ -81,13 +81,12 @@ Now check the *tagged* release. (Checking the untagged release was previously do
 
 Todo: turn this into a script in `admin-tools`
 
+	$ [[ ! -d /tmp/gittest ]] && mkdir /tmp/gittest
 	$ pushd /tmp/gittest
+	$ pyenv local 3.8.3
 	$ pip install -e git://github.com/rocky/python-filecache.git@$VERSION#egg=pyficache
 	$ pip uninstall pyficache
 	$ popd
-
-
-	$ twine check dist/pyficache-$VERSION*
 
 # Get on PyPI
 
