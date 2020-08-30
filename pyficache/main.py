@@ -489,6 +489,22 @@ def remap_file(from_file, to_file):
     file2file_remap[to_file] = from_file
     return
 
+# Hash to remap filename by regular expression.
+# For exmaple, often we may want to remap the beginning of a path to
+# something else beause it may be mounted, so the prefix changes.
+remap_re_hash = {}
+
+def add_remap_pat(pat, replace):
+    global remap_file_re
+    remap_re_hash[re.compile(pat)] = (pat, replace)
+
+def remap_file_pat(from_file):
+    """If *from_file* matches remap_patterns do the replacement"""
+    for pat, replace_tup in remap_re_hash.items():
+        match = pat.match(from_file)
+        if match:
+            return re.sub(pat, replace_tup[1], from_file)
+    return from_file
 
 def remap_file_lines(from_path, to_path, line_map_list):
     """Adds line_map list to the list of association of from_file to
@@ -884,6 +900,8 @@ if __name__ == "__main__":
         else:
             return prefix2
         return  # Not reached
+    add_remap_pat("^/code", "/tmp/project")
+    print(remap_file_pat("/code/setup.py"))
 
     # print(resolve_name_to_path("os"))
     # print(getline(__file__, 1, {"output": "dark"}))
