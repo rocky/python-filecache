@@ -713,8 +713,20 @@ def is_mapped_file(filename):
 
 
 def unmap_file(filename):
-    # FIXME: this is wrong?
-    return file2file_remap.get(filename, filename)
+    # If it is in the cache, use that.
+    if filename in file2file_remap:
+        return file2file_remap[filename]
+
+    # If there is a pattern remapping, do the
+    # remapping and cache the results
+    if remap_re_hash:
+        unmapped_file = remap_file_pat(filename)
+        if unmapped_file != filename:
+            remap_file(filename, unmapped_file)
+            return unmapped_file
+
+    # No remappings done, so return what was given
+    return filename
 
 
 def unmap_file_line(filename, line_number, reverse=False):
