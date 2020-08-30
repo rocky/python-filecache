@@ -65,7 +65,7 @@
 # Make packages, check, and tag
 
     $ . ./admin-tools/make-dist-older.sh
-	$ pyenv local 3.8.3
+	$ pyenv local 3.8.5
 	$ twine check dist/pyficache-$VERSION*
     $ git tag release-python-2.4-$VERSION
     $ . ./admin-tools/make-dist-newer.sh
