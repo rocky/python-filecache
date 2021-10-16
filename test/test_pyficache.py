@@ -82,14 +82,14 @@ class TestPyFiCache(unittest.TestCase):
         # we get a change when calling getline.
         (fd, path) = mkstemp(prefix="pyfcache", suffix=".txt")
         test_string = "Now is the time.\n"
-        f = open(path, 'w')
+        f = open(path, "w")
         f.write(test_string)
         f.close()
-        line = pyficache.getline(path, 1, {'strip_nl': False})
-        self.assertEqual(test_string, line,
-                         "C'mon - a simple line test like this worked "
-                         "before.")
-        f = open(path, 'w')
+        line = pyficache.getline(path, 1, {"strip_nl": False})
+        self.assertEqual(
+            test_string, line, "C'mon - a simple line test like this worked " "before."
+        )
+        f = open(path, "w")
         test_string = "Now is another time."
         f.write(test_string)
         f.close()

@@ -880,10 +880,10 @@ def update_cache(filename, opts=default_opts, module_globals=None):
         pass
 
     try:
-        mode = 'rU'
+        mode = "rU"
         try:
             fp = open(path, mode)
-            lines = {'plain' : fp.readlines()}
+            lines = {"plain": fp.readlines()}
             eols = fp.newlines
         finally:
             fp.close()

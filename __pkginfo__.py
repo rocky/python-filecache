@@ -48,10 +48,7 @@ pygments_version = "<= 1.6"
 author = "Rocky Bernstein"
 author_email = "rocky@gnu.org"
 ftp_url = None
-install_requires = [
-    "Pygments " + pygments_version,
-    "xdis >= 6.0.0, < 6.1.0"
-]
+install_requires = ["Pygments " + pygments_version, "xdis >= 6.0.0, < 6.1.0"]
 
 license = "GPL"
 mailing_list = None
