@@ -15,7 +15,7 @@ from __pkginfo__ import (
     modname,
     py_modules,
     short_desc,
-    VERSION,
+    __version__,
     web,
     zip_safe,
 )
@@ -38,6 +38,6 @@ setup(
     py_modules=py_modules,
     test_suite="nose.collector",
     url=web,
-    version=VERSION,
+    version=__version__,
     zip_safe=zip_safe,
 )

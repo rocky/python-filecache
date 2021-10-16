@@ -12,7 +12,7 @@
 #
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-__docformat__ = 'restructuredtext'
+__docformat__ = "restructuredtext"
 
 # Export some functions
 from pyficache.main import (
@@ -58,3 +58,4 @@ from pyficache.main import (
     update_cache,
     update_script_cache,
 )
+from pyficache.version import __version__
