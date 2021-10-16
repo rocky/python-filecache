@@ -1,4 +1,4 @@
-# Copyright (C) 2009-2010, 2013, 2015, 2017, 2020 Rocky Bernstein <rocky@gnu.org>
+# Copyright (C) 2009-2010, 2013, 2015, 2017, 2020-2021 Rocky Bernstein <rocky@gnu.org>
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
 import sys
 
 copyright = """
-Copyright (C) 2008-2010, 2012-2013, 2015-2018, 2020 Rocky Bernstein <rocky@gnu.org>.
+Copyright (C) 2008-2010, 2012-2013, 2015-2018, 2020-2021 Rocky Bernstein <rocky@gnu.org>.
 """
 classifiers = [
     "Development Status :: 5 - Production/Stable",
@@ -33,10 +33,13 @@ classifiers = [
     "Programming Language :: Python :: 3.2",
     "Programming Language :: Python :: 3.3",
     "Programming Language :: Python :: 3.4",
-    "Programming Language :: Python :: 3.5 ",
-    "Programming Language :: Python :: 3.6 ",
-    "Programming Language :: Python :: 3.7 ",
-    "Programming Language :: Python :: 3.8 ",
+    "Programming Language :: Python :: 3.5",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: Implementation :: PyPy",
 ]
 
 SYS_VERSION = sys.version_info[0:2]
@@ -51,7 +54,7 @@ author_email = "rocky@gnu.org"
 ftp_url = None
 install_requires = [
     "pygments " + pygments_version,
-    "xdis >= 5.0.0, < 6.0.1"
+    "xdis >= 6.0.0, < 6.1.0"
 ]
 
 license = "GPL"
@@ -61,7 +64,7 @@ py_modules = [modname]
 
 short_desc = "Cache lines and file information which are generally Python programs"
 
-# VERSION.py sets variable VERSION.
+# version.py sets variable __version__.
 import os.path as osp
 
 exec(

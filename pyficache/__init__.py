@@ -58,3 +58,4 @@ from pyficache.main import (
     update_cache,
     update_script_cache,
 )
+from pyficache.version import __version__
