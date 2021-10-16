@@ -1,10 +1,10 @@
-2.2.1 2021-10-15
+2.3.0 2021-10-15
 ================
 
 Revise to use xdis 6.0.0 - Python version comparisions use tuples instead of floats
 which are horribly broken on 3.10.
 
-Some other minor change as well.
+Some other minor changes as well.
 
 2.2.1 2020-08-30
 ================
