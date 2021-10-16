@@ -29,7 +29,11 @@ test: check
 #: Same as "check-short"
 test-short: check-short
 
-#: Run all tests
+#: Run all tests - the older way
+check-nosetests:
+	nosetests
+
+#: Run all tests - the pytest way
 check:
 	pytest test
 
