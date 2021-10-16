@@ -4,4 +4,5 @@
 # This file should define a variable VERSION which we use as the
 # package version number.
 
+# fmt: off
 __version__="2.3.0"  # noqa

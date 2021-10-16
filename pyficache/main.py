@@ -156,7 +156,17 @@ def resolve_name_to_path(path_or_name):
 
 
 class LineCacheInfo:
-    def __init__(self, stat, line_numbers, linestarts, lines, path, sha1, eols=None, code_map=None):
+    def __init__(
+        self,
+        stat,
+        line_numbers,
+        linestarts,
+        lines,
+        path,
+        sha1,
+        eols=None,
+        code_map=None,
+    ):
         self.stat, self.lines, self.path, self.sha1 = (stat, lines, path, sha1)
         self.line_numbers = line_numbers
         self.linestarts = linestarts
@@ -489,16 +499,19 @@ def remap_file(from_file, to_file):
     file2file_remap[to_file] = from_file
     return
 
+
 # Hash to remap filename by regular expression.
 # For exmaple, often we may want to remap the beginning of a path to
 # something else beause it may be mounted, so the prefix changes.
 remap_re_hash = {}
+
 
 def add_remap_pat(pat, replace, clear_remap=True):
     global file2file_remap
     remap_re_hash[re.compile(pat)] = (pat, replace)
     if clear_remap:
         file2file_remap = {}
+
 
 def remap_file_pat(from_file, remap_re_hash=remap_re_hash):
     """If *from_file* matches remap_patterns do the replacement"""
@@ -508,9 +521,10 @@ def remap_file_pat(from_file, remap_re_hash=remap_re_hash):
             return re.sub(pat, replace_tup[1], from_file)
     return from_file
 
+
 def remap_file_lines(from_path, to_path, line_map_list):
     """Adds line_map list to the list of association of from_file to
-       to to_file"""
+    to to_file"""
     from_path = resolve_name_to_path(from_path)
     cache_file(to_path)
     remap_entry = file2file_remap_lines.get(to_path)
@@ -656,8 +670,9 @@ def code_lines(
     """Return the line numbers, bytecode offsets, and code object that are
     (or would be) stored in the bytecode for `filename`.
     """
-    file_info = cache_code_lines(filename, toplevel_only=toplevel_only,
-                                 include_offsets=include_offsets)
+    file_info = cache_code_lines(
+        filename, toplevel_only=toplevel_only, include_offsets=include_offsets
+    )
     if not file_info:
         return None
     return file_info
@@ -673,17 +688,21 @@ def code_line_info(
     """Return the bytecode information that is associated with
     `line_number` in the bytecode for `filename`.
     """
-    file_info = cache_code_lines(filename,
-                                 reload_on_change=reload_on_change,
-                                 toplevel_only=toplevel_only,
-                                 include_offsets=include_offsets)
+    file_info = cache_code_lines(
+        filename,
+        reload_on_change=reload_on_change,
+        toplevel_only=toplevel_only,
+        include_offsets=include_offsets,
+    )
     if not file_info:
         return None
     return file_info.line_numbers.get(line_number, None)
 
 
 def code_offset_info(
-    filename, offset, reload_on_change=False,
+    filename,
+    offset,
+    reload_on_change=False,
 ):
     """Return the bytecode information that is associated with
     `offset` in the bytecode for `filename`.
@@ -893,7 +912,7 @@ def update_cache(filename, opts=default_opts, module_globals=None):
         path=path,
         sha1=None,
         eols=eols,
-        code_map = {}
+        code_map={},
     )
     file2file_remap[path] = filename
     return True
@@ -914,6 +933,7 @@ if __name__ == "__main__":
         else:
             return prefix2
         return  # Not reached
+
     add_remap_pat("^/code", "/tmp/project")
     print(remap_file_pat("/code/setup.py"))
 
