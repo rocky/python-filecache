@@ -10,7 +10,7 @@ cd $(dirname ${BASH_SOURCE[0]})
 owd=$(pwd)
 trap finish EXIT
 
-if ! source ./pyenv-newer-versions ; then
+if ! source ./pyenv-newest-versions ; then
     exit $?
 fi
 if ! source ./setup-master.sh ; then
@@ -33,7 +33,7 @@ for pyversion in $PYVERSIONS; do
     rm -fr build
     python setup.py bdist_egg bdist_wheel
     if (( $first_two >= 30 )) ; then
-	mv -v dist/${PACKAGE}-$VERSION-{py3,py$first_two}-none-any.whl
+	mv -v dist/${PACKAGE}-$VERSION-{py3$first_two}-none-any.whl
     else
 	mv -v dist/${PACKAGE}-$VERSION-{py2,py$first_two}-none-any.whl
     fi
