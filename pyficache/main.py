@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#   Copyright (C) 2008-2009, 2012-2013, 2015-2016, 2018, 2020
+#   Copyright (C) 2008-2009, 2012-2013, 2015-2016, 2018, 2020-2021
 #   Rocky Bernstein <rocky@gnu.org>
 #
 #   This program is free software: you can redistribute it and/or modify
@@ -62,7 +62,8 @@ from pygments import highlight
 from pygments.lexers import PythonLexer
 from pygments.formatters import TerminalFormatter, Terminal256Formatter
 
-from xdis import PYTHON3, PYTHON_VERSION, lineoffsets_in_file
+from xdis.lineoffsets import lineoffsets_in_file
+from xdis.version_info import PYTHON3, PYTHON_VERSION_TRIPLE
 from pyficache.line_numbers import code_linenumbers_in_file
 
 PYVER = "%s%s" % sys.version_info[0:2]
@@ -97,7 +98,7 @@ def has_trailing_nl(string):
     return len(string) > 0 and "\n" == string[-1]
 
 
-if PYTHON_VERSION >= 3.4:
+if PYTHON_VERSION_TRIPLE >= (3, 4):
     from importlib.util import source_from_cache, resolve_name, find_spec
 else:
     source_from_cache = resolve_name = find_spec = None
