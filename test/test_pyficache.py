@@ -12,10 +12,9 @@ import platform
 import sys
 import unittest
 
-import os, sys, unittest
 from tempfile import mkstemp
 
-from xdis.version_info import IS_PYPY, PYTHON3, PYTHON_VERSION_TRIPLE
+from xdis.version_info import PYTHON3, PYTHON_VERSION_TRIPLE
 
 import pyficache
 from pyficache import PYVER
