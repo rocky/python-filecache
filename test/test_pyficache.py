@@ -5,7 +5,7 @@
 Unit test for pyficache
 """
 from __future__ import with_statement
-from xdis import PYTHON_VERSION, PYTHON3
+from xdis.version_info import PYTHON_VERSION_TRIPLE, PYTHON3
 import os, sys, unittest
 from tempfile import mkstemp
 
@@ -213,9 +213,9 @@ class TestPyFiCache(unittest.TestCase):
             self.assertEqual(set([1]), line_nums)
             pass
         test_file = osp.join(TEST_DIR, "devious.py")
-        if PYTHON_VERSION < 3.0 or PYTHON_VERSION in (3.1, 3.2, 3.3, 3.4, 3.5, 3.6):
+        if PYTHON_VERSION_TRIPLE < (3, 0) or (3, 1) <= PYTHON_VERSION_TRIPLE < (3, 8):
             expected = [4, 6, 8, 9]
-        elif PYTHON_VERSION >= 3.8:
+        elif PYTHON_VERSION_TRIPLE >= (3, 8):
             expected = [2, 5, 7, 9]
         else:
             expected = [4, 5, 8, 9]
