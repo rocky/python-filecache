@@ -16,4 +16,5 @@ cd $fulldir/..
     pyenv local $PYTHON_VERSION
 
 cd $owd
+git checkout python-3.1-to-3.2
 rm -v */.python-version || true
