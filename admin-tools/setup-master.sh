@@ -6,6 +6,14 @@ function finish {
   cd $owd
 }
 
+function checkout_version {
+    local repo=$1
+    echo Checking out master on $repo ...
+    (cd ../$repo && git checkout master && pyenv local $PYTHON_VERSION) && \
+	git pull
+    return $?
+}
+
 export PATH=$HOME/.pyenv/bin/pyenv:$PATH
 owd=$(pwd)
 bs=${BASH_SOURCE[0]}
@@ -18,7 +26,6 @@ mydir=$(dirname $bs)
 fulldir=$(readlink -f $mydir)
 cd $fulldir/..
 
-(cd ../python-xdis && git checkout master && pyenv local $PYTHON_VERSION) && git pull && \
-    git checkout master && git pull && pyenv local $PYTHON_VERSION
+(checkout_version python-xdis && checkout_version python-filecache)
 cd $owd
 rm -v */.python-version || true
