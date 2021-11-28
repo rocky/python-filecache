@@ -12,7 +12,7 @@ mydir=$(dirname $bs)
 fulldir=$(readlink -f $mydir)
 cd $fulldir/..
 
-(cd ../python-xdis && git checkout python-3.3-3.5 && pyenv local $PYTHON_VERSION) && git pull && \
+(cd ../python-xdis && git checkout python-3.3-to-3.5 && pyenv local $PYTHON_VERSION) && git pull && \
     pyenv local $PYTHON_VERSION
 
 cd $owd
