@@ -44,7 +44,7 @@ classifiers = [
 
 SYS_VERSION = sys.version_info[0:2]
 if (3, 0) <= SYS_VERSION < (3, 2):
-    pygments_version = ">=14, <= 1.6"
+    pygments_version = ">=14, <= 2.2"
 else:
     pygments_version = ""
 
@@ -52,10 +52,7 @@ else:
 author = "Rocky Bernstein"
 author_email = "rocky@gnu.org"
 ftp_url = None
-install_requires = [
-    "pygments " + pygments_version,
-    "xdis >= 6.0.0, < 6.1.0"
-]
+install_requires = ["pygments " + pygments_version, "xdis >= 6.0.0, < 6.1.0"]
 
 license = "GPL"
 mailing_list = None
