@@ -19,7 +19,11 @@ for version in $PYVERSIONS; do
 	exit $?
     fi
     make clean && python setup.py develop
+<<<<<<< HEAD
     if ! make check ; then
+=======
+    if ! make check-nosetests ; then
+>>>>>>> python-3.1-to-3.2
 	exit $?
     fi
 done

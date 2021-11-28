@@ -42,7 +42,11 @@ classifiers = [
     "Programming Language :: Python :: Implementation :: PyPy",
 ]
 
-pygments_version = "<= 1.6"
+SYS_VERSION = sys.version_info[0:2]
+if (3, 0) <= SYS_VERSION < (3, 2):
+    pygments_version = ">=14, <= 2.2"
+else:
+    pygments_version = ""
 
 # The rest in alphabetic order
 author = "Rocky Bernstein"
