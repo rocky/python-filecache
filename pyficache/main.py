@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 #   Copyright (C) 2008-2009, 2012-2013, 2015-2016, 2018, 2020-2021,
-#   2023 Rocky Bernstein <rocky@gnu.org>
+#   2023-2024 Rocky Bernstein <rocky@gnu.org>
 #
 #   This program is free software: you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
@@ -874,7 +874,7 @@ def update_cache(filename, opts=default_opts, module_globals=None):
         # Try looking through the module search path, which is only useful
         # when handling a relative filename.
         stat = None
-        for dirname in sys.path:
+        for dirname in ["."] + sys.path:
             path = osp.join(dirname, filename)
             if osp.exists(path):
                 stat = os.stat(path)
