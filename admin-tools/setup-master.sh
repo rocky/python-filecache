@@ -1,19 +1,6 @@
 #!/bin/bash
 PYTHON_VERSION=3.8.18
 
-# FIXME put some of the below in a common routine
-function finish {
-  cd $owd
-}
-
-function checkout_version {
-    local repo=$1
-    echo Checking out master on $repo ...
-    (cd ../$repo && git checkout master && pyenv local $PYTHON_VERSION) && \
-	git pull
-    return $?
-}
-
 export PATH=$HOME/.pyenv/bin/pyenv:$PATH
 owd=$(pwd)
 bs=${BASH_SOURCE[0]}
@@ -26,6 +13,7 @@ mydir=$(dirname $bs)
 fulldir=$(readlink -f $mydir)
 cd $fulldir/..
 
-(checkout_version python-xdis && checkout_version python-filecache)
+(cd ../python-xdis && git checkout master && pyenv local $PYTHON_VERSION) && git pull && \
+    git checkout master && git pull && pyenv local $PYTHON_VERSION
 cd $owd
 rm -v */.python-version || true
