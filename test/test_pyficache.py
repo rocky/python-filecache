@@ -227,6 +227,8 @@ class TestPyFiCache(unittest.TestCase):
             if IS_PYPY and PYTHON_VERSION_TRIPLE[:2] == (3, 6):
                 # Later PyPy 3.6's go with later Python nunmberings
                 expected = {2, 5, 7, 9}
+            elif PYTHON_VERSION_TRIPLE[:2] == (3, 7):
+                expected = {4, 5, 8, 9}
             else:
                 expected = {4, 6, 8, 9}
         elif PYTHON_VERSION_TRIPLE >= (3, 11):
