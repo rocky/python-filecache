@@ -8,6 +8,7 @@ from __future__ import with_statement
 
 import os
 import os.path as osp
+import platform
 import sys
 import unittest
 from tempfile import mkstemp
@@ -215,7 +216,10 @@ class TestPyFiCache(unittest.TestCase):
         if 0 == len(line_nums):
             self.assertEqual({}, line_nums)
         else:
-            start_lineno = 1 if PYTHON_VERSION_TRIPLE < (3, 11) else 0
+            if platform.python_implementation() == "GraalVM":
+                start_lineno = 2
+            else:
+                start_lineno = 1 if PYTHON_VERSION_TRIPLE < (3, 11) else 0
             self.assertEqual(set([start_lineno]), line_nums)
             pass
         test_file = osp.join(TEST_DIR, "devious.py")
@@ -228,7 +232,10 @@ class TestPyFiCache(unittest.TestCase):
         elif PYTHON_VERSION_TRIPLE >= (3, 11):
             expected = {0, 2, 5, 7, 9}
         elif PYTHON_VERSION_TRIPLE >= (3, 8):
-            expected = {2, 5, 7, 9}
+            if platform.python_implementation() == "GraalVM":
+                expected = {2, 5, 6, 7, 9}
+            else:
+                expected = {2, 5, 7, 9}
         else:
             expected = {4, 5, 8, 9}
         self.assertEqual(expected, pyficache.trace_line_numbers(test_file))
