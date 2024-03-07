@@ -61,6 +61,7 @@ import os.path as osp
 import re
 import sys
 from collections import namedtuple
+from term_background import is_dark_background
 
 from pygments import highlight
 from pygments.formatters import Terminal256Formatter, TerminalFormatter
@@ -98,7 +99,7 @@ def get_option(key, options):
     return None  # Not reached
 
 
-def has_trailing_nl(string):
+def has_trailing_nl(string) -> bool:
     return len(string) > 0 and "\n" == string[-1]
 
 
@@ -108,7 +109,7 @@ else:
     source_from_cache = resolve_name = find_spec = None
 
 
-def resolve_name_to_path(path_or_name):
+def resolve_name_to_path(path_or_name: str) -> str:
     """Try to "resolve" `path_or_name` info its constituent file path.
 
     `path_or_name` could be either a
@@ -441,11 +442,16 @@ def getlines(filename, opts=default_opts):
     highlight_opts = {"bg": fmt}
     cs = opts.get("style")
 
-    # Colorstyle of Terminal255Formatter takes precidence over
-    # light/dark colorthemes of TerminalFormatter
+    # Set list style baseed on "style" option passed
+    # if no style given use "zenburn" for dark backgrounds,
+    # and "tango" for light backgrounds.
     if cs:
         highlight_opts["style"] = cs
         fmt = cs
+    elif is_dark_background:
+        highlight_opts["style"] = "zenburn"
+    else:
+        highlight_opts["style"] = "tango"
 
     if filename not in file_cache:
         update_cache(filename, opts)
@@ -942,7 +948,9 @@ if __name__ == "__main__":
     print(remap_file_pat("/code/setup.py"))
 
     # print(resolve_name_to_path("os"))
-    # print(getline(__file__, 1, {"output": "dark"}))
+    print(
+        getline(__file__, 1, {"style": "zenburn" if is_dark_background() else "tango"})
+    )
     # print(getline(__file__, 2, {"output": "light"}))
     # from pygments.styles import STYLE_MAP
 
