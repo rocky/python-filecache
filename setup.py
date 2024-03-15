@@ -36,7 +36,6 @@ setup(
     name=modname,
     packages=packages,
     py_modules=py_modules,
-    test_suite="nose.collector",
     url=web,
     version=__version__,
     zip_safe=zip_safe,

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-#   Copyright (C) 2008-2009, 2012-2013, 2015-2016, 2018, 2020-2021
-#   Rocky Bernstein <rocky@gnu.org>
+#
+#   Copyright (C) 2008-2009, 2012-2013, 2015-2016, 2018, 2020-2021,
+#   2023-2024 Rocky Bernstein <rocky@gnu.org>
 #
 #   This program is free software: you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
@@ -53,17 +54,21 @@ Synopsis
 
 """
 
-import hashlib, linecache, os, re, sys
+import hashlib
+import linecache
+import os
 import os.path as osp
-
+import re
+import sys
 from collections import namedtuple
+from term_background import is_dark_background
 
 from pygments import highlight
+from pygments.formatters import Terminal256Formatter, TerminalFormatter
 from pygments.lexers import PythonLexer
-from pygments.formatters import TerminalFormatter, Terminal256Formatter
-
 from xdis.lineoffsets import lineoffsets_in_file
 from xdis.version_info import PYTHON3, PYTHON_VERSION_TRIPLE
+
 from pyficache.line_numbers import code_linenumbers_in_file
 
 PYVER = "%s%s" % sys.version_info[0:2]
@@ -94,17 +99,17 @@ def get_option(key, options):
     return None  # Not reached
 
 
-def has_trailing_nl(string):
+def has_trailing_nl(string) -> bool:
     return len(string) > 0 and "\n" == string[-1]
 
 
 if PYTHON_VERSION_TRIPLE >= (3, 4):
-    from importlib.util import source_from_cache, resolve_name, find_spec
+    from importlib.util import find_spec, resolve_name, source_from_cache
 else:
     source_from_cache = resolve_name = find_spec = None
 
 
-def resolve_name_to_path(path_or_name):
+def resolve_name_to_path(path_or_name: str) -> str:
     """Try to "resolve" `path_or_name` info its constituent file path.
 
     `path_or_name` could be either a
@@ -125,7 +130,7 @@ def resolve_name_to_path(path_or_name):
     if source_from_cache:
         try:
             source_path = source_from_cache(path_or_name)
-        except:
+        except Exception:
             pass
         else:
             if source_path:
@@ -135,7 +140,7 @@ def resolve_name_to_path(path_or_name):
     if find_spec:
         try:
             spec = find_spec(path_or_name)
-        except:
+        except Exception:
             spec = None
         else:
             if spec and spec.origin:
@@ -437,11 +442,16 @@ def getlines(filename, opts=default_opts):
     highlight_opts = {"bg": fmt}
     cs = opts.get("style")
 
-    # Colorstyle of Terminal255Formatter takes precidence over
-    # light/dark colorthemes of TerminalFormatter
+    # Set list style baseed on "style" option passed
+    # if no style given use "zenburn" for dark backgrounds,
+    # and "tango" for light backgrounds.
     if cs:
         highlight_opts["style"] = cs
         fmt = cs
+    elif is_dark_background:
+        highlight_opts["style"] = "zenburn"
+    else:
+        highlight_opts["style"] = "tango"
 
     if filename not in file_cache:
         update_cache(filename, opts)
@@ -817,7 +827,7 @@ def update_cache(filename, opts=default_opts, module_globals=None):
                         path=path,
                         sha1=None,
                     )
-                except:
+                except Exception:
                     pass
                 pass
             if orig_filename != filename:
@@ -870,7 +880,7 @@ def update_cache(filename, opts=default_opts, module_globals=None):
         # Try looking through the module search path, which is only useful
         # when handling a relative filename.
         stat = None
-        for dirname in sys.path:
+        for dirname in ["."] + sys.path:
             path = osp.join(dirname, filename)
             if osp.exists(path):
                 stat = os.stat(path)
@@ -885,7 +895,7 @@ def update_cache(filename, opts=default_opts, module_globals=None):
         with open(path, mode) as fp:
             lines = {"plain": fp.readlines()}
             eols = fp.newlines
-    except:
+    except Exception:
         return None
 
     # FIXME: DRY with code above
@@ -921,7 +931,6 @@ def update_cache(filename, opts=default_opts, module_globals=None):
 
 # example usage
 if __name__ == "__main__":
-
     z = lambda x, y: x + y
 
     def yes_no(var):
@@ -939,7 +948,9 @@ if __name__ == "__main__":
     print(remap_file_pat("/code/setup.py"))
 
     # print(resolve_name_to_path("os"))
-    # print(getline(__file__, 1, {"output": "dark"}))
+    print(
+        getline(__file__, 1, {"style": "zenburn" if is_dark_background() else "tango"})
+    )
     # print(getline(__file__, 2, {"output": "light"}))
     # from pygments.styles import STYLE_MAP
 

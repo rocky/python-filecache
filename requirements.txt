@@ -1,1 +1,1 @@
--e git+git://github.com/rocky/python-xdis.git#egg=xdis
+-e .

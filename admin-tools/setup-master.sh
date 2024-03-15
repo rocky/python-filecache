@@ -1,10 +1,13 @@
 #!/bin/bash
-PYTHON_VERSION=3.8.12
+PYTHON_VERSION=3.8.18
+<<<<<<< Updated upstream
+=======
 
 # FIXME put some of the below in a common routine
 function finish {
   cd $owd
 }
+>>>>>>> Stashed changes
 
 export PATH=$HOME/.pyenv/bin/pyenv:$PATH
 owd=$(pwd)
