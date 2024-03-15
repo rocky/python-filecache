@@ -224,7 +224,6 @@ class TestPyFiCache(unittest.TestCase):
             pass
         test_file = osp.join(TEST_DIR, "devious.py")
         if PYTHON_VERSION_TRIPLE < (3, 0) or (3, 1) <= PYTHON_VERSION_TRIPLE < (3, 8):
-<<<<<<< HEAD
             if IS_PYPY and PYTHON_VERSION_TRIPLE[:2] == (3, 6):
                 # Later PyPy 3.6's go with later Python nunmberings
                 expected = {2, 5, 7, 9}
@@ -239,11 +238,6 @@ class TestPyFiCache(unittest.TestCase):
                 expected = {2, 5, 6, 7, 9}
             else:
                 expected = {2, 5, 7, 9}
-=======
-            expected = [4, 6, 8, 9]
-        elif PYTHON_VERSION_TRIPLE >= (3, 8):
-            expected = [2, 5, 7, 9]
->>>>>>> e016010 (Version hacking)
         else:
             expected = {4, 5, 8, 9}
         self.assertEqual(expected, pyficache.trace_line_numbers(test_file))

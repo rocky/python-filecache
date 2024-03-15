@@ -55,8 +55,8 @@ author = "Rocky Bernstein"
 author_email = "rocky@gnu.org"
 ftp_url = None
 install_requires = [
-    "Pygments " + pygments_version,
-    "xdis >= 6.1.1, < 6.3.0",
+    "pygments " + pygments_version,
+    "xdis >= 6.0.0, < 6.2.0",
     "term-background >= 1.0.1",
 ]
 
