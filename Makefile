@@ -35,7 +35,7 @@ check-nosetests:
 
 #: Run all tests - the pytest way
 check:
-	pytest test
+	$(PYTHON) -m pytest test
 
 #: Clean up temporary files
 clean:
