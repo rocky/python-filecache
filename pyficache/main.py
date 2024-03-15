@@ -443,13 +443,13 @@ def getlines(filename, opts=default_opts):
     cs = opts.get("style")
 
     # Set list style baseed on "style" option passed
-    # if no style given use "zenburn" for dark backgrounds,
+    # if no style given use "monokai" for dark backgrounds,
     # and "tango" for light backgrounds.
     if cs:
         highlight_opts["style"] = cs
         fmt = cs
     elif is_dark_background:
-        highlight_opts["style"] = "zenburn"
+        highlight_opts["style"] = "monokai"
     else:
         highlight_opts["style"] = "tango"
 
@@ -949,7 +949,7 @@ if __name__ == "__main__":
 
     # print(resolve_name_to_path("os"))
     print(
-        getline(__file__, 1, {"style": "zenburn" if is_dark_background() else "tango"})
+        getline(__file__, 1, {"style": "monokai" if is_dark_background() else "tango"})
     )
     # print(getline(__file__, 2, {"output": "light"}))
     # from pygments.styles import STYLE_MAP
