@@ -58,6 +58,8 @@ import hashlib
 import linecache
 import os
 import os.path as osp
+import re
+import sys
 
 from pyficache.namedtuple24 import namedtuple
 from term_background import is_dark_background
@@ -98,7 +100,7 @@ def get_option(key, options):
     return None  # Not reached
 
 
-def has_trailing_nl(string) -> bool:
+def has_trailing_nl(string):
     return len(string) > 0 and "\n" == string[-1]
 
 
@@ -108,7 +110,7 @@ else:
     source_from_cache = resolve_name = find_spec = None
 
 
-def resolve_name_to_path(path_or_name: str) -> str:
+def resolve_name_to_path(path_or_name):
     """Try to "resolve" `path_or_name` info its constituent file path.
 
     `path_or_name` could be either a
@@ -950,8 +952,13 @@ if __name__ == "__main__":
     print(remap_file_pat("/code/setup.py"))
 
     # print(resolve_name_to_path("os"))
+    if is_dark_background():
+        style="monokai"
+    else:
+        style="tango"
+
     print(
-        getline(__file__, 1, {"style": "monokai" if is_dark_background() else "tango"})
+        getline(__file__, 1, {"style": style})
     )
     # print(getline(__file__, 2, {"output": "light"}))
     # from pygments.styles import STYLE_MAP
