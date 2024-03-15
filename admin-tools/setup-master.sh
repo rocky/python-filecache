@@ -5,6 +5,7 @@ PYTHON_VERSION=3.8.18
 function finish {
   cd $owd
 }
+>>>>>>> Stashed changes
 
 export PATH=$HOME/.pyenv/bin/pyenv:$PATH
 owd=$(pwd)

@@ -17,9 +17,6 @@ if top_builddir[-1] != osp.sep:
     top_builddir += osp.sep
 sys.path.insert(0, top_builddir)
 
-import pyficache
-from pyficache import PYVER
-
 # Test LineCache module
 class TestPyFiCache(unittest.TestCase):
     def setUp(self):
@@ -204,6 +201,8 @@ class TestPyFiCache(unittest.TestCase):
     def test_trace_line_numbers(self):
         test_file = osp.join(TEST_DIR, "short-file")
         line_nums = pyficache.trace_line_numbers(test_file)
+        if line_nums is None:
+            assert False, "expected to get line numbers from pyficache"
         if 0 == len(line_nums):
             self.assertEqual({}, line_nums)
         else:
@@ -218,6 +217,31 @@ class TestPyFiCache(unittest.TestCase):
         else:
             expected = [9, 2, 5, 7]
         self.assertEqual(set(expected), pyficache.trace_line_numbers(test_file))
+            if platform.python_implementation() == "GraalVM":
+                start_lineno = 2
+            else:
+                start_lineno = 1 if PYTHON_VERSION_TRIPLE < (3, 11) else 0
+            self.assertEqual(set([start_lineno]), line_nums)
+            pass
+        test_file = osp.join(TEST_DIR, "devious.py")
+        if PYTHON_VERSION_TRIPLE < (3, 0) or (3, 1) <= PYTHON_VERSION_TRIPLE < (3, 8):
+            if IS_PYPY and PYTHON_VERSION_TRIPLE[:2] == (3, 6):
+                # Later PyPy 3.6's go with later Python nunmberings
+                expected = {2, 5, 7, 9}
+            elif PYTHON_VERSION_TRIPLE[:2] == (3, 7):
+                expected = {4, 5, 8, 9}
+            else:
+                expected = {4, 6, 8, 9}
+        elif PYTHON_VERSION_TRIPLE >= (3, 11):
+            expected = {0, 2, 5, 7, 9}
+        elif PYTHON_VERSION_TRIPLE >= (3, 8):
+            if platform.python_implementation() == "GraalVM":
+                expected = {2, 5, 6, 7, 9}
+            else:
+                expected = {2, 5, 7, 9}
+        else:
+            expected = {4, 5, 8, 9}
+        self.assertEqual(expected, pyficache.trace_line_numbers(test_file))
         return
 
     # def test_universal_new_lines(self):
@@ -280,13 +304,19 @@ class TestPyFiCache(unittest.TestCase):
     def test_resolve_name_to_path(self):
         if PYTHON3:
             testdata = (
-                ("pyc/__pycache__/foo.cpython-%s.pyc" % PYVER, "pyc/foo.py"),
+                (
+                    "pyc/__pycache__/foo.cpython-%s.pyc" % PYVER,
+                    osp.join("pyc", "foo.py"),
+                ),
                 ("__pycache__/pyo.cpython-%s.pyc" % PYVER, "pyo.py"),
-                ("foo/__pycache__/bar.cpython-%s.pyo" % PYVER, "foo/bar.py"),
+                (
+                    "foo/__pycache__/bar.cpython-%s.pyo" % PYVER,
+                    osp.join("foo", "bar.py"),
+                ),
             )
         else:
             testdata = (
-                ("pyc/foo.pyc", "pyc/foo.py"),
+                (osp.join("pyc", "foo.pyc"), osp.join("pyc", "foo.py")),
                 ("pyo.pyc", "pyo.py"),
                 ("foo.pyo", "foo.py"),
             )
