@@ -1,8 +1,13 @@
 #!/bin/bash
 PYTHON_VERSION=3.8
 
+# FIXME put some of the below in a common routine
+function finish {
+  cd $python_filecache_owd
+}
+
 export PATH=$HOME/.pyenv/bin/pyenv:$PATH
-setup_filecache_owd=$(pwd)
+python_filecache_owd=$(pwd)
 bs=${BASH_SOURCE[0]}
 if [[ $0 == $bs ]] ; then
     echo "This script should be *sourced* rather than run directly through bash"
