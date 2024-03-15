@@ -30,12 +30,8 @@ test: check
 test-short: check-short
 
 #: Run all tests - the older way
-check-nosetests:
-	nosetests
-
-#: Run all tests - the pytest way
 check:
-	pytest test
+	nosetests
 
 #: Clean up temporary files
 clean:
