@@ -15,6 +15,7 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """packaging information"""
 import sys
+import os.path as osp
 
 copyright = """
 Copyright (C) 2008-2010, 2012-2013, 2015-2018, 2020-2021, 2024 Rocky Bernstein <rocky@gnu.org>.
@@ -55,8 +56,8 @@ author = "Rocky Bernstein"
 author_email = "rocky@gnu.org"
 ftp_url = None
 install_requires = [
-    "Pygments " + pygments_version,
-    "xdis >= 6.1.1, < 6.3.0",
+    "pygments " + pygments_version,
+    "xdis >= 6.0.0, < 6.2.0",
     "term-background >= 1.0.1",
 ]
 
@@ -68,7 +69,6 @@ py_modules = [modname]
 short_desc = "Cache lines and file information which are generally Python programs"
 
 # version.py sets variable __version__.
-import os.path as osp
 
 exec(
     compile(
