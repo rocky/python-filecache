@@ -1,8 +1,8 @@
 #!/bin/bash
 function finish {
-  cd $owd
+  cd $filecache_check_31_owd
 }
-owd=$(pwd)
+filecache_check_31_owd=$(pwd)
 trap finish EXIT
 
 cd $(dirname ${BASH_SOURCE[0]})
@@ -19,7 +19,8 @@ for version in $PYVERSIONS; do
 	exit $?
     fi
     make clean && python setup.py develop
-    if ! make check-nosetests ; then
+    if ! make check ; then
 	exit $?
     fi
 done
+cd $filecache_check_31_owd
