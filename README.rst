@@ -84,7 +84,7 @@ Python statements.
 
 .. |Downloads| image:: https://img.shields.io/pypi/dm/pyficache.svg
    :target: https://travis-ci.org/rocky/python-filecache/
-.. |CircleCI| https://dl.circleci.com/status-badge/img/gh/rocky/python-filecache/tree/master.svg?style=svg
+.. |CircleCI| image:: https://dl.circleci.com/status-badge/img/gh/rocky/python-filecache/tree/master.svg?style=svg
         :target: https://dl.circleci.com/status-badge/redirect/gh/rocky/python-filecache/tree/master
     :target: https://circleci.com/gh/rocky/python-filecache
 .. |Supported Python Versions| image:: https://img.shields.io/pypi/pyversions/pyficache.svg
