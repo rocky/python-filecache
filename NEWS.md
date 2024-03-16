@@ -1,6 +1,15 @@
 2.3.0 2021-10-15
 ================
 
+Adjust for more recent xdis.
+Numerous bug fixes
+black, isort and lint files.
+Source code for older Python is now in separate branches
+
+
+2.3.0 2021-10-15
+================
+
 Revise to use xdis 6.0.0 - Python version comparisions use tuples instead of floats
 which are horribly broken on 3.10.
 
