@@ -6,14 +6,14 @@ function finish {
   cd $make_dist_24_filecache_owd
 }
 
-cd $(dirname ${BASH_SOURCE[0]})
 make_dist_24_filecache_owd=$(pwd)
+cd $(dirname ${BASH_SOURCE[0]})
 trap finish EXIT
 
 if ! source ./pyenv-2.4-2.7-versions ; then
     exit $?
 fi
-if ! source ./setup-2.4.sh ; then
+if ! source ./setup-python-2.4.sh ; then
     exit $?
 fi
 
