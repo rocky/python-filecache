@@ -19,7 +19,7 @@ for version in $PYVERSIONS; do
 	exit $?
     fi
     make clean && python setup.py develop
-    if ! make check-nosetests ; then
+    if ! make check ; then
 	exit $?
     fi
 done
