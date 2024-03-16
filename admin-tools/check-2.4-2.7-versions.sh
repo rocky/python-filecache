@@ -1,12 +1,12 @@
 #!/bin/bash
 function finish {
-  cd $owd
+  cd $filecache_check_24_owd
 }
-owd=$(pwd)
+filecache_check_24_owd=$(pwd)
 trap finish EXIT
 
 cd $(dirname ${BASH_SOURCE[0]})
-if ! source ./pyenv-older-versions ; then
+if ! source ./pyenv-2.4-2.7-versions ; then
     exit $?
 fi
 if ! source ./setup-python-2.4.sh ; then
@@ -23,3 +23,4 @@ for version in $PYVERSIONS; do
 	exit $?
     fi
 done
+cd $filecache_check_24_owd
