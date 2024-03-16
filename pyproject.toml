@@ -1,0 +1,53 @@
+[build-system]
+requires = [
+    "setuptools>=61.2",
+]
+[project]
+name = "pyficache"
+description = "Cache lines and file information which are generally Python programs"
+dependencies = [
+    "pygments",
+    "xdis >= 6.0.0, < 6.2.0",
+    "term-background >= 1.0.1",
+]
+readme = "README.rst"
+license = {text = "GPL"}
+maintainers = [
+    {name = "Rocky Bernstein"},
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Programming Language :: Python :: 2.4",
+    "Programming Language :: Python :: 2.5",
+    "Programming Language :: Python :: 2.6",
+    "Programming Language :: Python :: 2.7",
+    "Programming Language :: Python :: 3.1",
+    "Programming Language :: Python :: 3.2",
+    "Programming Language :: Python :: 3.3",
+    "Programming Language :: Python :: 3.4",
+    "Programming Language :: Python :: 3.5",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+dynamic = ["version"]
+
+[project.urls]
+Homepage = "https://github.com/rocky/python-filecache"
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pre-commit",
+]
+
+[tool.setuptools.dynamic]
+version = {attr = "pyficache.version.__version__"}
