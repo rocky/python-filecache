@@ -46,8 +46,8 @@ classifiers = [
 ]
 
 SYS_VERSION = sys.version_info[0:2]
-if (3, 0) <= SYS_VERSION < (3, 2):
-    pygments_version = ">=14, <= 2.2"
+if (3, 0) <= SYS_VERSION <= (3, 2):
+    pygments_version = "==1.6"
 else:
     pygments_version = ""
 
