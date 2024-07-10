@@ -56,7 +56,7 @@ author_email = "rocky@gnu.org"
 ftp_url = None
 install_requires = [
     "Pygments " + pygments_version,
-    "xdis >= 6.0.0, < 6.2.0",
+    "xdis >= 6.0.0, < 6.3.0",
     "term-background >= 1.0.1",
 ]
 
@@ -80,7 +80,7 @@ exec(
 
 web = "http://github.com/rocky/python-filecache"
 
-zip_safe = False  # tracebacks in zip files are funky and not debuggable
+zip_safe = False  # tracebacks inzip files are funky and not debuggable
 
 
 def read(*rnames):
