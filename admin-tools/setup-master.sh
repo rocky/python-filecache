@@ -1,5 +1,5 @@
 #!/bin/bash
-PYTHON_VERSION=3.8.18
+PYTHON_VERSION=3.8
 
 export PATH=$HOME/.pyenv/bin/pyenv:$PATH
 setup_filecache_owd=$(pwd)
