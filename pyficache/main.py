@@ -483,7 +483,7 @@ light_terminal_formatter = TerminalFormatter(bg="light")
 terminal_256_formatter = Terminal256Formatter()
 
 
-def highlight_string(string, bg="light", **options):
+def highlight_string(string, bg="light", **options) -> str:
     global terminal_256_formatter
     if options.get("style"):
         if terminal_256_formatter.style != options["style"]:
@@ -494,7 +494,6 @@ def highlight_string(string, bg="light", **options):
         return highlight(string, python_lexer, light_terminal_formatter, **options)
     else:
         return highlight(string, python_lexer, dark_terminal_formatter, **options)
-    pass
 
 
 def path(filename):
