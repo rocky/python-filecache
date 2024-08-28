@@ -18,7 +18,7 @@ mydir=$(dirname $bs)
 fulldir=$(readlink -f $mydir)
 cd $fulldir/..
 
-(cd ../python-xdis && git checkout master && pyenv local $PYTHON_VERSION) && git pull && \
+(cd ../python-xdis && git checkout master && pyenv local $PYTHON_VERSION) && \
     git checkout master && git pull && pyenv local $PYTHON_VERSION
-cd $setup_filecache_owd
+cd $python_filecache_owd
 rm -v */.python-version || true

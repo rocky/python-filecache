@@ -45,17 +45,17 @@ classifiers = [
 ]
 
 SYS_VERSION = sys.version_info[0:2]
-if (3, 0) <= SYS_VERSION < (3, 2):
-    pygments_version = ">=14, <= 2.2"
+if (3, 0) <= SYS_VERSION < (3, 3):
+    pygments_version = "pygments == 2.0.0" # I have my own patch for this
 else:
-    pygments_version = ""
+    pygments_version = "pygments>= 2.2.0"
 
 # The rest in alphabetic order
 author = "Rocky Bernstein"
 author_email = "rocky@gnu.org"
 ftp_url = None
 install_requires = [
-    "pygments " + pygments_version,
+    pygments_version,
     "xdis >= 6.0.0, < 6.2.0",
     "term-background >= 1.0.1",
 ]
