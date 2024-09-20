@@ -439,8 +439,11 @@ def getlines(filename, opts=default_opts):
     if get_option("reload_on_change", opts):
         checkcache(filename)
     fmt = get_option("output", opts)
+    if fmt == "plain":
+        cs = "plain"
+    else:
+        cs = opts.get("style")
     highlight_opts = {"bg": fmt}
-    cs = opts.get("style")
 
     # Set list style baseed on "style" option passed
     # if no style given use "zenburn" for dark backgrounds,
