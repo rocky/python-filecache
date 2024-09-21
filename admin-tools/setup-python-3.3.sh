@@ -25,6 +25,6 @@ fi
 
 mydir=$(dirname $bs)
 fulldir=$(readlink -f $mydir)
-(cd $fulldir/.. && checkout_version python-xdis python-3.3-to-3.5 && checkout_version python-filecache python-3.1-to-3.2)
+(cd $fulldir/.. && checkout_version python-xdis python-3.3-to-3.5 && checkout_version python-filecache python-3.3-to-3.5)
 cd $owd
 rm -v */.python-version || true
