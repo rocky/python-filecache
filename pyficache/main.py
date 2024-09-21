@@ -439,8 +439,11 @@ def getlines(filename, opts=default_opts):
     if get_option("reload_on_change", opts):
         checkcache(filename)
     fmt = get_option("output", opts)
+    if fmt == "plain":
+        cs = "plain"
+    else:
+        cs = opts.get("style")
     highlight_opts = {"bg": fmt}
-    cs = opts.get("style")
 
     # Set list style baseed on "style" option passed
     # if no style given use "zenburn" for dark backgrounds,
@@ -483,7 +486,7 @@ light_terminal_formatter = TerminalFormatter(bg="light")
 terminal_256_formatter = Terminal256Formatter()
 
 
-def highlight_string(string, bg="light", **options):
+def highlight_string(string, bg="light", **options) -> str:
     global terminal_256_formatter
     if options.get("style"):
         if terminal_256_formatter.style != options["style"]:
@@ -494,7 +497,6 @@ def highlight_string(string, bg="light", **options):
         return highlight(string, python_lexer, light_terminal_formatter, **options)
     else:
         return highlight(string, python_lexer, dark_terminal_formatter, **options)
-    pass
 
 
 def path(filename):
