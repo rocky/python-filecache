@@ -17,4 +17,4 @@ cd $fulldir/..
 
 cd $owd
 git checkout python-3.1-to-3.2
-rm -v */.python-version || true
+rm -v */.python-version 2>/dev/null || true
