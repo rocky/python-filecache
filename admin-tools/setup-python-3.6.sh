@@ -27,5 +27,5 @@ fi
 mydir=$(dirname $bs)
 fulldir=$(readlink -f $mydir)
 (cd $fulldir/.. && checkout_version python-xdis python-3.6-to-3.10 && checkout_version python-filecache python-3.6-to-3.10)
-rm -v */.python-version || true
+rm -v */.python-version 2>/dev/null || true
 finish
