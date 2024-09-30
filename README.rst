@@ -47,8 +47,8 @@ Summary
      # return line 6, and reload all lines if the file has changed.
     line = pyficache.getline(filename, 6, {'reload_on_change': True})
 
-    # return line 6 syntax highlighted via pygments using style 'emacs'
-    line = pyficache.getline(filename, 6, {'style': 'emacs'})
+    # return line 6 syntax highlighted via pygments using style 'colorful'
+    line = pyficache.getline(filename, 6, {'style': 'colorful'})
 
     pyficache.remap_file('/tmp/myprogram.py', 'another-name')
     line_from_alias = pyficache.getline('another-name', 6)
