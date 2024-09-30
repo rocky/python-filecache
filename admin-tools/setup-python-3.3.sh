@@ -1,5 +1,5 @@
 #!/bin/bash
-PYTHON_VERSION=3.3.7
+PYTHON_VERSION=3.5
 
 function checkout_version {
     local repo=$1
@@ -12,11 +12,11 @@ function checkout_version {
 
 # FIXME put some of the below in a common routine
 function finish {
-  cd $owd
+  cd $setup_filecache_33_owd
 }
 
 export PATH=$HOME/.pyenv/bin/pyenv:$PATH
-owd=$(pwd)
+setup_filecache_33_owd=$(pwd)
 bs=${BASH_SOURCE[0]}
 if [[ $0 == $bs ]] ; then
     echo "This script should be *sourced* rather than run directly through bash"
@@ -25,6 +25,10 @@ fi
 
 mydir=$(dirname $bs)
 fulldir=$(readlink -f $mydir)
-(cd $fulldir/.. && checkout_version python-xdis python-3.3-to-3.5 && checkout_version python-filecache python-3.3-to-3.5)
-cd $owd
-rm -v */.python-version || true
+(cd $fulldir/.. && checkout_version python-xdis python-3.3-to-3.5 && \
+     checkout_version python-filecache python-3.3-to-3.5 && \
+     checkout_version shell-term-background python-3.3-to-3.5 \
+    )
+cd $pyficache_33_owd
+rm -v */.python-version 2>/dev/null || true
+finish
