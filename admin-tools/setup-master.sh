@@ -1,9 +1,5 @@
 #!/bin/bash
-export PATH=$HOME/.pyenv/bin/pyenv:$PATH
-setup_filecache_owd=$(pwd)
-=======
 # Check out master branch and dependent development master branches
->>>>>>> python-3.3-to-3.5
 bs=${BASH_SOURCE[0]}
 if [[ $0 == $bs ]] ; then
     echo "This script should be *sourced* rather than run directly through bash"
