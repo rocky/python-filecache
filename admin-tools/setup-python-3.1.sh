@@ -15,4 +15,6 @@ cd $fulldir/..
 (cd ../python-xdis && git checkout python-3.1-to-3.2 && pyenv local $PYTHON_VERSION) && git pull && \
     pyenv local $PYTHON_VERSION
 
-rm -v */.python-version || true
+cd $python_filecache_owd
+git checkout python-3.1-to-3.2
+rm -v */.python-version 2>/dev/null || true
