@@ -44,18 +44,13 @@ classifiers = [
     "Programming Language :: Python :: Implementation :: PyPy",
 ]
 
-SYS_VERSION = sys.version_info[0:2]
-if (3, 0) <= SYS_VERSION < (3, 3):
-    pygments_version = "pygments == 2.0.0" # I have my own patch for this
-else:
-    pygments_version = "pygments>= 2.2.0"
 
 # The rest in alphabetic order
 author = "Rocky Bernstein"
 author_email = "rocky@gnu.org"
 ftp_url = None
 install_requires = [
-    "Pygments " + pygments_version,
+    "Pygments >=1.4",
     "xdis >= 6.0.0, < 6.3.0",
     "term-background >= 1.0.1",
 ]

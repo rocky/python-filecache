@@ -487,7 +487,7 @@ light_terminal_formatter = TerminalFormatter(bg="light")
 terminal_256_formatter = Terminal256Formatter()
 
 
-def highlight_string(string, bg="light", **options) -> str:
+def highlight_string(string, bg="light", **options):
     global terminal_256_formatter
     if options.get("style"):
         if terminal_256_formatter.style != options["style"]:
