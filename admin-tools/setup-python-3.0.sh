@@ -1,5 +1,5 @@
 #!/bin/bash
-PYTHON_VERSION=3.1.5
+PYTHON_VERSION=3.0
 
 python_filecache_owd=$(pwd)
 bs=${BASH_SOURCE[0]}
@@ -16,5 +16,5 @@ cd $fulldir/..
     pyenv local $PYTHON_VERSION
 
 cd $python_filecache_owd
-git checkout python-3.1-to-3.2
+git checkout python-3.0-to-3.2
 rm -v */.python-version 2>/dev/null || true
