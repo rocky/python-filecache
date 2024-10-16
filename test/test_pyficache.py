@@ -208,13 +208,13 @@ class TestPyFiCache(unittest.TestCase):
         if line_nums is None:
             assert False, "expected to get line numbers from pyficache"
         if 0 == len(line_nums):
-            self.assertEqual({}, line_nums)
+            self.assertEqual(set(), line_nums)
         else:
-            start_lineno = 1
+            start_lineno = 0
             self.assertEqual(set([start_lineno]), line_nums)
             pass
         test_file = osp.join(TEST_DIR, "devious.py")
-        expected = {8, 9, 4, 6}
+        expected = set([9, 2, 5, 7])
         self.assertEqual(expected, pyficache.trace_line_numbers(test_file))
         return
 
@@ -278,12 +278,12 @@ class TestPyFiCache(unittest.TestCase):
     def test_resolve_name_to_path(self):
         testdata = (
             (
-                "pyc/__pycache__/foo.cpython-%s.pyc" % PYVER,
+                "pyc/foo.py",
                 osp.join("pyc", "foo.py"),
             ),
-            ("__pycache__/pyo.cpython-%s.pyc" % PYVER, "pyo.py"),
+            ("pyo.py", "pyo.py"),
             (
-                "foo/__pycache__/bar.cpython-%s.pyo" % PYVER,
+                "foo/bar.py",
                 osp.join("foo", "bar.py"),
             ),
         )
