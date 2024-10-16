@@ -1,8 +1,8 @@
 #!/bin/bash
 function finish {
-  cd $owd
+  cd $filecache_check_33
 }
-owd=$(pwd)
+filecache_check_33=$(pwd)
 trap finish EXIT
 
 cd $(dirname ${BASH_SOURCE[0]})
