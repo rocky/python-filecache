@@ -210,14 +210,14 @@ class TestPyFiCache(unittest.TestCase):
         if 0 == len(line_nums):
             self.assertEqual(set(), line_nums)
         else:
-            if PYVER > "2.4":
+            if PYVER > "24":
                 start_lineno = 1
             else:
                 start_lineno = 0
             self.assertEqual(set([start_lineno]), line_nums)
             pass
         test_file = osp.join(TEST_DIR, "devious.py")
-        if PYVER > "2.4":
+        if PYVER > "24":
             expected = set([8, 9, 4, 6])
         else:
             expected = set([9, 2, 5, 7])
