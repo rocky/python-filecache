@@ -4,7 +4,6 @@
 """
 Unit test for pyficache
 """
-from __future__ import with_statement
 
 import os
 import os.path as osp
@@ -223,23 +222,7 @@ class TestPyFiCache(unittest.TestCase):
             self.assertEqual(set([start_lineno]), line_nums)
             pass
         test_file = osp.join(TEST_DIR, "devious.py")
-        if PYTHON_VERSION_TRIPLE < (3, 0) or (3, 1) <= PYTHON_VERSION_TRIPLE < (3, 8):
-            if IS_PYPY and PYTHON_VERSION_TRIPLE[:2] == (3, 6):
-                # Later PyPy 3.6's go with later Python nunmberings
-                expected = {2, 5, 7, 9}
-            elif PYTHON_VERSION_TRIPLE[:2] == (3, 7):
-                expected = {4, 5, 8, 9}
-            else:
-                expected = {4, 6, 8, 9}
-        elif PYTHON_VERSION_TRIPLE >= (3, 11):
-            expected = {0, 2, 5, 7, 9}
-        elif PYTHON_VERSION_TRIPLE >= (3, 8):
-            if platform.python_implementation() == "GraalVM":
-                expected = {2, 5, 6, 7, 9}
-            else:
-                expected = {2, 5, 7, 9}
-        else:
-            expected = {4, 5, 8, 9}
+        expected = {0, 2, 5, 7, 9}
         self.assertEqual(expected, pyficache.trace_line_numbers(test_file))
         return
 
