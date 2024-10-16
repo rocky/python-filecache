@@ -53,14 +53,19 @@ Synopsis
 
 """
 
-import hashlib, linecache, os, re, sys
+import hashlib
+import linecache
+import os
+import re
+import sys
 import os.path as osp
 
 from pyficache.namedtuple24 import namedtuple
 
-from pygments import highlight
-from pygments.lexers import PythonLexer
-from pygments.formatters import TerminalFormatter, Terminal256Formatter
+# FIXME for 2.4
+# from pygments import highlight
+# from pygments.lexers import PythonLexer
+# from pygments.formatters import TerminalFormatter, Terminal256Formatter
 
 from xdis.lineoffsets import lineoffsets_in_file
 from xdis.version_info import PYTHON3, PYTHON_VERSION_TRIPLE
@@ -464,27 +469,29 @@ def highlight_array(array, trailing_nl=True, bg="light", **options):
     return lines
 
 
-python_lexer = PythonLexer()
+# python_lexer = PythonLexer()
 
 # TerminalFormatter uses a colorTHEME with light and dark pairs.
 # But Terminal256Formatter uses a colorSTYLE.  Ugh
-dark_terminal_formatter = TerminalFormatter(bg="dark")
-light_terminal_formatter = TerminalFormatter(bg="light")
-terminal_256_formatter = Terminal256Formatter()
+# dark_terminal_formatter = TerminalFormatter(bg="dark")
+# light_terminal_formatter = TerminalFormatter(bg="light")
+# terminal_256_formatter = Terminal256Formatter()
 
 
 def highlight_string(string, bg="light", **options):
     global terminal_256_formatter
-    if options.get("style"):
-        if terminal_256_formatter.style != options["style"]:
-            terminal_256_formatter = Terminal256Formatter(style=options["style"])
-            del options["style"]
-        return highlight(string, python_lexer, terminal_256_formatter, **options)
-    elif "light" == bg:
-        return highlight(string, python_lexer, light_terminal_formatter, **options)
-    else:
-        return highlight(string, python_lexer, dark_terminal_formatter, **options)
-    pass
+    # FIXME for 2.4
+    return string
+    # if options.get("style"):
+    #     if terminal_256_formatter.style != options["style"]:
+    #         terminal_256_formatter = Terminal256Formatter(style=options["style"])
+    #         del options["style"]
+    #     return highlight(string, python_lexer, terminal_256_formatter, **options)
+    # elif "light" == bg:
+    #     return highlight(string, python_lexer, light_terminal_formatter, **options)
+    # else:
+    #     return highlight(string, python_lexer, dark_terminal_formatter, **options)
+    # pass
 
 
 def path(filename):
