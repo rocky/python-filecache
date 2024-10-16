@@ -5,12 +5,14 @@
 Unit test for pyficache
 """
 import os
+import os.path as osp
 import sys
 import unittest
-import os.path as osp
+
 from tempfile import mkstemp
 
-from xdis.version_info import PYTHON_VERSION_TRIPLE, PYTHON3
+import pyficache
+from pyficache import PYVER
 
 TEST_DIR = osp.abspath(osp.dirname(__file__))
 
@@ -208,17 +210,12 @@ class TestPyFiCache(unittest.TestCase):
         if 0 == len(line_nums):
             self.assertEqual({}, line_nums)
         else:
-            if PYTHON_VERSION_TRIPLE[:2] in ((2, 5), (2, 6), (2, 7)):
-                self.assertEqual(set([1]), line_nums)
-            else:
-                self.assertEqual(set([0]), line_nums)
+            start_lineno = 1
+            self.assertEqual(set([start_lineno]), line_nums)
             pass
         test_file = osp.join(TEST_DIR, "devious.py")
-        if PYTHON_VERSION_TRIPLE[:2] in ((2, 5), (2, 6), (2, 7)):
-            expected = [8, 9, 4, 6]
-        else:
-            expected = [9, 2, 5, 7]
-        self.assertEqual(set(expected), pyficache.trace_line_numbers(test_file))
+        expected = {8, 9, 4, 6}
+        self.assertEqual(expected, pyficache.trace_line_numbers(test_file))
         return
 
     # def test_universal_new_lines(self):
@@ -279,24 +276,17 @@ class TestPyFiCache(unittest.TestCase):
         return
 
     def test_resolve_name_to_path(self):
-        if PYTHON3:
-            testdata = (
-                (
-                    "pyc/__pycache__/foo.cpython-%s.pyc" % PYVER,
-                    osp.join("pyc", "foo.py"),
-                ),
-                ("__pycache__/pyo.cpython-%s.pyc" % PYVER, "pyo.py"),
-                (
-                    "foo/__pycache__/bar.cpython-%s.pyo" % PYVER,
-                    osp.join("foo", "bar.py"),
-                ),
-            )
-        else:
-            testdata = (
-                (osp.join("pyc", "foo.pyc"), osp.join("pyc", "foo.py")),
-                ("pyo.pyc", "pyo.py"),
-                ("foo.pyo", "foo.py"),
-            )
+        testdata = (
+            (
+                "pyc/__pycache__/foo.cpython-%s.pyc" % PYVER,
+                osp.join("pyc", "foo.py"),
+            ),
+            ("__pycache__/pyo.cpython-%s.pyc" % PYVER, "pyo.py"),
+            (
+                "foo/__pycache__/bar.cpython-%s.pyo" % PYVER,
+                osp.join("foo", "bar.py"),
+            ),
+        )
         for path, expect in testdata:
             self.assertEqual(pyficache.resolve_name_to_path(path), expect)
         return

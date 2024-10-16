@@ -30,12 +30,7 @@ test-short: check-short
 
 #: Run all tests - the older way
 check:
-	nosetests
-
-#: Run unit (white-box) tests
-check-short:
-	$(PYTHON) ./setup.py nosetests --quiet | \
-	$(PYTHON) ./make-check-filter.py
+	nosetests test/test_*.py
 
 #: Clean up temporary files
 clean:

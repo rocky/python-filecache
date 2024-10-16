@@ -68,6 +68,7 @@ py_modules = [modname]
 
 short_desc = "Cache lines and file information which are generally Python programs"
 
+# version.py sets variable __version__.
 exec(
     compile(
         open(osp.join(osp.dirname(__file__), "pyficache", "version.py")).read(),
