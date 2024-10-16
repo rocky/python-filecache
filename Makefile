@@ -31,7 +31,7 @@ test-short: check-short
 
 #: Run all tests - the older way
 check-nosetests:
-	nosetests
+	nosetests test/*.py
 
 #: Run all tests - the pytest way
 check:
