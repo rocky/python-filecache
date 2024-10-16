@@ -1,3 +1,12 @@
+2.3.1 2024-03-15
+================
+
+Adjust for more recent xdis.
+Numerous bug fixes
+black, isort and lint files.
+Source code for older Python is now in separate branches
+
+
 2.3.0 2021-10-15
 ================
 

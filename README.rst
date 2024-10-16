@@ -1,4 +1,4 @@
-|TravisCI| |Pypi Installs| |License| |Supported Python Versions|
+|CircleCI| |Pypi Installs| |License| |Supported Python Versions|
 
 |packagestatus|
 
@@ -46,8 +46,8 @@ Summary
     # return line 6, and reload all lines if the file has changed.
     line = pyficache.getline(filename, 6, {'reload_on_change': True})
 
-    # return line 6 syntax highlighted via pygments using style 'emacs'
-    line = pyficache.getline(filename, 6, {'style': 'emacs'})
+    # return line 6 syntax highlighted via pygments using style 'colorful'
+    line = pyficache.getline(filename, 6, {'style': 'colorful'})
 
     pyficache.remap_file('/tmp/myprogram.py', 'another-name')
     line_from_alias = pyficache.getline('another-name', 6)
@@ -79,8 +79,8 @@ Python statements.
 .. _xdis: https://pypi.org/project/xdis/
 .. _linecache: https://rubygems.org/gems/linecache
 .. |Downloads| image:: https://img.shields.io/pypi/dm/pyficache.svg
-.. |TravisCI| image:: https://travis-ci.org/rocky/python-filecache.svg
-.. |CircleCI| image:: https://circleci.com/gh/rocky/python-filecache.svg?style=svg
+   :target: https://travis-ci.org/rocky/python-filecache/
+.. |CircleCI| image:: https://dl.circleci.com/status-badge/img/gh/rocky/python-filecache/tree/master.svg?style=svg :target: https://dl.circleci.com/status-badge/redirect/gh/rocky/python-filecache/tree/master
 .. |Supported Python Versions| image:: https://img.shields.io/pypi/pyversions/pyficache.svg
 .. |Pypi Installs| image:: https://pepy.tech/badge/pyficache/month
 .. |packagestatus| image:: https://repology.org/badge/vertical-allrepos/python:pyficache.svg

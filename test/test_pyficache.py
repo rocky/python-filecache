@@ -4,7 +4,9 @@
 """
 Unit test for pyficache
 """
-import os, sys, unittest
+import os
+import sys
+import unittest
 import os.path as osp
 from tempfile import mkstemp
 
@@ -16,9 +18,6 @@ top_builddir = osp.join(TEST_DIR, "..")
 if top_builddir[-1] != osp.sep:
     top_builddir += osp.sep
 sys.path.insert(0, top_builddir)
-
-import pyficache
-from pyficache import PYVER
 
 # Test LineCache module
 class TestPyFiCache(unittest.TestCase):
@@ -204,6 +203,8 @@ class TestPyFiCache(unittest.TestCase):
     def test_trace_line_numbers(self):
         test_file = osp.join(TEST_DIR, "short-file")
         line_nums = pyficache.trace_line_numbers(test_file)
+        if line_nums is None:
+            assert False, "expected to get line numbers from pyficache"
         if 0 == len(line_nums):
             self.assertEqual({}, line_nums)
         else:
@@ -280,13 +281,19 @@ class TestPyFiCache(unittest.TestCase):
     def test_resolve_name_to_path(self):
         if PYTHON3:
             testdata = (
-                ("pyc/__pycache__/foo.cpython-%s.pyc" % PYVER, "pyc/foo.py"),
+                (
+                    "pyc/__pycache__/foo.cpython-%s.pyc" % PYVER,
+                    osp.join("pyc", "foo.py"),
+                ),
                 ("__pycache__/pyo.cpython-%s.pyc" % PYVER, "pyo.py"),
-                ("foo/__pycache__/bar.cpython-%s.pyo" % PYVER, "foo/bar.py"),
+                (
+                    "foo/__pycache__/bar.cpython-%s.pyo" % PYVER,
+                    osp.join("foo", "bar.py"),
+                ),
             )
         else:
             testdata = (
-                ("pyc/foo.pyc", "pyc/foo.py"),
+                (osp.join("pyc", "foo.pyc"), osp.join("pyc", "foo.py")),
                 ("pyo.pyc", "pyo.py"),
                 ("foo.pyo", "foo.py"),
             )

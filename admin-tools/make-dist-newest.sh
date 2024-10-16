@@ -3,14 +3,14 @@ PACKAGE=pyficache
 
 # FIXME put some of the below in a common routine
 function finish {
-  cd $owd
+  cd $make_dist_filecache_owd
 }
 
 cd $(dirname ${BASH_SOURCE[0]})
-owd=$(pwd)
+make_dist_filecache_owd=$(pwd)
 trap finish EXIT
 
-if ! source ./pyenv-3-versions ; then
+if ! source ./pyenv-newest-versions ; then
     exit $?
 fi
 if ! source ./setup-master.sh ; then
@@ -19,9 +19,14 @@ fi
 
 cd ..
 source $PACKAGE/version.py
-echo $VERSION
+echo $__version__
 
 for pyversion in $PYVERSIONS; do
+    echo --- $pyversion ---
+    if [[ ${pyversion:0:4} == "pypy" ]] ; then
+	echo "$pyversion - PyPy does not get special packaging"
+	continue
+    fi
     if ! pyenv local $pyversion ; then
 	exit $?
     fi
@@ -40,3 +45,4 @@ for pyversion in $PYVERSIONS; do
 done
 
 python ./setup.py sdist
+finish

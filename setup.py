@@ -20,8 +20,9 @@ from __pkginfo__ import (
     zip_safe,
 )
 
-__import__("pkg_resources")
 from setuptools import setup, find_packages
+
+__import__("pkg_resources")
 
 packages = find_packages()
 
@@ -36,7 +37,6 @@ setup(
     name=modname,
     packages=packages,
     py_modules=py_modules,
-    test_suite="nose.collector",
     url=web,
     version=__version__,
     zip_safe=zip_safe,

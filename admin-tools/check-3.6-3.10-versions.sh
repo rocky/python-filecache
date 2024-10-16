@@ -1,15 +1,15 @@
 #!/bin/bash
 function finish {
-  cd $owd
+  cd $filecache_check_36
 }
-owd=$(pwd)
+filecache_check_36=$(pwd)
 trap finish EXIT
 
 cd $(dirname ${BASH_SOURCE[0]})
-if ! source ./pyenv-3.1-3.2-versions ; then
+if ! source ./pyenv-3.6-3.10-versions ; then
     exit $?
 fi
-if ! source ./setup-python-3.3.sh ; then
+if ! source ./setup-python-3.6.sh ; then
     exit $?
 fi
 

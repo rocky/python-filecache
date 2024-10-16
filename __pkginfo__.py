@@ -1,4 +1,5 @@
-# Copyright (C) 2009-2010, 2013, 2015, 2017, 2020-2021 Rocky Bernstein <rocky@gnu.org>
+# Copyright (C) 2009-2010, 2013, 2015, 2017,
+# 2020-2021, 2024 Rocky Bernstein <rocky@gnu.org>
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -16,7 +17,7 @@
 import sys
 
 copyright = """
-Copyright (C) 2008-2010, 2012-2013, 2015-2018, 2020-2021 Rocky Bernstein <rocky@gnu.org>.
+Copyright (C) 2008-2010, 2012-2013, 2015-2018, 2020-2021, 2024 Rocky Bernstein <rocky@gnu.org>.
 """
 classifiers = [
     "Development Status :: 5 - Production/Stable",
@@ -39,20 +40,25 @@ classifiers = [
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: Implementation :: PyPy",
 ]
 
 SYS_VERSION = sys.version_info[0:2]
-if (3, 0) <= SYS_VERSION < (3, 2):
-    pygments_version = ">=14, <= 2.2"
+if (3, 0) <= SYS_VERSION < (3, 3):
+    pygments_version = "pygments == 2.0.0" # I have my own patch for this
 else:
-    pygments_version = ""
+    pygments_version = "pygments>= 2.2.0"
 
 # The rest in alphabetic order
 author = "Rocky Bernstein"
 author_email = "rocky@gnu.org"
 ftp_url = None
-install_requires = ["Pygments " + pygments_version, "xdis >= 6.0.0, < 6.1.0"]
+install_requires = [
+    pygments_version,
+    "xdis >= 6.0.0, < 6.2.0",
+    "term-background >= 1.0.1",
+]
 
 license = "GPL"
 mailing_list = None
