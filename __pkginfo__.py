@@ -15,6 +15,7 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """packaging information"""
 import sys
+import os.path as osp
 
 copyright = """
 Copyright (C) 2008-2010, 2012-2013, 2015-2018, 2020-2021, 2024 Rocky Bernstein <rocky@gnu.org>.
@@ -45,10 +46,10 @@ classifiers = [
 ]
 
 SYS_VERSION = sys.version_info[0:2]
-if (3, 0) <= SYS_VERSION < (3, 3):
-    pygments_version = "pygments == 2.0.0" # I have my own patch for this
+if (2, 6) <= SYS_VERSION < (2, 7):
+    pygments_version = "pygments >= 2.2"
 else:
-    pygments_version = "pygments>= 2.2.0"
+    pygments_version = "pygments>= 1.4"
 
 # The rest in alphabetic order
 author = "Rocky Bernstein"
@@ -66,9 +67,6 @@ modname = "pyficache"
 py_modules = [modname]
 
 short_desc = "Cache lines and file information which are generally Python programs"
-
-# version.py sets variable __version__.
-import os.path as osp
 
 exec(
     compile(

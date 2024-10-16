@@ -453,8 +453,6 @@ def getlines(filename, opts=default_opts):
     if cs:
         highlight_opts["style"] = cs
         fmt = cs
-    elif is_dark_background:
-        highlight_opts["style"] = "monokai"
     else:
         highlight_opts["style"] = "tango"
 
@@ -957,9 +955,9 @@ if __name__ == "__main__":
     print(remap_file_pat("/code/setup.py"))
 
     # print(resolve_name_to_path("os"))
-    print(
-        getline(__file__, 1, {"style": "monokai" if is_dark_background() else "tango"})
-    )
+    # print(
+    #     getline(__file__, 1, {"style": "monokai" if is_dark_background() else "tango"})
+    # )
     # print(getline(__file__, 2, {"output": "light"}))
     # from pygments.styles import STYLE_MAP
 
