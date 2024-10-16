@@ -218,11 +218,25 @@ class TestPyFiCache(unittest.TestCase):
             if platform.python_implementation() == "GraalVM":
                 start_lineno = 2
             else:
-                start_lineno = 1 if PYTHON_VERSION_TRIPLE < (3, 11) else 0
+                start_lineno = 1
             self.assertEqual(set([start_lineno]), line_nums)
             pass
         test_file = osp.join(TEST_DIR, "devious.py")
-        expected = {0, 2, 5, 7, 9}
+        if PYTHON_VERSION_TRIPLE < (3, 8):
+            if IS_PYPY and PYTHON_VERSION_TRIPLE[:2] == (3, 6):
+                # Later PyPy 3.6's go with later Python nunmberings
+                expected = {2, 5, 7, 9}
+            elif PYTHON_VERSION_TRIPLE[:2] == (3, 7):
+                expected = {4, 5, 8, 9}
+            else:
+                expected = {4, 6, 8, 9}
+        elif PYTHON_VERSION_TRIPLE >= (3, 8):
+            if platform.python_implementation() == "GraalVM":
+                expected = {2, 5, 6, 7, 9}
+            else:
+                expected = {2, 5, 7, 9}
+        else:
+            expected = {4, 5, 8, 9}
         self.assertEqual(expected, pyficache.trace_line_numbers(test_file))
         return
 
