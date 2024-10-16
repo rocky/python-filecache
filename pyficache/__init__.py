@@ -128,10 +128,6 @@ from pyficache.version import __version__
 
 __all__ = [
     "__version__",
-<<<<<<< HEAD
-=======
-    "PYTHON3",
->>>>>>> d9f367d (Admnistriva and merge hell)
     "PYVER",
     "add_remap_pat",
     "cache_code_lines",
