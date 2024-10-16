@@ -31,7 +31,7 @@ test-short: check-short
 
 #: Run all tests - the older way
 check:
-	nosetests
+	nosetests test/test_*.py
 
 #: Clean up temporary files
 clean:
