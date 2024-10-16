@@ -13,10 +13,10 @@ python_filecache_owd=$(pwd)
 fulldir=$(readlink -f $mydir)
 cd $fulldir/..
 
-(cd $fulldir/.. && setup_version python-xdis python-3.0-to-3.2 && \
-    setup_version shell-term-background python-3.0-to-3.2
+(cd $fulldir/.. && setup_version python-xdis python-3.0 && \
+    setup_version shell-term-background python-3.0
     )
 
 cd $python_filecache_owd
 rm -v */.python-version 2>/dev/null || true
-checkout_finish master
+checkout_finish python-3.0-to-3.2
