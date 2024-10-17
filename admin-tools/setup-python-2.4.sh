@@ -1,7 +1,6 @@
 #!/bin/bash
 PYTHON_VERSION=2.4
 
-setup_filecache_24_owd=$(pwd)
 bs=${BASH_SOURCE[0]}
 if [[ $0 == $bs ]] ; then
     echo "This script should be *sourced* rather than run directly through bash"
@@ -9,7 +8,7 @@ if [[ $0 == $bs ]] ; then
 fi
 
 mydir=$(dirname $bs)
-python_filecache_owd=$(pwd)
+pyficache_od=$(pwd)
 . ./checkout_common.sh
 fulldir=$(readlink -f $mydir)
 cd $fulldir/..
