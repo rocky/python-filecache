@@ -223,8 +223,8 @@ class TestPyFiCache(unittest.TestCase):
             pass
         test_file = osp.join(TEST_DIR, "devious.py")
         if PYTHON_VERSION_TRIPLE < (3, 8):
-            if IS_PYPY and PYTHON_VERSION_TRIPLE[:2] == (3, 6):
-                # Later PyPy 3.6's go with later Python nunmberings
+            if IS_PYPY:
+                # Later PyPy 3.6 and 3.7 go with later Python nunmberings
                 expected = {2, 5, 7, 9}
             elif PYTHON_VERSION_TRIPLE[:2] == (3, 7):
                 expected = {4, 5, 8, 9}
