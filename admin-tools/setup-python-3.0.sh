@@ -19,4 +19,4 @@ cd $fulldir/..
 
 cd $python_filecache_owd
 rm -v */.python-version 2>/dev/null || true
-checkout_finish master
+checkout_finish python-3.0-to-3.2
