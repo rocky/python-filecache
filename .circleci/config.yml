@@ -1,25 +1,37 @@
 version: 2.1
 
-orbs:
-  python: circleci/python@0.2.1
-
 jobs:
-  build-and-test:
-    executor: python/default
-    steps:
-      - checkout
-      - python/load-cache
-      - python/install-deps
-      - python/save-cache
-      - run:
-          command: | # use pip install to install dependencis
-            sudo pip install -e . && pip install -r requirements-dev.txt
-          name: Install dependencies
-      - run:
-          command: make check
-          name: Run Tests
+  build:
+    working_directory: ~/rocky/python-filecache
+    parallelism: 1
+    docker:
+    - image: cimg/python:3.12
 
-workflows:
-  main:
-    jobs:
-      - build-and-test
+    steps:
+      # Checkout the code as the first step.
+      - checkout
+      - run: pip install --upgrade setuptools
+      - run: pip install -e .[dev]
+      - run: make check
+
+      - restore_cache:
+          keys:
+            # This branch if available
+            - v2-dependencies-{{ .Branch }}-
+            # Default branch if not
+            - v2-dependencies-master-
+            # Any branch if there are none on the default branch - this should be unnecessary if you have your default branch configured correctly
+            - v2-dependencies-
+
+      # Save dependency cache
+      - save_cache:
+          key: v2-dependencies-{{ .Branch }}-{{ epoch }}
+          paths:
+          # This is a broad list of cache paths to include many possible development environments
+          # You can probably delete some of these entries
+          - vendor/bundle
+          - ~/virtualenvs
+          - ~/.m2
+          - ~/.ivy2
+          - ~/.bundle
+          - ~/.cache/bower
