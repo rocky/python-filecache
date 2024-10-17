@@ -9,6 +9,7 @@
 /.eggs
 /.hypothesis
 /.python-version
+/ChangeLog
 /Pygments*
 /how-to-make-a-release.txt
 __pycache__

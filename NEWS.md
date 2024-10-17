@@ -1,17 +1,24 @@
+2.3.2 2024-10-16
+================
+
+Handle `highlight="plain"` in `getlines()` It needs to override "style"
+
+Lots of little administrative things to support newer Python up to 3.13 while allowing functioning on older Python. For example, pyproject.toml was added.
+
+
 2.3.1 2024-03-15
 ================
 
-Adjust for more recent xdis.
-Numerous bug fixes
-black, isort and lint files.
-Source code for older Python is now in separate branches
+* Adjust for more recent xdis.
+* Numerous bug fixes.
+* black, isort and lint files.
+* Source code for older Python is now in separate branches.
 
 
 2.3.0 2021-10-15
 ================
 
-Revise to use xdis 6.0.0 - Python version comparisions use tuples instead of floats
-which are horribly broken on 3.10.
+ Revise to use xdis 6.0.0 - Python version comparisons use tuples instead of floats which are horribly broken on 3.10.
 
 Some other minor changes as well.
 
@@ -36,15 +43,11 @@ Added  `cache_offset_info()`.
 2.1.0 2020-06-12 Fleetwood 66
 ==============================
 
-This shifts responsibility of getting line offset info to `xdis`. But we have routines here
-since we manage file objects and cache them.
+This shifts responsibility of getting line offset info to `xdis`. But we have routines here since we manage file objects and cache them.
 
 To this end routines `code_lines()` and and `code_line_info()` were added.
 
-Line information now contains all offsets for a given line number in
-the module or function that the offset is relative to. There are various options
-for indicting whether you want the offset informaiton or just the line numbers,
-nnd if you want to note which line numbers are dups.
+Line information now contains all offsets for a given line number in the module or function that the offset is relative to. There are various options for indicting whether you want the offset information or just the line numbers, and if you want to note which line numbers are dups.
 
 2.0.1 2018-04-22
 ================
