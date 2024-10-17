@@ -8,7 +8,7 @@ if [[ $0 == $bs ]] ; then
 fi
 
 mydir=$(dirname $bs)
-pyficache_od=$(pwd)
+pyficache_owd=$(pwd)
 . ./checkout_common.sh
 fulldir=$(readlink -f $mydir)
 cd $fulldir/..
