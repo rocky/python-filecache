@@ -1,6 +1,354 @@
+2024-10-16  rocky <rocky@gnu.org>
+
+	* .gitignore, ChangeLog, appveyor.yml, pyficache/version.py: Get
+	ready for release 2.3.2
+
+2024-10-16  rocky <rocky@gnu.org>
+
+	* admin-tools/setup-python-2.4.sh: Administrivia
+
+2024-10-16  rocky <rocky@gnu.org>
+
+	* admin-tools/merge-for-2.4.sh: Administrivia
+
+2024-10-16  R. Bernstein <rocky@users.noreply.github.com>
+
+	* : Merge pull request #8 from rocky/try-github-ci Add Github-flavored CI
+
+2024-10-16  rocky <rocky@gnu.org>
+
+	* .circleci/config.yml: Update CiriclCI
+
+2024-10-16  rocky <rocky@gnu.org>
+
+	* test/test_pyficache.py: Reduce use of Python version differences
+	in test
+
+2024-10-16  rocky <rocky@gnu.org>
+
+	* setup.cfg: remove pyproject complaints in setup.cfg
+
+2024-10-16  rocky <rocky@gnu.org>
+
+	* setup.py: Reduced setup.py on master
+
+2024-10-16  rocky <rocky@gnu.org>
+
+	* pyproject.toml: Reinstante pyproject.toml
+
+2024-10-16  rocky <rocky@gnu.org>
+
+	* admin-tools/setup-python-3.0.sh: Administrivia
+
+2024-10-16  rocky <rocky@gnu.org>
+
+	* : commit cb6411966ddfdb1946cbfceb17f077e379c981fa Merge: 0b42893
+	db69e60 Author: rocky <rocky@gnu.org> Date:   Wed Oct 16 09:09:38
+	2024 -0400
+
+2024-10-15  rocky <rocky@gnu.org>
+
+	* admin-tools/{make-dist-3.1-3.2.sh => make-dist-3.0-to-3.2.sh},
+	admin-tools/merge-for-2.4.sh, admin-tools/merge-for-3.0.sh,
+	admin-tools/merge-for-3.3.sh, admin-tools/setup-master.sh,
+	admin-tools/setup-python-3.0.sh: Administrivia
+
+2024-10-15  rocky <rocky@gnu.org>
+
+	* : commit 0b42893eef4b416b045af4360f340eaaa6a61970 Merge: 029f506
+	db23fa7 Author: rocky <rocky@gnu.org> Date:   Tue Oct 15 22:44:31
+	2024 -0400
+
+2024-10-15  rocky <rocky@gnu.org>
+
+	* admin-tools/{make-dist-3.1-3.2.sh => make-dist-3.0-to-3.2.sh},
+	admin-tools/merge-for-2.4.sh, admin-tools/merge-for-3.0.sh,
+	admin-tools/merge-for-3.3.sh: Administrivia
+
+2024-10-15  rocky <rocky@gnu.org>
+
+	* : commit 029f50632b0e7bdd456df0f75b1a11f45fbfef2b Merge: 18c4cd6
+	8a87313 Author: rocky <rocky@gnu.org> Date:   Tue Oct 15 22:40:25
+	2024 -0400
+
+2024-10-15  rocky <rocky@gnu.org>
+
+	* admin-tools/{make-dist-3.1-3.2.sh => make-dist-3.0-to-3.2.sh},
+	admin-tools/merge-for-2.4.sh, admin-tools/merge-for-3.3.sh:
+	Administrivia
+
+2024-10-15  rocky <rocky@gnu.org>
+
+	* : commit 18c4cd6781456375e299bb62ffa3bfc59ccce3b9 Merge: b3baafb
+	388c8e9 Author: rocky <rocky@gnu.org> Date:   Tue Oct 15 22:36:49
+	2024 -0400
+
+2024-10-15  rocky <rocky@gnu.org>
+
+	* admin-tools/{make-dist-3.1-3.2.sh => make-dist-3.0-to-3.2.sh},
+	admin-tools/merge-for-2.4.sh, admin-tools/merge-for-3.3.sh,
+	admin-tools/merge_for-3.0.sh: Administrivia
+
+2024-10-15  rocky <rocky@gnu.org>
+
+	* : commit b3baafb86a86ff202a719d8b0a44442120e2c258 Merge: 5b372c4
+	5631485 Author: rocky <rocky@gnu.org> Date:   Tue Oct 15 22:31:15
+	2024 -0400
+
+2024-10-15  rocky <rocky@gnu.org>
+
+	* admin-tools/{check-3.1-3.2-versions.sh =>
+	check-3.0-3.2-versions.sh}, admin-tools/check-3.3-3.5-versions.sh,
+	admin-tools/check-3.6-3.10-versions.sh,
+	admin-tools/{pyenv-3.1-3.2-versions => pyenv-3.0-3.2-versions}:
+	Administrivia
+
+2024-10-15  rocky <rocky@gnu.org>
+
+	* : commit 5b372c4c33c85421c306442992a9d409f244f01e Merge: 5b64eda
+	1055bab Author: rocky <rocky@gnu.org> Date:   Tue Oct 15 22:21:51
+	2024 -0400
+
+2024-10-15  rocky <rocky@gnu.org>
+
+	* admin-tools/setup-python-2.4.sh, admin-tools/setup-python-3.3.sh:
+	Administrivia
+
+2024-10-14  rocky <rocky@gnu.org>
+
+	* admin-tools/setup-python-3.0.sh: Administrivia
+
+2024-10-09  rocky <rocky@gnu.org>
+
+	* admin-tools/merge-for-3.1.sh, admin-tools/{setup-python-3.1.sh =>
+	setup-python-3.0.sh}: Administrivia
+
+2024-10-13  rocky <rocky@gnu.org>
+
+	* admin-tools/pyenv-newest-versions: Note that 3.13 works here
+
+2024-10-09  rocky <rocky@gnu.org>
+
+	* : commit 5b64edaabf684c0e5cb2d33d2594489ab9cb7936 Merge: 473c0a9
+	c54a720 Author: rocky <rocky@gnu.org> Date:   Wed Oct 9 03:37:43
+	2024 -0400
+
+2024-10-09  rocky <rocky@gnu.org>
+
+	* admin-tools/merge-for-3.1.sh, admin-tools/{setup-python-3.1.sh =>
+	setup-python-3.0.sh}: Administrivia
+
+2024-10-09  rocky <rocky@gnu.org>
+
+	* : commit 473c0a9ff6b7a4b34e71429dc1660c1b8fd97260 Merge: 3bd9698
+	4bd05fa Author: rocky <rocky@gnu.org> Date:   Wed Oct 9 03:36:03
+	2024 -0400
+
+2024-10-09  rocky <rocky@gnu.org>
+
+	* admin-tools/{setup-python-3.1.sh => setup-python-3.0.sh}:
+	Administrivia
+
+2024-09-30  rocky <rocky@gnu.org>
+
+	* : commit 3bd9698169961b6ea3f5c4220272984a51fb4a68 Merge: 403680f
+	119e832 Author: rocky <rocky@gnu.org> Date:   Mon Sep 30 09:11:42
+	2024 -0400
+
+2024-09-30  rocky <rocky@gnu.org>
+
+	* admin-tools/setup-python-2.4.sh, admin-tools/setup-python-3.1.sh,
+	admin-tools/setup-python-3.6.sh: Admnistrivia
+
+2024-09-30  rocky <rocky@gnu.org>
+
+	* : commit 403680f7eb52f24f83a6b4d8debd7e0a2e35cf72 Merge: ff1dd5f
+	bd83c7c Author: rocky <rocky@gnu.org> Date:   Mon Sep 30 09:09:10
+	2024 -0400
+
+2024-09-30  rocky <rocky@gnu.org>
+
+	* admin-tools/setup-python-2.4.sh, admin-tools/setup-python-3.1.sh,
+	admin-tools/setup-python-3.6.sh: Admnistrivia
+
+2024-09-30  rocky <rocky@gnu.org>
+
+	* : commit ff1dd5fec658dde6ca0a900db1d7ffec587f7496 Merge: 001b060
+	711b10a Author: rocky <rocky@gnu.org> Date:   Mon Sep 30 09:02:28
+	2024 -0400
+
+2024-09-30  rocky <rocky@gnu.org>
+
+	* admin-tools/setup-python-3.3.sh: Use 3.5 for 3.3 testing for
+	now...  local machine doesn't have 3.3 yet
+
+2024-09-30  rocky <rocky@gnu.org>
+
+	* : commit 001b060cfb2ee8142b4dc9a5b0616e361dd17754 Merge: bce829a
+	5639c92 Author: rocky <rocky@gnu.org> Date:   Mon Sep 30 08:58:15
+	2024 -0400
+
+2024-09-30  rocky <rocky@gnu.org>
+
+	* admin-tools/setup-master.sh, admin-tools/setup-python-3.3.sh:
+	Administrivia
+
+2024-09-30  rocky <rocky@gnu.org>
+
+	* : commit bce829a7ff46675c9b0a2d3de8b05dcffd3b4b98 Merge: 48423d4
+	f2aa7aa Author: rocky <rocky@gnu.org> Date:   Mon Sep 30 08:20:04
+	2024 -0400
+
+2024-09-30  rocky <rocky@gnu.org>
+
+	* README.rst, pyficache/__init__.py, setup.py: Administrivia
+
+2024-09-21  rocky <rocky@gnu.org>
+
+	* : commit c5dba246c9c96568127e0fec69e4afefc131b2fe Author: rocky
+	<rocky@gnu.org> Date:   Sat Sep 21 09:28:21 2024 -0400
+
+2024-09-21  rocky <rocky@gnu.org>
+
+	* : commit b6f5ac741a1f782b90eb7d43e9ad7abb8e209461 Author: rocky
+	<rocky@gnu.org> Date:   Sat Sep 21 07:06:06 2024 -0400
+
+2024-09-21  rocky <rocky@gnu.org>
+
+	* : commit 322a4c5cc008a670131e5652f08fc7332409c927 Merge: 59e6eee
+	e2bbfa6 Author: rocky <rocky@gnu.org> Date:   Sat Sep 21 06:56:38
+	2024 -0400
+
+2024-09-20  rocky <rocky@gnu.org>
+
+	* admin-tools/.gitignore, pyficache/main.py: Handle highlight=plain
+	in getlines It needs to override "style"
+
+2024-09-20  rocky <rocky@gnu.org>
+
+	* admin-tools/setup-master.sh: Administrivia
+
+2024-09-20  rocky <rocky@gnu.org>
+
+	* admin-tools/checkout_common.sh: Administrivia
+
+2024-08-28  rocky <rocky@gnu.org>
+
+	* admin-tools/setup-python-3.3.sh: Administrivia
+
+2024-08-28  rocky <rocky@gnu.org>
+
+	* __pkginfo__.py, admin-tools/setup-master.sh: Packaging woes
+
+2024-03-14  rocky <rocky@gnu.org>
+
+	* pyficache/main.py, pyproject.toml: Administrivia
+
+2024-03-14  rocky <rocky@gnu.org>
+
+	* __pkginfo__.py, admin-tools/pyenv-newest-versions,
+	admin-tools/setup-master.sh, requirements-dev.txt,
+	test/test_pyficache.py: Admnistriva and merge hell
+
+2021-11-24  rocky <rocky@gnu.org>
+
+	* requirements-dev.txt, test/test_pyficache.py: Version hacking
+
+2021-11-24  rocky <rocky@gnu.org>
+
+	* admin-tools/setup-python-3.1.sh: Administrivia
+
+2024-08-26  rocky <rocky@gnu.org>
+
+	* pyficache/main.py: Add one more annotation
+
+2024-07-22  rocky <rocky@gnu.org>
+
+	* __pkginfo__.py: Use newer xdis
+
+2024-07-10  rocky <rocky@gnu.org>
+
+	* admin-tools/setup-master.sh: Administrivia
+
+2024-07-17  rocky <rocky@gnu.org>
+
+	* : commit 0dfdb21ac28a5e8af058fa5add0554b7a77b808b Author: rocky
+	<rocky@gnu.org> Date:   Wed Jul 10 16:28:48 2024 -0400
+
 2024-03-16  rocky <rocky@gnu.org>
 
-	* NEWS.md, pyficache/version.py: Get ready for release 2.3.1
+	* NEWS.md, admin-tools/{check-older-versions.sh =>
+	check-2.4-2.7-versions.sh}, admin-tools/check-3.1-3.2-versions.sh,
+	admin-tools/make-dist-3.1-3.2.sh,
+	admin-tools/pyenv-2.4-2.7-versions, admin-tools/setup-python-2.4.sh:
+	Get ready for release 2.3.1 - this time, for sure!
+
+2024-03-16  rocky <rocky@gnu.org>
+
+	* : commit ddfc53d0d6cb40b3823c707f400d7125dc2b2c43 Author: rocky
+	<rocky@gnu.org> Date:   Sat Mar 16 10:44:23 2024 -0400
+
+2024-03-16  rocky <rocky@gnu.org>
+
+	* : commit a4ba2d3c46f3040a038293130727c4f1f2e14644 Author: rocky
+	<rocky@gnu.org> Date:   Sat Mar 16 10:44:23 2024 -0400
+
+2024-03-16  rocky <rocky@gnu.org>
+
+	* : commit 7e8d877db34c6fef15d6618e238e883b05c1924d Author: rocky
+	<rocky@gnu.org> Date:   Sat Mar 16 10:44:23 2024 -0400
+
+2024-03-16  rocky <rocky@gnu.org>
+
+	* : commit cad1f7f3848412aae938ca3208e4f7206f1e923a Author: rocky
+	<rocky@gnu.org> Date:   Sat Mar 16 10:44:23 2024 -0400
+
+2024-03-16  rocky <rocky@gnu.org>
+
+	* : commit a6ddaa2ae6d9456347f366298ce84b619d65e9d2 Author: rocky
+	<rocky@gnu.org> Date:   Sat Mar 16 10:44:23 2024 -0400
+
+2024-03-16  rocky <rocky@gnu.org>
+
+	* : commit d831d798a5769bdf14d6118469244c5c240c938b Author: rocky
+	<rocky@gnu.org> Date:   Sat Mar 16 10:44:23 2024 -0400
+
+2024-03-16  rocky <rocky@gnu.org>
+
+	* : commit b9fcb8484cb85017c2b358d7661a5a388257aec5 Author: rocky
+	<rocky@gnu.org> Date:   Sat Mar 16 10:09:24 2024 -0400
+
+2024-03-16  rocky <rocky@gnu.org>
+
+	* : commit e7a87b90345a0816517fa0ee9aa86ca15217ecfd Author: rocky
+	<rocky@gnu.org> Date:   Sat Mar 16 10:09:24 2024 -0400
+
+2024-03-16  rocky <rocky@gnu.org>
+
+	* : commit 1881e9e29b1873f9552b355545ed1618fd49d607 Author: rocky
+	<rocky@gnu.org> Date:   Sat Mar 16 10:09:24 2024 -0400
+
+2024-03-16  rocky <rocky@gnu.org>
+
+	* : commit 00d7fbd06574d1e70389bc32cb41e9ffb2f5be6f Author: rocky
+	<rocky@gnu.org> Date:   Sat Mar 16 10:09:24 2024 -0400
+
+2024-03-16  rocky <rocky@gnu.org>
+
+	* : commit 7a704dd7caa525891e9a466ba3c69a5c630d8c13 Author: rocky
+	<rocky@gnu.org> Date:   Sat Mar 16 09:43:12 2024 -0400
+
+2024-03-16  rocky <rocky@gnu.org>
+
+	* admin-tools/check-3.6-3.10-versions.sh,
+	admin-tools/setup-python-3.6.sh: Administrivia
+
+2024-03-16  rocky <rocky@gnu.org>
+
+	* ChangeLog, NEWS.md, admin-tools/merge-for-3.6.sh,
+	admin-tools/pyenv-3.6-3.10-versions,
+	admin-tools/pyenv-newest-versions, appveyor.yml,
+	pyficache/version.py, pyproject.toml: Get ready for release 2.3.1
 
 2024-03-16  rocky <rocky@gnu.org>
 
@@ -79,7 +427,7 @@
 
 2023-09-07  rocky <rocky@gnu.org>
 
-	* admin-tools/pyenv-newest-versions, admin-tools/setup-master.sh: 
+	* admin-tools/pyenv-newest-versions, admin-tools/setup-master.sh:
 	Bump versions
 
 2023-07-01  rocky <rocky@gnu.org>
@@ -89,7 +437,7 @@
 
 2023-06-10  rocky <rocky@gnu.org>
 
-	* admin-tools/pyenv-newest-versions, admin-tools/setup-master.sh: 
+	* admin-tools/pyenv-newest-versions, admin-tools/setup-master.sh:
 	Bump versions
 
 2023-05-28  rocky <rocky@gnu.org>
@@ -114,7 +462,7 @@
 
 2021-11-28  rocky <rocky@gnu.org>
 
-	* admin-tools/setup-master.sh, admin-tools/setup-python-3.3.sh: 
+	* admin-tools/setup-master.sh, admin-tools/setup-python-3.3.sh:
 	Administrivia
 
 2021-11-28  rocky <rocky@gnu.org>
@@ -124,7 +472,7 @@
 2021-11-28  rocky <rocky@gnu.org>
 
 	* admin-tools/setup-python-2.4.sh, admin-tools/setup-python-3.1.sh,
-	admin-tools/setup-python-3.3.sh: vresion hacking
+	admin-tools/setup-python-3.3.sh: version hacking
 
 2021-11-28  rocky <rocky@gnu.org>
 
@@ -176,14 +524,14 @@
 	check-newest-versions.sh}, admin-tools/make-dist-newer.sh,
 	admin-tools/pyenv-3.1-3.5-versions,
 	admin-tools/{pyenv-newer-versions => pyenv-newest-versions},
-	admin-tools/setup-python-3.1.sh, admin-tools/setup-python-3.3.sh: 
+	admin-tools/setup-python-3.1.sh, admin-tools/setup-python-3.3.sh:
 	Testing and packaging administrivia
 
 2021-10-15  rocky <rocky@gnu.org>
 
 	* .editorconfig, .pre-commit-config.yaml,
 	admin-tools/pyenv-newer-versions, pyficache/__init__.py,
-	pyficache/line_numbers.py, pyficache/main.py, pyficache/version.py: 
+	pyficache/line_numbers.py, pyficache/main.py, pyficache/version.py:
 	Administrivia: * Black files * use pre-comit hook and add editorconfig
 
 2021-10-15  rocky <rocky@gnu.org>
@@ -341,7 +689,7 @@
 
 2020-05-22  rocky <rocky@gnu.org>
 
-	* admin-tools/setup-master.sh, admin-tools/setup-python-2.4.sh: 
+	* admin-tools/setup-master.sh, admin-tools/setup-python-2.4.sh:
 	Revise setup programs for xdis dependency
 
 2020-05-22  rocky <rocky@gnu.org>
@@ -383,7 +731,7 @@
 2020-05-21  rocky <rocky@gnu.org>
 
 	* requirements.txt: A more accurate requirements.txt CircleCI seems to need this in its default configuration.  Until I
-	figure out how to aviod this, we'll duplicate the config.
+	figure out how to avoid this, we'll duplicate the config.
 
 2020-05-21  rocky <rocky@gnu.org>
 
@@ -391,7 +739,7 @@
 
 2020-05-21  rocky <rocky@gnu.org>
 
-	* pyficache/__init__.py, pyficache/main.py, requirements.txt: 
+	* pyficache/__init__.py, pyficache/main.py, requirements.txt:
 	Travis-related stuff
 
 2020-05-21  rocky <rocky@gnu.org>
@@ -513,7 +861,7 @@
 
 2018-01-26  rocky <rocky@gnu.org>
 
-	* pyficache.py: Add reverse option on unmap_file_line...  To allow retriving line number in the other direction.
+	* pyficache.py: Add reverse option on unmap_file_line...  To allow retrieving line number in the other direction.
 
 2018-01-25  rocky <rocky@gnu.org>
 
@@ -535,7 +883,7 @@
 
 2018-01-25  rocky <rocky@gnu.org>
 
-	* pyficache.py: Remove older compatability routine "cache()"
+	* pyficache.py: Remove older compatibility routine "cache()"
 
 2018-01-25  rocky <rocky@gnu.org>
 
@@ -551,7 +899,7 @@
 
 2018-01-25  rocky <rocky@gnu.org>
 
-	* VERSION.py, __pkginfo__.py, pyficache.py, test/test-pyficache.py: 
+	* VERSION.py, __pkginfo__.py, pyficache.py, test/test-pyficache.py:
 	Reworked file/line mappings...  1st cut
 
 2017-08-11  rocky <rocky@gnu.org>
@@ -630,7 +978,7 @@
 2015-12-26  rocky <rocky@gnu.org>
 
 	* Makefile, pyficache.py: Fix bug in setting pygments style, Line
-	remapping stuff is stil borked though.
+	remapping stuff is still borked though.
 
 2015-12-07  rocky <rocky@gnu.org>
 
@@ -663,7 +1011,7 @@
 
 2015-11-29  rocky <rocky@gnu.org>
 
-	* README.rst: Versions sheild no working. Remove
+	* README.rst: Versions shield no working. Remove
 
 2015-11-29  rocky <rocky@gnu.org>
 
@@ -885,7 +1233,7 @@
 
 2012-12-30  rocky.bernstein <rocky.bernstein@928b09c6-f64b-11dd-aa46-671127399dce>
 
-	* pyficache.py: Use newer interface more agressively. Fix
+	* pyficache.py: Use newer interface more aggressively. Fix
 	uninitialized dict key bug.  git-svn-id: https://pyficache.googlecode.com/svn/trunk@32
 	928b09c6-f64b-11dd-aa46-671127399dce
 
