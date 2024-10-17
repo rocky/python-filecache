@@ -14,6 +14,7 @@ from tempfile import mkstemp
 
 import pyficache
 from pyficache import PYVER
+from xdis import IS_PYPY
 
 TEST_DIR = osp.abspath(osp.dirname(__file__))
 
@@ -218,7 +219,7 @@ class TestPyFiCache(unittest.TestCase):
             self.assertEqual(set([start_lineno]), line_nums)
             pass
         test_file = osp.join(TEST_DIR, "devious.py")
-        if PYVER > "24":
+        if PYVER > "24" and not IS_PYPY:
             expected = set([8, 9, 4, 6])
         else:
             expected = set([9, 2, 5, 7])
