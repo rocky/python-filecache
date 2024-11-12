@@ -14,7 +14,8 @@ fulldir=$(readlink -f $mydir)
 cd $fulldir/..
 
 (cd $fulldir/.. && setup_version python-xdis python-3.0 && \
-    setup_version shell-term-background python-3.0
+    setup_version shell-term-background python-3.0 && \
+    setup_version python-filecache python-3.0
     )
 
 rm -v */.python-version 2>/dev/null || true
