@@ -9,6 +9,7 @@ fi
 
 mydir=$(dirname $bs)
 pyficache_owd=$(pwd)
+cd $mydir
 . ./checkout_common.sh
 fulldir=$(readlink -f $mydir)
 cd $fulldir/..
