@@ -46,10 +46,11 @@ classifiers = [
 ]
 
 SYS_VERSION = sys.version_info[0:2]
-if (2, 6) <= SYS_VERSION < (2, 7):
-    pygments_version = "pygments >= 2.2"
+if (2, 6) <= SYS_VERSION < (3, 3):
+    pygments_version = "pygments == 2.0.0"  # I have my own patch for this
 else:
     pygments_version = "pygments>= 1.4"
+
 
 # The rest in alphabetic order
 author = "Rocky Bernstein"
