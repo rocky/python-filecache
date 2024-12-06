@@ -692,12 +692,12 @@ def code_lines(
 
 
 def code_line_info(
-    filename,
-    line_number,
+    filename: str,
+    line_number: int,
     reload_on_change=False,
     toplevel_only=False,
     include_offsets=True,
-):
+) -> tuple:
     """Return the bytecode information that is associated with
     `line_number` in the bytecode for `filename`.
     """
@@ -709,7 +709,7 @@ def code_line_info(
     )
     if not file_info:
         return None
-    return file_info.line_numbers.get(line_number, None)
+    return file_info.code_map, file_info.line_numbers.get(line_number, None)
 
 
 def code_offset_info(
