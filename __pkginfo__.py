@@ -49,6 +49,7 @@ SYS_VERSION = sys.version_info[0:2]
 if (2, 6) <= SYS_VERSION < (3, 3):
     pygments_version = "pygments == 2.0.0"  # I have my own patch for this
 else:
+    # Must be before 2.6. We don't support >= 3.3 in this branch
     pygments_version = "pygments>= 1.4"
 
 
