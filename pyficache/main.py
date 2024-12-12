@@ -57,16 +57,11 @@ Synopsis
 import hashlib
 import linecache
 import os
+import os.path as osp
 import re
 import sys
-import os.path as osp
-
+from term_background import is_dark_background
 from pyficache.namedtuple24 import namedtuple
-
-# FIXME for 2.4
-# from pygments import highlight
-# from pygments.lexers import PythonLexer
-# from pygments.formatters import TerminalFormatter, Terminal256Formatter
 
 from xdis.lineoffsets import lineoffsets_in_file
 from xdis.version_info import PYTHON3, PYTHON_VERSION_TRIPLE
@@ -79,6 +74,13 @@ if PYTHON3:
     large_int = sys.maxsize
 else:
     large_int = sys.maxint
+
+if PYTHON_VERSION_TRIPLE[:2] == (2, 7):
+    from pygments import highlight
+    from pygments.lexers import PythonLexer
+    from pygments.formatters import TerminalFormatter, Terminal256Formatter
+else:
+    TerminalFormatter = Terminal256Formatter = None
 
 
 default_opts = {
@@ -105,6 +107,7 @@ def has_trailing_nl(string):
     return len(string) > 0 and "\n" == string[-1]
 
 
+# FIXME for 2.4
 if PYTHON_VERSION_TRIPLE >= (3, 4):
     from importlib.util import find_spec, resolve_name, source_from_cache
 else:
@@ -453,6 +456,8 @@ def getlines(filename, opts=default_opts):
     if cs:
         highlight_opts["style"] = cs
         fmt = cs
+    elif is_dark_background:
+        highlight_opts["style"] = "monokai"
     else:
         highlight_opts["style"] = "tango"
 
@@ -477,29 +482,33 @@ def highlight_array(array, trailing_nl=True, bg="light", **options):
     return lines
 
 
-# python_lexer = PythonLexer()
+# FIXME for 2.4
+if PYTHON_VERSION_TRIPLE[:2] == (2, 7):
+    python_lexer = PythonLexer()
 
-# TerminalFormatter uses a colorTHEME with light and dark pairs.
-# But Terminal256Formatter uses a colorSTYLE.  Ugh
-# dark_terminal_formatter = TerminalFormatter(bg="dark")
-# light_terminal_formatter = TerminalFormatter(bg="light")
-# terminal_256_formatter = Terminal256Formatter()
+    # TerminalFormatter uses a colorTHEME with light and dark pairs.
+    # But Terminal256Formatter uses a colorSTYLE.  Ugh
+    dark_terminal_formatter = TerminalFormatter(bg="dark")
+    light_terminal_formatter = TerminalFormatter(bg="light")
+    terminal_256_formatter = Terminal256Formatter()
 
 
 def highlight_string(string, bg="light", **options):
     global terminal_256_formatter
     # FIXME for 2.4
-    return string
-    # if options.get("style"):
-    #     if terminal_256_formatter.style != options["style"]:
-    #         terminal_256_formatter = Terminal256Formatter(style=options["style"])
-    #         del options["style"]
-    #     return highlight(string, python_lexer, terminal_256_formatter, **options)
-    # elif "light" == bg:
-    #     return highlight(string, python_lexer, light_terminal_formatter, **options)
-    # else:
-    #     return highlight(string, python_lexer, dark_terminal_formatter, **options)
-    # pass
+    if PYTHON_VERSION_TRIPLE[:2] != (2, 7):
+        return string
+
+    if options.get("style"):
+        if terminal_256_formatter.style != options["style"]:
+            terminal_256_formatter = Terminal256Formatter(style=options["style"])
+            del options["style"]
+        return highlight(string, python_lexer, terminal_256_formatter, **options)
+    elif "light" == bg:
+        return highlight(string, python_lexer, light_terminal_formatter, **options)
+    else:
+        return highlight(string, python_lexer, dark_terminal_formatter, **options)
+
 
 def path(filename):
     """Return full filename path for filename"""
