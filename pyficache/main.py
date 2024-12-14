@@ -75,7 +75,7 @@ if PYTHON3:
 else:
     large_int = sys.maxint
 
-if PYTHON_VERSION_TRIPLE[:2] == (2, 7):
+if PYTHON_VERSION_TRIPLE[:2] >= (2, 5):
     from pygments import highlight
     from pygments.lexers import PythonLexer
     from pygments.formatters import TerminalFormatter, Terminal256Formatter
@@ -107,11 +107,7 @@ def has_trailing_nl(string):
     return len(string) > 0 and "\n" == string[-1]
 
 
-# FIXME for 2.4
-if PYTHON_VERSION_TRIPLE >= (3, 4):
-    from importlib.util import find_spec, resolve_name, source_from_cache
-else:
-    source_from_cache = resolve_name = find_spec = None
+source_from_cache = resolve_name = find_spec = None
 
 
 def resolve_name_to_path(path_or_name):
@@ -483,7 +479,7 @@ def highlight_array(array, trailing_nl=True, bg="light", **options):
 
 
 # FIXME for 2.4
-if PYTHON_VERSION_TRIPLE[:2] == (2, 7):
+if PYTHON_VERSION_TRIPLE[:2] >= (2, 5):
     python_lexer = PythonLexer()
 
     # TerminalFormatter uses a colorTHEME with light and dark pairs.
@@ -496,7 +492,7 @@ if PYTHON_VERSION_TRIPLE[:2] == (2, 7):
 def highlight_string(string, bg="light", **options):
     global terminal_256_formatter
     # FIXME for 2.4
-    if PYTHON_VERSION_TRIPLE[:2] != (2, 7):
+    if PYTHON_VERSION_TRIPLE[:2] < (2, 5):
         return string
 
     if options.get("style"):
