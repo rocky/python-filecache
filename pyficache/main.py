@@ -75,7 +75,7 @@ if PYTHON3:
 else:
     large_int = sys.maxint
 
-if PYTHON_VERSION_TRIPLE[:2] >= (2, 5):
+if PYTHON_VERSION_TRIPLE[:2] > (2, 6):
     from pygments import highlight
     from pygments.lexers import PythonLexer
     from pygments.formatters import TerminalFormatter, Terminal256Formatter
@@ -479,7 +479,7 @@ def highlight_array(array, trailing_nl=True, bg="light", **options):
 
 
 # FIXME for 2.4
-if PYTHON_VERSION_TRIPLE[:2] >= (2, 5):
+if PYTHON_VERSION_TRIPLE[:2] > (2, 6):
     python_lexer = PythonLexer()
 
     # TerminalFormatter uses a colorTHEME with light and dark pairs.
@@ -492,7 +492,7 @@ if PYTHON_VERSION_TRIPLE[:2] >= (2, 5):
 def highlight_string(string, bg="light", **options):
     global terminal_256_formatter
     # FIXME for 2.4
-    if PYTHON_VERSION_TRIPLE[:2] < (2, 5):
+    if PYTHON_VERSION_TRIPLE[:2] < (2, 7):
         return string
 
     if options.get("style"):

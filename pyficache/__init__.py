@@ -95,7 +95,6 @@ from pyficache.main import (
     code_line_info,
     code_lines,
     code_offset_info,
-    dark_terminal_formatter,
     file_cache,
     file2file_remap,
     getline,
@@ -105,7 +104,6 @@ from pyficache.main import (
     is_cached,
     is_cached_script,
     is_mapped_file,
-    light_terminal_formatter,
     maxline,
     path,
     remap_file,
@@ -116,7 +114,6 @@ from pyficache.main import (
     sha1,
     size,
     stat,
-    terminal_256_formatter,
     trace_line_numbers,
     uncache_script,
     unmap_file,
@@ -125,6 +122,14 @@ from pyficache.main import (
     update_script_cache,
 )
 from pyficache.version import __version__
+from xdis.version_info import PYTHON_VERSION_TRIPLE
+
+if PYTHON_VERSION_TRIPLE[:2] > (2, 6):
+    from pyficache.main import (
+        dark_terminal_formatter,
+        light_terminal_formatter,
+        terminal_256_formatter,
+    )
 
 __all__ = [
     "__version__",
@@ -140,7 +145,6 @@ __all__ = [
     "code_line_info",
     "code_lines",
     "code_offset_info",
-    "dark_terminal_formatter",
     "file_cache",
     "file2file_remap",
     "getline",
@@ -150,7 +154,6 @@ __all__ = [
     "is_cached",
     "is_cached_script",
     "is_mapped_file",
-    "light_terminal_formatter",
     "maxline",
     "path",
     "remap_file",
@@ -161,7 +164,6 @@ __all__ = [
     "sha1",
     "size",
     "stat",
-    "terminal_256_formatter",
     "trace_line_numbers",
     "uncache_script",
     "unmap_file",
@@ -169,3 +171,9 @@ __all__ = [
     "update_cache",
     "update_script_cache",
 ]
+
+if PYTHON_VERSION_TRIPLE[:2] > (2, 6):
+    __all__ += [
+        "dark_terminal_formatter",
+        "light_terminal_formatter",
+        "terminal_256_formatter"]
