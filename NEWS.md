@@ -1,3 +1,13 @@
+2.4.0 2025-01-15
+================
+
+Revised to allow easier line-number remapping.
+
+Note: API change!
+
+`code_line_info` now returns tuple code_map and line numbers
+
+
 2.3.2 2024-10-16
 ================
 
