@@ -71,6 +71,7 @@ install:
 
 ChangeLog: rmChangeLog
 	git log --pretty --numstat --summary | $(GIT2CL) >$@
+	patch -p0 < ChangeLog-spell-corrected.diff
 
 rmChangeLog:
 	rm ChangeLog || true
