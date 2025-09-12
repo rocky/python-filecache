@@ -42,11 +42,13 @@ classifiers = [
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: Implementation :: PyPy",
 ]
 
 SYS_VERSION = sys.version_info[0:2]
-pygments_version = "pygments > 1.9, <2.1"  # I have my own patch for this
+pygments_version = "pygments==1.6"
 
 
 # The rest in alphabetic order
