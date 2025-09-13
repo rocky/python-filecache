@@ -71,6 +71,7 @@ from pygments.lexers import PythonLexer
 from xdis.lineoffsets import lineoffsets_in_file
 from xdis.version_info import PYTHON3
 
+from pyficache.pyasm import PyasmLexer
 from pyficache.line_numbers import code_linenumbers_in_file
 
 PYVER = "%s%s" % sys.version_info[0:2]
@@ -421,7 +422,13 @@ def getline(file_or_script, line_number, opts=default_opts):
     is_pyasm = opts.get("is_pyasm", filename.endswith(".pyasm"))
     lines = getlines(filename, opts)
     if is_pyasm:
-        return grep_first_line(lines["plain"], f"^[ ]+{line_number}:")
+        lines = getlines(filename, {"output": "plain"})
+        fmt = opts.get("output", "plain")
+        line = grep_first_line(lines, f"^[ ]+{line_number}:")
+        if fmt == "plain":
+            return line
+        else:
+            return highlight_string(line, fmt)
 
     elif lines and line_number >= 1 and line_number <= maxline(filename):
         line = lines[line_number - 1]
@@ -452,20 +459,16 @@ def getlines(filename, opts=default_opts, is_pyasm: Optional[bool] = None):
     if is_pyasm is None:
         is_pyasm = filename.endswith(".pyasm")
 
-    if is_pyasm:
-        # Until we has a pyasm lexer.
-        highlight_opts["style"] = "plain"
+    # Set list style based on "style" option passed
+    # if no style given use "monokai" for dark backgrounds,
+    # and "tango" for light backgrounds.
+    if cs:
+        highlight_opts["style"] = cs
+        fmt = cs
+    elif is_dark_background:
+        highlight_opts["style"] = "monokai"
     else:
-        # Set list style based on "style" option passed
-        # if no style given use "monokai" for dark backgrounds,
-        # and "tango" for light backgrounds.
-        if cs:
-            highlight_opts["style"] = cs
-            fmt = cs
-        elif is_dark_background:
-            highlight_opts["style"] = "monokai"
-        else:
-            highlight_opts["style"] = "tango"
+        highlight_opts["style"] = "tango"
 
     if filename not in file_cache:
         update_cache(filename, opts)
@@ -476,8 +479,8 @@ def getlines(filename, opts=default_opts, is_pyasm: Optional[bool] = None):
     lines = file_cache[filename].lines
     if is_pyasm:
         # Until we has a pyasm lexer.
-        lines[fmt] = lines
-    elif fmt not in lines.keys():
+        highlight_opts["lexer"] = pyasm_lexer
+    if fmt not in lines.keys():
         lines[fmt] = highlight_array(lines["plain"], **highlight_opts)
         pass
     return lines[fmt]
@@ -491,6 +494,7 @@ def highlight_array(array, trailing_nl=True, bg="light", **options):
     return lines
 
 
+pyasm_lexer = PyasmLexer()
 python_lexer = PythonLexer()
 
 # TerminalFormatter uses a colorTHEME with light and dark pairs.
@@ -502,7 +506,10 @@ terminal_256_formatter = Terminal256Formatter()
 
 def highlight_string(string, bg="light", **options) -> str:
     global terminal_256_formatter
-    lexer = options.get("lexer", python_lexer)
+    if "lexer" in options:
+        lexer = options.pop("lexer")
+    else:
+        lexer = python_lexer
     if options.get("style"):
         if terminal_256_formatter.style != options["style"]:
             terminal_256_formatter = Terminal256Formatter(style=options["style"])
@@ -967,6 +974,8 @@ if __name__ == "__main__":
 
     remap_file("../test/seven-313.pyasm", "seven.py", is_pyasm=True)
     line = getline("seven.py", 4)
+    print(line)
+    line = getline("seven.py", 4, {"output": "light"})
     print(line)
     add_remap_pat("^/code", "/tmp/project")
     print(remap_file_pat("/code/setup.py"))
