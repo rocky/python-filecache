@@ -8,6 +8,7 @@ PHONY=check clean dist distclean test rmChangeLog
 PHONY=check check-short  clean dist distclean test lint
 
 GIT2CL ?= git2cl
+BASH ?= bash
 PYTHON ?= python
 
 #: the default target - same as running "check"
@@ -42,7 +43,7 @@ coverage:
 
 #: Create source (tarball) and binary (egg) distribution
 dist:
-	$(PYTHON) ./setup.py sdist bdist_egg
+	${BASH} ./admin-tools/make-dist-newest.sh
 
 #: Create source tarball
 sdist: README.rst
