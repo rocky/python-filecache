@@ -1,7 +1,67 @@
+2025-09-17  rocky <rocky@gnu.org>
+
+	* Makefile, README.rst, __pkginfo__.py,
+	admin-tools/make-dist-newest.sh, pyficache/version.py,
+	pyproject.toml, setup.py: Get ready for release 2.5.0
+
+2025-09-17  rocky <rocky@gnu.org>
+
+	* admin-tools/merge-for-3.0.sh, pyproject.toml: Pyproject crap again
+
+2025-09-17  rocky <rocky@gnu.org>
+
+	* pyficache/main.py: Small stuff Spelling and lint some "return" stmts
+
+2025-09-13  rocky <rocky@gnu.org>
+
+	* pyficache/__init__.py, pyficache/main.py, pyficache/pyasm.py,
+	test/seven-313.pyasm: Start a pyasm lexer
+
+2025-09-12  rocky <rocky@gnu.org>
+
+	* pyficache/main.py, pyficache/version.py: Start handling python
+	assembler files
+
+2025-01-15  rocky <rocky@gnu.org>
+
+	* ChangeLog-spell-corrected.diff, Makefile, NEWS.md,
+	admin-tools/pyenv-3.6-3.10-versions, pyficache/version.py,
+	pyproject.toml: Get ready for release 2.4.0
+
+2024-12-09  rocky <rocky@gnu.org>
+
+	* pyficache/version.py: Bump version due to API incompatibility
+
+2024-12-06  rocky <rocky@gnu.org>
+
+	* pyficache/main.py: Warning: API CHANGE! ...  code_line_info now returns tuple code_map and line numbers
+
+2024-11-13  rocky <rocky@gnu.org>
+
+	* admin-tools/setup-python-3.0.sh: Administrivia
+
+2024-11-13  rocky <rocky@gnu.org>
+
+	* admin-tools/setup-python-2.4.sh, admin-tools/setup-python-3.0.sh:
+	Administrivia
+
+2024-11-12  rocky <rocky@gnu.org>
+
+	* __pkginfo__.py, admin-tools/setup-python-3.0.sh: Bump version
+
 2024-10-16  rocky <rocky@gnu.org>
 
-	* .gitignore, ChangeLog, appveyor.yml, pyficache/version.py: Get
-	ready for release 2.3.2
+	* README.rst, pyficache/version.py: Bump to dev
+
+2024-10-16  rocky <rocky@gnu.org>
+
+	* .gitignore, ChangeLog => ChangeLog-spell-corrected,
+	ChangeLog-spell-corrected.diff, NEWS.md,
+	admin-tools/check-3.6-3.10-versions.sh,
+	admin-tools/make-dist-3.3-to-3.5.sh,
+	admin-tools/make-dist-3.6-to-3.10.sh,
+	admin-tools/setup-python-2.4.sh, admin-tools/setup-python-3.0.sh,
+	appveyor.yml, pyficache/version.py: Get ready for release 2.3.2
 
 2024-10-16  rocky <rocky@gnu.org>
 
@@ -883,7 +943,7 @@
 
 2018-01-25  rocky <rocky@gnu.org>
 
-	* pyficache.py: Remove older compatibility routine "cache()"
+	* pyficache.py: Remove older compataiility routine "cache()"
 
 2018-01-25  rocky <rocky@gnu.org>
 

@@ -1,64 +1,222 @@
---- ChangeLog	2025-01-15 18:41:57.097331308 -0500
-+++ ChangeLog-spell-corrected	2025-01-15 18:43:22.119360475 -0500
-@@ -4,7 +4,7 @@
-
+--- ChangeLog	2025-09-17 15:23:03.430406304 -0400
++++ ChangeLog-spell-corrected	2025-09-17 15:20:38.627261332 -0400
+@@ -30,7 +30,7 @@
+ 
  2024-12-09  rocky <rocky@gnu.org>
-
+ 
 -	* pyficache/version.py: Bump version due to API incompatability
 +	* pyficache/version.py: Bump version due to API incompatibility
-
+ 
  2024-12-06  rocky <rocky@gnu.org>
-
-@@ -55,7 +55,7 @@
-
+ 
+@@ -42,7 +42,7 @@
+ 
+ 2024-11-13  rocky <rocky@gnu.org>
+ 
+-	* admin-tools/setup-python-2.4.sh, admin-tools/setup-python-3.0.sh: 
++	* admin-tools/setup-python-2.4.sh, admin-tools/setup-python-3.0.sh:
+ 	Administrivia
+ 
+ 2024-11-12  rocky <rocky@gnu.org>
+@@ -81,7 +81,7 @@
+ 
  2024-10-16  rocky <rocky@gnu.org>
-
+ 
 -	* test/test_pyficache.py: Reduce use of Python verison differences
 +	* test/test_pyficache.py: Reduce use of Python version differences
  	in test
-
+ 
  2024-10-16  rocky <rocky@gnu.org>
-@@ -506,6 +506,6 @@
+@@ -134,7 +134,7 @@
+ 2024-10-15  rocky <rocky@gnu.org>
+ 
+ 	* admin-tools/{make-dist-3.1-3.2.sh => make-dist-3.0-to-3.2.sh},
+-	admin-tools/merge-for-2.4.sh, admin-tools/merge-for-3.3.sh: 
++	admin-tools/merge-for-2.4.sh, admin-tools/merge-for-3.3.sh:
+ 	Administrivia
+ 
+ 2024-10-15  rocky <rocky@gnu.org>
+@@ -160,7 +160,7 @@
+ 	* admin-tools/{check-3.1-3.2-versions.sh =>
+ 	check-3.0-3.2-versions.sh}, admin-tools/check-3.3-3.5-versions.sh,
+ 	admin-tools/check-3.6-3.10-versions.sh,
+-	admin-tools/{pyenv-3.1-3.2-versions => pyenv-3.0-3.2-versions}: 
++	admin-tools/{pyenv-3.1-3.2-versions => pyenv-3.0-3.2-versions}:
+ 	Administrivia
+ 
+ 2024-10-15  rocky <rocky@gnu.org>
+@@ -171,7 +171,7 @@
+ 
+ 2024-10-15  rocky <rocky@gnu.org>
+ 
+-	* admin-tools/setup-python-2.4.sh, admin-tools/setup-python-3.3.sh: 
++	* admin-tools/setup-python-2.4.sh, admin-tools/setup-python-3.3.sh:
+ 	Administrivia
+ 
+ 2024-10-14  rocky <rocky@gnu.org>
+@@ -206,7 +206,7 @@
+ 
+ 2024-10-09  rocky <rocky@gnu.org>
+ 
+-	* admin-tools/{setup-python-3.1.sh => setup-python-3.0.sh}: 
++	* admin-tools/{setup-python-3.1.sh => setup-python-3.0.sh}:
+ 	Administrivia
+ 
+ 2024-09-30  rocky <rocky@gnu.org>
+@@ -250,7 +250,7 @@
+ 
+ 2024-09-30  rocky <rocky@gnu.org>
+ 
+-	* admin-tools/setup-master.sh, admin-tools/setup-python-3.3.sh: 
++	* admin-tools/setup-master.sh, admin-tools/setup-python-3.3.sh:
+ 	Administrivia
+ 
+ 2024-09-30  rocky <rocky@gnu.org>
+@@ -340,7 +340,7 @@
+ 	* NEWS.md, admin-tools/{check-older-versions.sh =>
+ 	check-2.4-2.7-versions.sh}, admin-tools/check-3.1-3.2-versions.sh,
+ 	admin-tools/make-dist-3.1-3.2.sh,
+-	admin-tools/pyenv-2.4-2.7-versions, admin-tools/setup-python-2.4.sh: 
++	admin-tools/pyenv-2.4-2.7-versions, admin-tools/setup-python-2.4.sh:
+ 	Get ready for release 2.3.1 - this time, for sure!
+ 
+ 2024-03-16  rocky <rocky@gnu.org>
+@@ -487,7 +487,7 @@
+ 
+ 2023-09-07  rocky <rocky@gnu.org>
+ 
+-	* admin-tools/pyenv-newest-versions, admin-tools/setup-master.sh: 
++	* admin-tools/pyenv-newest-versions, admin-tools/setup-master.sh:
+ 	Bump versions
+ 
+ 2023-07-01  rocky <rocky@gnu.org>
+@@ -497,7 +497,7 @@
+ 
+ 2023-06-10  rocky <rocky@gnu.org>
+ 
+-	* admin-tools/pyenv-newest-versions, admin-tools/setup-master.sh: 
++	* admin-tools/pyenv-newest-versions, admin-tools/setup-master.sh:
+ 	Bump versions
+ 
+ 2023-05-28  rocky <rocky@gnu.org>
+@@ -522,7 +522,7 @@
+ 
  2021-11-28  rocky <rocky@gnu.org>
-
+ 
+-	* admin-tools/setup-master.sh, admin-tools/setup-python-3.3.sh: 
++	* admin-tools/setup-master.sh, admin-tools/setup-python-3.3.sh:
+ 	Administrivia
+ 
+ 2021-11-28  rocky <rocky@gnu.org>
+@@ -532,7 +532,7 @@
+ 2021-11-28  rocky <rocky@gnu.org>
+ 
  	* admin-tools/setup-python-2.4.sh, admin-tools/setup-python-3.1.sh,
 -	admin-tools/setup-python-3.3.sh: vresion hacking
 +	admin-tools/setup-python-3.3.sh: version hacking
-
+ 
  2021-11-28  rocky <rocky@gnu.org>
-
-@@ -765,7 +765,7 @@
+ 
+@@ -584,14 +584,14 @@
+ 	check-newest-versions.sh}, admin-tools/make-dist-newer.sh,
+ 	admin-tools/pyenv-3.1-3.5-versions,
+ 	admin-tools/{pyenv-newer-versions => pyenv-newest-versions},
+-	admin-tools/setup-python-3.1.sh, admin-tools/setup-python-3.3.sh: 
++	admin-tools/setup-python-3.1.sh, admin-tools/setup-python-3.3.sh:
+ 	Testing and packaging administrivia
+ 
+ 2021-10-15  rocky <rocky@gnu.org>
+ 
+ 	* .editorconfig, .pre-commit-config.yaml,
+ 	admin-tools/pyenv-newer-versions, pyficache/__init__.py,
+-	pyficache/line_numbers.py, pyficache/main.py, pyficache/version.py: 
++	pyficache/line_numbers.py, pyficache/main.py, pyficache/version.py:
+ 	Administrivia: * Black files * use pre-comit hook and add editorconfig
+ 
+ 2021-10-15  rocky <rocky@gnu.org>
+@@ -749,7 +749,7 @@
+ 
+ 2020-05-22  rocky <rocky@gnu.org>
+ 
+-	* admin-tools/setup-master.sh, admin-tools/setup-python-2.4.sh: 
++	* admin-tools/setup-master.sh, admin-tools/setup-python-2.4.sh:
+ 	Revise setup programs for xdis dependency
+ 
+ 2020-05-22  rocky <rocky@gnu.org>
+@@ -791,7 +791,7 @@
  2020-05-21  rocky <rocky@gnu.org>
-
+ 
  	* requirements.txt: A more accurate requirements.txt CircleCI seems to need this in its default configuration.  Until I
 -	figure out how to aviod this, we'll duplicate the config.
 +	figure out how to avoid this, we'll duplicate the config.
-
+ 
  2020-05-21  rocky <rocky@gnu.org>
-
-@@ -895,7 +895,7 @@
-
+ 
+@@ -799,7 +799,7 @@
+ 
+ 2020-05-21  rocky <rocky@gnu.org>
+ 
+-	* pyficache/__init__.py, pyficache/main.py, requirements.txt: 
++	* pyficache/__init__.py, pyficache/main.py, requirements.txt:
+ 	Travis-related stuff
+ 
+ 2020-05-21  rocky <rocky@gnu.org>
+@@ -921,7 +921,7 @@
+ 
  2018-01-26  rocky <rocky@gnu.org>
-
+ 
 -	* pyficache.py: Add reverse option on unmap_file_line...  To allow retriving line number in the other direction.
 +	* pyficache.py: Add reverse option on unmap_file_line...  To allow retrieving line number in the other direction.
-
+ 
  2018-01-25  rocky <rocky@gnu.org>
-
-@@ -1012,7 +1012,7 @@
+ 
+@@ -943,7 +943,7 @@
+ 
+ 2018-01-25  rocky <rocky@gnu.org>
+ 
+-	* pyficache.py: Remove older compatability routine "cache()"
++	* pyficache.py: Remove older compataiility routine "cache()"
+ 
+ 2018-01-25  rocky <rocky@gnu.org>
+ 
+@@ -959,7 +959,7 @@
+ 
+ 2018-01-25  rocky <rocky@gnu.org>
+ 
+-	* VERSION.py, __pkginfo__.py, pyficache.py, test/test-pyficache.py: 
++	* VERSION.py, __pkginfo__.py, pyficache.py, test/test-pyficache.py:
+ 	Reworked file/line mappings...  1st cut
+ 
+ 2017-08-11  rocky <rocky@gnu.org>
+@@ -1038,7 +1038,7 @@
  2015-12-26  rocky <rocky@gnu.org>
-
+ 
  	* Makefile, pyficache.py: Fix bug in setting pygments style, Line
 -	remapping stuff is stil borked though.
 +	remapping stuff is still borked though.
-
+ 
  2015-12-07  rocky <rocky@gnu.org>
-
-@@ -1267,6 +1267,6 @@
-
+ 
+@@ -1071,7 +1071,7 @@
+ 
+ 2015-11-29  rocky <rocky@gnu.org>
+ 
+-	* README.rst: Versions sheild no working. Remove
++	* README.rst: Versions shield no working. Remove
+ 
+ 2015-11-29  rocky <rocky@gnu.org>
+ 
+@@ -1293,7 +1293,7 @@
+ 
  2012-12-30  rocky.bernstein <rocky.bernstein@928b09c6-f64b-11dd-aa46-671127399dce>
-
+ 
 -	* pyficache.py: Use newer interface more agressively. Fix
 +	* pyficache.py: Use newer interface more aggressively. Fix
  	uninitialized dict key bug.  git-svn-id: https://pyficache.googlecode.com/svn/trunk@32
  	928b09c6-f64b-11dd-aa46-671127399dce
+ 
+@@ -1445,4 +1445,3 @@
+ 
+ 	* Initial directory structure.  git-svn-id: https://pyficache.googlecode.com/svn/trunk@1
+ 	928b09c6-f64b-11dd-aa46-671127399dce
+-
