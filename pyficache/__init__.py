@@ -82,6 +82,8 @@ Summary
 __docformat__ = "restructuredtext"
 
 # Export some functions
+from pyficache.pyasm import PyasmLexer
+
 from pyficache.main import (
     PYVER,
     add_remap_pat,
@@ -134,6 +136,7 @@ if PYTHON_VERSION_TRIPLE[:2] > (2, 6):
 __all__ = [
     "__version__",
     "PYVER",
+    "PyasmLexer",
     "add_remap_pat",
     "cache_code_lines",
     "cache_file",

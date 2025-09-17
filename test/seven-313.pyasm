@@ -1,0 +1,61 @@
+# Decompiled from: Python 3.13.7 (main, Aug 17 2025, 17:14:11) [GCC 13.3.0]
+# Embedded file name: seven.py
+# Compiled at: 2025-09-12 19:17:11
+# Size of source mod 2**32: 49 bytes
+# pydisasm version 6.1.7.dev0
+# Python bytecode 3.13.0 (3571)
+# Disassembled from Python 3.13.7 (main, Aug 17 2025, 17:14:11) [GCC 13.3.0]
+# Timestamp in code: 1757719031 (2025-09-12 19:17:11)
+# Source code size mod 2**32: 49 bytes
+# Method Name:       <module>
+# Filename:          seven.py
+# Argument count:    0
+# Position-only argument count: 0
+# Keyword-only arguments: 0
+# Number of locals:  0
+# Stack size:        4
+# Flags:             0x00000000 (0x0)
+# First Line:        1
+# Constants:
+#    0: 'return'
+#    1: <code object seven at 0x751319bda0b0, file "seven.py", line 1>
+#    2: None
+# Names:
+#    0: int
+#    1: seven
+#    2: print
+  0:           0 |95 00| RESUME               0
+
+  1:           2 |53 00| LOAD_CONST           ("return")
+               4 |5c 00| LOAD_NAME            (int)
+               6 |34 02| BUILD_TUPLE          () ; ("return", int)
+               8 |53 01| LOAD_CONST           (<code object seven at 0x751319bda0b0, file "seven.py", line 1>)
+              10 |1a 00| MAKE_FUNCTION
+              12 |6a 04| SET_FUNCTION_ATTRIBUTE 4
+              14 |72 01| STORE_NAME           (seven) ; seven = 4
+
+  4:          16 |5c 02| LOAD_NAME            (print)
+              18 |22 00| PUSH_NULL
+              20 |5c 01| LOAD_NAME            (seven)
+              22 |22 00| PUSH_NULL
+              24 |35 00| CALL                 0
+              32 |35 01| CALL                 1
+              40 |20 00| POP_TOP
+              42 |67 02| RETURN_CONST         (None)
+
+
+# Method Name:       seven
+# Filename:          seven.py
+# Argument count:    0
+# Position-only argument count: 0
+# Keyword-only arguments: 0
+# Number of locals:  0
+# Stack size:        1
+# Flags:             0x00000003 (NEWLOCALS | OPTIMIZED)
+# First Line:        1
+# Constants:
+#    0: None
+#    1: 7
+  1:           0 |95 00| RESUME               0
+
+  2:           2 |67 01| RETURN_CONST         (7)
