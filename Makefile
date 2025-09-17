@@ -39,8 +39,16 @@ check:
 	$(PYTHON) -m pytest test
 
 #: Clean up temporary files
-clean:
+#: Clean up temporary files and .pyc files
+clean: clean_pyc
 	$(PYTHON) ./setup.py $@
+	find . -name __pycache__ -exec rm -fr {} \; || true
+	(cd test && $(MAKE) clean)
+	(cd test_unit && $(MAKE) clean)
+
+#: Remove .pyc files
+clean_pyc:
+	$(RM) -f *.pyc */*.pyc */*/*.pyc || true
 
 #: Run coverage
 coverage:
