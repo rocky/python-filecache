@@ -11,14 +11,13 @@ dependencies = [
     "term-background >= 1.0.1",
 ]
 readme = "README.rst"
-license = {text = "GPL"}
+license = "GPL-3.0-or-later"
 maintainers = [
     {name = "Rocky Bernstein"},
 ]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
     "Programming Language :: Python",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Programming Language :: Python :: 2.4",
