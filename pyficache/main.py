@@ -101,9 +101,7 @@ def get_option(key, options):
     global default_opts
     if not options or key not in options:
         return default_opts.get(key)
-    else:
-        return options[key]
-    return None  # Not reached
+    return options[key]
 
 
 def has_trailing_nl(string) -> bool:
@@ -435,9 +433,7 @@ def getline(file_or_script, line_number, opts=default_opts):
         else:
             return line
         pass
-    else:
-        return None
-    return  # Not reached
+    return None
 
 
 def getlines(filename, opts=default_opts, is_pyasm=None):
@@ -965,9 +961,7 @@ if __name__ == "__main__":
         prefix2 = "not "
         if var:
             return prefix1
-        else:
-            return prefix2
-        return  # Not reached
+        return prefix2
 
     remap_file("../test/seven-313.pyasm", "seven.py", is_pyasm=True)
     line = getline("seven.py", 4)
