@@ -66,7 +66,7 @@ from pyficache.namedtuple24 import namedtuple
 from xdis.lineoffsets import lineoffsets_in_file
 from xdis.version_info import PYTHON3, PYTHON_VERSION_TRIPLE
 
-from pyficache.pyasm import PyasmLexer
+# from pyficache.pyasm import PyasmLexer
 from pyficache.line_numbers import code_linenumbers_in_file
 
 PYVER = "%s%s" % sys.version_info[0:2]
@@ -94,12 +94,13 @@ default_opts = {
 source_from_cache = resolve_name = find_spec = None
 
 
-def grep_first_line(lines: list, pattern):
+def grep_first_line(lines, pattern):
     """
     Greps for the first line in "lines" that matches pattern "pattern".
     """
-    matching_lines = [line for line in lines if re.search(pattern, line)]
-    return matching_lines[0] if len(matching_lines) > 0 else None
+    return None
+    # matching_lines = [line for line in lines if re.search(pattern, line)]
+    # return matching_lines[0] if len(matching_lines) > 0 else None
 
 
 def get_option(key, options):
@@ -480,7 +481,9 @@ def getlines(filename, opts=default_opts, is_pyasm=None):
         pass
     lines = file_cache[filename].lines
     if is_pyasm:
-        highlight_opts["lexer"] = pyasm_lexer
+        # highlight_opts["lexer"] = pyasm_lexer
+        lines[fmt] = lines["plain"]
+        return
     if fmt not in lines.keys():
         lines[fmt] = highlight_array(lines["plain"], **highlight_opts)
         pass
@@ -498,7 +501,7 @@ def highlight_array(array, trailing_nl=True, bg="light", **options):
 # FIXME for 2.4
 if PYTHON_VERSION_TRIPLE[:2] > (2, 6):
     python_lexer = PythonLexer()
-    pyasm_lexer = PyasmLexer()
+    # pyasm_lexer = PyasmLexer()
 
     # TerminalFormatter uses a colorTHEME with light and dark pairs.
     # But Terminal256Formatter uses a colorSTYLE.  Ugh
@@ -523,9 +526,11 @@ def highlight_string(string, bg="light", **options):
             del options["style"]
         return highlight(string, lexer, terminal_256_formatter, **options)
     elif "light" == bg:
-        return highlight(string, lexer, light_terminal_formatter, **options)
+        return string
+        # return highlight(string, lexer, light_terminal_formatter, **options)
     else:
-        return highlight(string, lexer, dark_terminal_formatter, **options)
+        return string
+        # return highlight(string, lexer, dark_terminal_formatter, **options)
 
 
 def path(filename):
@@ -536,7 +541,7 @@ def path(filename):
     return file_cache[filename].path
 
 
-def remap_file(from_file: str, to_file: str, is_pyasm: bool = False):
+def remap_file(from_file, to_file, is_pyasm = False):
     """Make *to_file* be a synonym for *from_file*"""
     file2file_remap[to_file] = from_file
     if is_pyasm:
