@@ -80,7 +80,6 @@ Python statements.
 .. _linecache: https://rubygems.org/gems/linecache
 .. |Downloads| image:: https://img.shields.io/pypi/dm/pyficache.svg
    :target: https://travis-ci.org/rocky/python-filecache/
->>>>>>> python-3.0-to-3.2
 .. |Supported Python Versions| image:: https://img.shields.io/pypi/pyversions/pyficache.svg
 .. |Pypi Installs| image:: https://pepy.tech/badge/pyficache/month
 .. |packagestatus| image:: https://repology.org/badge/vertical-allrepos/python:pyficache.svg
