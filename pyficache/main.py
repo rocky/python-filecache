@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 #   Copyright (C) 2008-2009, 2012-2013, 2015-2016, 2018, 2020-2021,
-#   2023-2024 Rocky Bernstein <rocky@gnu.org>
+#   2023-2025 Rocky Bernstein <rocky@gnu.org>
 #
 #   This program is free software: you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
@@ -61,23 +61,22 @@ import os.path as osp
 import re
 import sys
 from collections import namedtuple
+from importlib.util import find_spec, source_from_cache
+from typing import List, Optional
 from term_background import is_dark_background
 
 from pygments import highlight
 from pygments.formatters import Terminal256Formatter, TerminalFormatter
 from pygments.lexers import PythonLexer
 from xdis.lineoffsets import lineoffsets_in_file
-from xdis.version_info import PYTHON3, PYTHON_VERSION_TRIPLE
+from xdis.version_info import PYTHON3
 
+from pyficache.pyasm import PyasmLexer
 from pyficache.line_numbers import code_linenumbers_in_file
 
 PYVER = "%s%s" % sys.version_info[0:2]
 
-if PYTHON3:
-    large_int = sys.maxsize
-else:
-    large_int = sys.maxint
-
+large_int = sys.maxsize
 
 default_opts = {
     "reload_on_change": False,  # Check if file has changed since last
@@ -88,6 +87,14 @@ default_opts = {
     # Set to 'terminal'
     # for terminal syntax-colored output
 }
+
+
+def grep_first_line(lines: List[str], pattern) -> Optional[str]:
+    """
+    Greps for the first line in "lines" that matches pattern "pattern".
+    """
+    matching_lines = [line for line in lines if re.search(pattern, line)]
+    return matching_lines[0] if len(matching_lines) > 0 else None
 
 
 def get_option(key, options):
@@ -101,12 +108,6 @@ def get_option(key, options):
 
 def has_trailing_nl(string) -> bool:
     return len(string) > 0 and "\n" == string[-1]
-
-
-if PYTHON_VERSION_TRIPLE >= (3, 4):
-    from importlib.util import find_spec, resolve_name, source_from_cache
-else:
-    source_from_cache = resolve_name = find_spec = None
 
 
 def resolve_name_to_path(path_or_name: str) -> str:
@@ -150,7 +151,7 @@ def resolve_name_to_path(path_or_name: str) -> str:
     if re.match(".*py[co]$", path_or_name):
         if PYTHON3:
             return re.sub(
-                r"(.*)__pycache__/(.+)\.cpython-%s.py[co]$" % PYVER,
+                rf"(.*)__pycache__/(.+)\.cpython-{PYVER}.py[co]$",
                 "\\1\\2.py",
                 path_or_name,
             )
@@ -187,6 +188,7 @@ class LineCacheInfo:
 # or __file__. The value is a LineCacheInfo object.
 file_cache = {}
 script_cache = {}
+pyasm_files = set()
 
 # `file2file_remap` maps a path (a string) to another path key in file_cache (a
 # string).
@@ -385,9 +387,7 @@ def cache_file(filename, reload_on_change=False, opts=default_opts):
         pass
     if filename in file_cache:
         return file_cache[filename].path
-    else:
-        return None
-    return  # Not reached
+    return None
 
 
 def is_cached(file_or_script):
@@ -418,8 +418,19 @@ def getline(file_or_script, line_number, opts=default_opts):
     """
     filename = unmap_file(file_or_script)
     filename, line_number = unmap_file_line(filename, line_number)
+
+    is_pyasm = opts.get("is_pyasm", filename.endswith(".pyasm"))
     lines = getlines(filename, opts)
-    if lines and line_number >= 1 and line_number <= maxline(filename):
+    if is_pyasm:
+        lines = getlines(filename, {"output": "plain"})
+        fmt = opts.get("output", "plain")
+        line = grep_first_line(lines, f"^[ ]+{line_number}:")
+        if fmt == "plain":
+            return line
+        else:
+            return highlight_string(line, fmt)
+
+    elif lines and line_number >= 1 and line_number <= maxline(filename):
         line = lines[line_number - 1]
         if get_option("strip_nl", opts):
             return line.rstrip("\n")
@@ -431,7 +442,7 @@ def getline(file_or_script, line_number, opts=default_opts):
     return  # Not reached
 
 
-def getlines(filename, opts=default_opts):
+def getlines(filename, opts=default_opts, is_pyasm: Optional[bool] = None):
     """Read lines of *filename* and cache the results. However, if
     *filename* was previously cached use the results from the
     cache. Return *None* if we can not get lines
@@ -445,7 +456,10 @@ def getlines(filename, opts=default_opts):
         cs = opts.get("style")
     highlight_opts = {"bg": fmt}
 
-    # Set list style baseed on "style" option passed
+    if is_pyasm is None:
+        is_pyasm = filename.endswith(".pyasm")
+
+    # Set list style based on "style" option passed
     # if no style given use "monokai" for dark backgrounds,
     # and "tango" for light backgrounds.
     if cs:
@@ -463,6 +477,9 @@ def getlines(filename, opts=default_opts):
             return None
         pass
     lines = file_cache[filename].lines
+    if is_pyasm:
+        # Until we has a pyasm lexer.
+        highlight_opts["lexer"] = pyasm_lexer
     if fmt not in lines.keys():
         lines[fmt] = highlight_array(lines["plain"], **highlight_opts)
         pass
@@ -477,6 +494,7 @@ def highlight_array(array, trailing_nl=True, bg="light", **options):
     return lines
 
 
+pyasm_lexer = PyasmLexer()
 python_lexer = PythonLexer()
 
 # TerminalFormatter uses a colorTHEME with light and dark pairs.
@@ -488,15 +506,19 @@ terminal_256_formatter = Terminal256Formatter()
 
 def highlight_string(string, bg="light", **options) -> str:
     global terminal_256_formatter
+    if "lexer" in options:
+        lexer = options.pop("lexer")
+    else:
+        lexer = python_lexer
     if options.get("style"):
         if terminal_256_formatter.style != options["style"]:
             terminal_256_formatter = Terminal256Formatter(style=options["style"])
             del options["style"]
-        return highlight(string, python_lexer, terminal_256_formatter, **options)
+        return highlight(string, lexer, terminal_256_formatter, **options)
     elif "light" == bg:
-        return highlight(string, python_lexer, light_terminal_formatter, **options)
+        return highlight(string, lexer, light_terminal_formatter, **options)
     else:
-        return highlight(string, python_lexer, dark_terminal_formatter, **options)
+        return highlight(string, lexer, dark_terminal_formatter, **options)
 
 
 def path(filename):
@@ -507,15 +529,17 @@ def path(filename):
     return file_cache[filename].path
 
 
-def remap_file(from_file, to_file):
+def remap_file(from_file: str, to_file: str, is_pyasm: bool = False):
     """Make *to_file* be a synonym for *from_file*"""
     file2file_remap[to_file] = from_file
+    if is_pyasm:
+        pyasm_files.add(from_file)
     return
 
 
 # Hash to remap filename by regular expression.
-# For exmaple, often we may want to remap the beginning of a path to
-# something else beause it may be mounted, so the prefix changes.
+# For example, often we may want to remap the beginning of a path to
+# something else because it may be mounted, so the prefix changes.
 remap_re_hash = {}
 
 
@@ -720,7 +744,7 @@ def code_offset_info(
     """Return the bytecode information that is associated with
     `offset` in the bytecode for `filename`.
 
-    Each entry is a line number list of instruction offests associated
+    Each entry is a line number list of instruction offets associated
     with that line number and a code object where this can be found.
 
     This comes from findlinestarts() from xdis which is the same
@@ -789,6 +813,8 @@ def unmap_file_line(filename, line_number, reverse=False):
                 mapped_line_number = last_t[0] + (line_number - last_t[1])
                 break
             last_t = t
+        pass
+    elif filename in pyasm_files:
         pass
     return (filename, mapped_line_number)
 
@@ -946,6 +972,11 @@ if __name__ == "__main__":
             return prefix2
         return  # Not reached
 
+    remap_file("../test/seven-313.pyasm", "seven.py", is_pyasm=True)
+    line = getline("seven.py", 4)
+    print(line)
+    line = getline("seven.py", 4, {"output": "light"})
+    print(line)
     add_remap_pat("^/code", "/tmp/project")
     print(remap_file_pat("/code/setup.py"))
 
@@ -980,11 +1011,11 @@ if __name__ == "__main__":
 
     update_cache(__file__)
     checkcache(__file__)
-    print("%s has %s lines" % (__file__, size(__file__)))
-    print("%s code_lines data:\n" % __file__)
+    print(f"{__file__} has {size(__file__)} lines")
+    print(f"{__file__} code_lines data:\n")
 
     line_info = code_offset_info(__file__, 0)
-    print("Starting line for file (bytecode offset 0) is %s" % line_info)
+    print(f"Starting line for file (bytecode offset 0) is {line_info}")
     line_info = code_lines(__file__).line_numbers
     for line_num, li in line_info.items():
         print("\tline: %4d: %s" % (line_num, ", ".join([str(i.offsets) for i in li])))
