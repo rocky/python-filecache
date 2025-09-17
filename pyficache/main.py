@@ -61,8 +61,6 @@ import os.path as osp
 import re
 import sys
 from collections import namedtuple
-from importlib.util import find_spec, source_from_cache
-from typing import List, Optional
 from term_background import is_dark_background
 
 from pygments import highlight
@@ -88,8 +86,10 @@ default_opts = {
     # for terminal syntax-colored output
 }
 
+source_from_cache = resolve_name = find_spec = None
 
-def grep_first_line(lines: List[str], pattern) -> Optional[str]:
+
+def grep_first_line(lines: list, pattern):
     """
     Greps for the first line in "lines" that matches pattern "pattern".
     """
@@ -151,7 +151,7 @@ def resolve_name_to_path(path_or_name: str) -> str:
     if re.match(".*py[co]$", path_or_name):
         if PYTHON3:
             return re.sub(
-                rf"(.*)__pycache__/(.+)\.cpython-{PYVER}.py[co]$",
+                r"(.*)__pycache__/(.+)\.cpython-%s.py[co]$" % PYVER,
                 "\\1\\2.py",
                 path_or_name,
             )
@@ -394,9 +394,7 @@ def is_cached(file_or_script):
     """Return True if file_or_script is cached"""
     if isinstance(file_or_script, str):
         return unmap_file(file_or_script) in file_cache
-    else:
-        return is_cached_script(file_or_script)
-    return
+    return is_cached_script(file_or_script)
 
 
 def is_cached_script(filename):
@@ -424,7 +422,7 @@ def getline(file_or_script, line_number, opts=default_opts):
     if is_pyasm:
         lines = getlines(filename, {"output": "plain"})
         fmt = opts.get("output", "plain")
-        line = grep_first_line(lines, f"^[ ]+{line_number}:")
+        line = grep_first_line(lines, "^[ ]+%s:" % line_number)
         if fmt == "plain":
             return line
         else:
@@ -442,7 +440,7 @@ def getline(file_or_script, line_number, opts=default_opts):
     return  # Not reached
 
 
-def getlines(filename, opts=default_opts, is_pyasm: Optional[bool] = None):
+def getlines(filename, opts=default_opts, is_pyasm=None):
     """Read lines of *filename* and cache the results. However, if
     *filename* was previously cached use the results from the
     cache. Return *None* if we can not get lines
@@ -478,7 +476,6 @@ def getlines(filename, opts=default_opts, is_pyasm: Optional[bool] = None):
         pass
     lines = file_cache[filename].lines
     if is_pyasm:
-        # Until we has a pyasm lexer.
         highlight_opts["lexer"] = pyasm_lexer
     if fmt not in lines.keys():
         lines[fmt] = highlight_array(lines["plain"], **highlight_opts)
@@ -744,7 +741,7 @@ def code_offset_info(
     """Return the bytecode information that is associated with
     `offset` in the bytecode for `filename`.
 
-    Each entry is a line number list of instruction offets associated
+    Each entry is a line number list of instruction offsets associated
     with that line number and a code object where this can be found.
 
     This comes from findlinestarts() from xdis which is the same
@@ -1011,11 +1008,11 @@ if __name__ == "__main__":
 
     update_cache(__file__)
     checkcache(__file__)
-    print(f"{__file__} has {size(__file__)} lines")
-    print(f"{__file__} code_lines data:\n")
+    print("%s has %s lines" % (__file__, size(__file__)))
+    print("%s code_lines data:\n" % __file__)
 
     line_info = code_offset_info(__file__, 0)
-    print(f"Starting line for file (bytecode offset 0) is {line_info}")
+    print("Starting line for file (bytecode offset 0) is %s" % line_info)
     line_info = code_lines(__file__).line_numbers
     for line_num, li in line_info.items():
         print("\tline: %4d: %s" % (line_num, ", ".join([str(i.offsets) for i in li])))
