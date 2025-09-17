@@ -1,7 +1,7 @@
 2.4.0 2025-01-15
 ================
 
-Revised allow easier line number remapping.
+Revised to allow easier line-number remapping.
 
 Note: API change!
 
