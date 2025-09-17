@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-setuptools setup (setup.py) for pyficach
+setuptools setup (setup.py) for pyficache
 
 This gets a bit of package info from __pkginfo__.py file
 """

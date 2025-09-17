@@ -1,4 +1,4 @@
-|CircleCI| |Pypi Installs| |License| |Supported Python Versions|
+|Pypi Installs| |License| |Supported Python Versions|
 
 |packagestatus|
 
@@ -10,7 +10,7 @@ caching lines of the file on first access to the file. Although the
 file may be any file, this package is more tailored to the case
 where the file is a Python script.
 
-Here, the file is parsed to determine statement bounderies,
+Here, the file is parsed to determine statement boundaries,
 and a copies of the file syntax-highlighted are also saved.
 
 Also saved is file information such as when the file was last modified
@@ -84,8 +84,6 @@ Python statements.
 
 .. |Downloads| image:: https://img.shields.io/pypi/dm/pyficache.svg
    :target: https://travis-ci.org/rocky/python-filecache/
-.. |CircleCI| image:: https://dl.circleci.com/status-badge/img/gh/rocky/python-filecache/tree/master.svg?style=svg
-        :target: https://dl.circleci.com/status-badge/redirect/gh/rocky/python-filecache/tree/master
 .. |Supported Python Versions| image:: https://img.shields.io/pypi/pyversions/pyficache.svg
 .. |Pypi Installs| image:: https://pepy.tech/badge/pyficache/month
 .. |packagestatus| image:: https://repology.org/badge/vertical-allrepos/python:pyficache.svg

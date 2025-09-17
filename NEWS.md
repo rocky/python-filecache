@@ -1,3 +1,9 @@
+2.5.0 2025-09-15
+================
+
+Start support for formatting and printing Python disassembly (pyasm) files.
+Much more work is needed, but this will probably be good enough for BSidesNYC 2025.
+
 2.4.0 2025-01-15
 ================
 
