@@ -423,6 +423,8 @@ def getline(file_or_script, line_number, opts=default_opts):
         lines = getlines(filename, {"output": "plain"})
         fmt = opts.get("output", "plain")
         line = grep_first_line(lines, f"^[ ]+{line_number}:")
+        if line is None:
+            return None
         if fmt == "plain":
             return line
         else:
