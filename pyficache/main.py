@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+a# -*- coding: utf-8 -*-
 #
 #   Copyright (C) 2008-2009, 2012-2013, 2015-2016, 2018, 2020-2021,
 #   2023-2025 Rocky Bernstein <rocky@gnu.org>
@@ -63,6 +63,9 @@ import sys
 from term_background import is_dark_background
 from pyficache.namedtuple24 import namedtuple
 
+from pygments import highlight
+from pygments.formatters import Terminal256Formatter, TerminalFormatter
+from pygments.lexers import GasLexer, PythonLexer
 from xdis.lineoffsets import lineoffsets_in_file
 from xdis.version_info import PYTHON3, PYTHON_VERSION_TRIPLE
 
@@ -501,7 +504,7 @@ def highlight_array(array, trailing_nl=True, bg="light", **options):
 # FIXME for 2.4
 if PYTHON_VERSION_TRIPLE[:2] > (2, 6):
     python_lexer = PythonLexer()
-    # pyasm_lexer = PyasmLexer()
+    pyasm_lexer = GasLexer()
 
     # TerminalFormatter uses a colorTHEME with light and dark pairs.
     # But Terminal256Formatter uses a colorSTYLE.  Ugh

@@ -13,26 +13,23 @@ from pygments.token import (
     Name,
     Whitespace,
 )
+from pygments.regexopt import regex_opt
 
-# from pyficache.regexopt import regex_opt
+class words():
+    """
+    Indicates a list of literal words that is transformed into an optimized
+    regex that matches any of the words.
 
+    .. versionadded:: 2.0
+    """
+    def __init__(self, words, prefix='', suffix=''):
+        self.words = words
+        self.prefix = prefix
+        self.suffix = suffix
 
-# class words(object):
-#     """
-#     Indicates a list of literal words that is transformed into an optimized
-#     regex that matches any of the words.
-
-#     .. versionadded:: 2.0
-#     """
-#     def __init__(self, words, prefix='', suffix=''):
-#         self.words = words
-#         self.prefix = prefix
-#         self.suffix = suffix
-
-#     def get(self):
-#         return regex_opt(self.words, prefix=self.prefix, suffix=self.suffix)
-
-
+    def get(self):
+        return regex_opt(self.words, prefix=self.prefix, suffix=self.suffix)
+>>>>>>> python-3.0-to-3.2
 
 class PyasmLexer(RegexLexer):
     """
