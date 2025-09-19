@@ -65,11 +65,11 @@ from term_background import is_dark_background
 
 from pygments import highlight
 from pygments.formatters import Terminal256Formatter, TerminalFormatter
-from pygments.lexers import PythonLexer
+from pygments.lexers import GasLexer, PythonLexer
 from xdis.lineoffsets import lineoffsets_in_file
 from xdis.version_info import PYTHON3
 
-from pyficache.pyasm import PyasmLexer
+# from pyficache.pyasm import PyasmLexer
 from pyficache.line_numbers import code_linenumbers_in_file
 
 PYVER = "%s%s" % sys.version_info[0:2]
@@ -487,7 +487,7 @@ def highlight_array(array, trailing_nl=True, bg="light", **options):
     return lines
 
 
-pyasm_lexer = PyasmLexer()
+pyasm_lexer = GasLexer()
 python_lexer = PythonLexer()
 
 # TerminalFormatter uses a colorTHEME with light and dark pairs.
