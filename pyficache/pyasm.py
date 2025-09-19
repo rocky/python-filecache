@@ -15,7 +15,7 @@ from pygments.token import (
 )
 from pygments.regexopt import regex_opt
 
-class words():
+class words(object):
     """
     Indicates a list of literal words that is transformed into an optimized
     regex that matches any of the words.
@@ -29,7 +29,6 @@ class words():
 
     def get(self):
         return regex_opt(self.words, prefix=self.prefix, suffix=self.suffix)
->>>>>>> python-3.0-to-3.2
 
 class PyasmLexer(RegexLexer):
     """

@@ -1,4 +1,4 @@
-a# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 #
 #   Copyright (C) 2008-2009, 2012-2013, 2015-2016, 2018, 2020-2021,
 #   2023-2025 Rocky Bernstein <rocky@gnu.org>
@@ -63,9 +63,6 @@ import sys
 from term_background import is_dark_background
 from pyficache.namedtuple24 import namedtuple
 
-from pygments import highlight
-from pygments.formatters import Terminal256Formatter, TerminalFormatter
-from pygments.lexers import GasLexer, PythonLexer
 from xdis.lineoffsets import lineoffsets_in_file
 from xdis.version_info import PYTHON3, PYTHON_VERSION_TRIPLE
 
@@ -79,6 +76,7 @@ large_int = sys.maxint
 if PYTHON_VERSION_TRIPLE[:2] > (2, 6):
     from pygments import highlight
     from pygments.lexers import PythonLexer
+    from pygments.lexers import GasLexer
     from pygments.formatters import TerminalFormatter, Terminal256Formatter
 else:
     TerminalFormatter = Terminal256Formatter = None
