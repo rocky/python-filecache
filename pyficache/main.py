@@ -63,6 +63,9 @@ import sys
 from term_background import is_dark_background
 from pyficache.namedtuple24 import namedtuple
 
+# from pygments import highlight
+# from pygments.formatters import Terminal256Formatter, TerminalFormatter
+# from pygments.lexers import GasLexer, PythonLexer
 from xdis.lineoffsets import lineoffsets_in_file
 from xdis.version_info import PYTHON3, PYTHON_VERSION_TRIPLE
 
@@ -431,6 +434,8 @@ def getline(file_or_script, line_number, opts=default_opts):
         lines = getlines(filename, {"output": "plain"})
         fmt = opts.get("output", "plain")
         line = grep_first_line(lines, "^[ ]+%s:" % line_number)
+        if line is None:
+            return None
         if fmt == "plain":
             return line
         else:

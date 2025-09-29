@@ -43,7 +43,7 @@ clean: clean_pyc
 
 #: Remove .pyc files
 clean_pyc:
-	$(RM) -f */*.pyc */*/*.pyc || true
+	$(RM) -f *.pyc */*.pyc */*/*.pyc || true
 
 #: Run coverage
 coverage:

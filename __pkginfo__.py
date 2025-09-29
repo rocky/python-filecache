@@ -18,7 +18,7 @@ import sys
 import os.path as osp
 
 copyright = """
-Copyright (C) 2008-2010, 2012-2013, 2015-2018, 2020-2021, 2024 Rocky Bernstein <rocky@gnu.org>.
+Copyright (C) 2008-2010, 2012-2013, 2015-2018, 2020-2021, 2024, 2025 Rocky Bernstein <rocky@gnu.org>.
 """
 classifiers = [
     "Development Status :: 5 - Production/Stable",
@@ -48,7 +48,9 @@ classifiers = [
 ]
 
 SYS_VERSION = sys.version_info[0:2]
-pygments_version = "pygments >= 1.9"  # I have my own patch for this
+pygments_version = "pygments>=1.6"
+
+>>>>>>> python-3.0-to-3.2
 
 # The rest in alphabetic order
 author = "Rocky Bernstein"
