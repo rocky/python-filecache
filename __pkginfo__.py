@@ -1,5 +1,5 @@
 # Copyright (C) 2009-2010, 2013, 2015, 2017,
-# 2020-2021, 2024 Rocky Bernstein <rocky@gnu.org>
+# 2020-2021, 2024-2025 Rocky Bernstein <rocky@gnu.org>
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -50,7 +50,6 @@ classifiers = [
 SYS_VERSION = sys.version_info[0:2]
 pygments_version = "pygments>=1.6"
 
->>>>>>> python-3.0-to-3.2
 
 # The rest in alphabetic order
 author = "Rocky Bernstein"
