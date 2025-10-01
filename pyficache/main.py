@@ -421,14 +421,16 @@ def getline(file_or_script, line_number, opts=default_opts):
     lines = getlines(filename, opts)
     if is_pyasm:
         lines = getlines(filename, {"output": "plain"})
+        if lines is None:
+            return ""
         fmt = opts.get("output", "plain")
         line = grep_first_line(lines, f"^[ ]+{line_number}:")
         if line is None:
-            return None
+            return ""
         if fmt == "plain":
             return line
         else:
-            return highlight_string(line, fmt)
+            return highlight_string(line, fmt, lexer=pyasm_lexer)
 
     elif lines and line_number >= 1 and line_number <= maxline(filename):
         line = lines[line_number - 1]
