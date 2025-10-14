@@ -416,9 +416,9 @@ def getline(file_or_script, line_number, opts=default_opts):
     filename, line_number = unmap_file_line(filename, line_number)
 
     is_pyasm = opts.get("is_pyasm", filename.endswith(".pyasm"))
-    lines = getlines(filename, opts)
+    lines = getlines(filename, opts, is_pyasm=is_pyasm)
     if is_pyasm:
-        lines = getlines(filename, {"output": "plain"})
+        lines = getlines(filename, {"output": "plain"}, is_pyasm=is_pyasm)
         if lines is None:
             return ""
         fmt = opts.get("output", "plain")
