@@ -8,6 +8,7 @@
 /.coverage
 /.eggs
 /.hypothesis
+/.jython_cache
 /.python-version
 /ChangeLog
 /Pygments*
