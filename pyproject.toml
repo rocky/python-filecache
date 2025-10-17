@@ -15,6 +15,7 @@ description = "Cache and colorize lines and file information which are generally
 dependencies = [
     "xdis >= 6.0.0, < 6.2.0",
     "term-background >= 1.0.2",
+    "pygments",
 ]
 readme = "README.rst"
 license = "GPL-3.0-or-later"
