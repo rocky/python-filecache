@@ -48,7 +48,7 @@ classifiers = [
 ]
 
 SYS_VERSION = sys.version_info[0:2]
-pygments_version = "pygments>=1.6"
+pygments_version = "pygments"
 
 
 # The rest in alphabetic order
