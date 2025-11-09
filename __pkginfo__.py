@@ -57,7 +57,7 @@ author_email = "rocky@gnu.org"
 ftp_url = None
 install_requires = [
     pygments_version,
-    "xdis >= 6.0.0, < 6.2.0",
+    "xdis >= 6.2",
     "term-background >= 1.0.1",
 ]
 
