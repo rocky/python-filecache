@@ -20,6 +20,8 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
       run: |
+        # Until the next xdis release
+        pip install --local -e "git+https://github.com/rocky/python-xdis.git#egg=xdis"
         pip install -e .[dev]
     - name: Test pyficache
       run: |
