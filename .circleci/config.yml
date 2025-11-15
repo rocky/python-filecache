@@ -10,6 +10,8 @@ jobs:
     steps:
       # Checkout the code as the first step.
       - checkout
+        # Until the next xdis release
+      - run: pip install --local -e "git+https://github.com/rocky/python-xdis.git@python-3.6-to-3.10#egg=xdis"
       - run: pip install --upgrade setuptools
       - run: pip install -e .[dev]
       - run: make check
