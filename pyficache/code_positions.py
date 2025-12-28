@@ -58,20 +58,43 @@ def get_position_info(
 def code_loop_for_positions(
     code: CodeType,
 ) -> Tuple[Dict[int, list], Dict[Tuple[int, int], set], Dict[Tuple[int, int], set]]:
-    """Returns two dictionaries. The first dictionary maps line and code offset numbers into a pair of
-      (starting line, starting column), (ending line, ending column) values.
-    in code.
+    """Loops over all code objects found within the constant section of `code` creating the
+    three dictionaries described in get_position_info() above.
     """
 
     queue = deque([code])
+
+    offset_line_dict = {}
+    line_offset_dict = {}
+
+    for offset, line in findlinestarts(code):
+        offset_line_dict[offset] = line
+        line_offset_dict[line] = offset
+
     lineno_and_offset = {}
     lineno_and_start_column = {}
     line_info = defaultdict(list)
+
     while len(queue) > 0:
         code = queue.popleft()
-        linestarts_dict = {line: offset for offset, line in findlinestarts(code)}
+
+        # First, process code.co_lines()...
+        for start_offset, _, lineno in code.co_lines():
+            if start_offset in offset_line_dict:
+                # A start offset of 0 means that this code is at the
+                # beginning of some module, method or function. This
+                # is one place where it is possible for a line number
+                # alone to be ambiguous about the scoping
+                # level. Therefore, add in the code's qualified name,
+                # co_qualname
+                if start_offset == 0:
+                    line_info[lineno].append(code)
+                else:
+                    line_info[lineno].append(start_offset)
+
+        # Next, process code.co_positions()...
         for start_line, end_line, start_column, end_column in code.co_positions():
-            start_offset = linestarts_dict.get(start_line, None)
+            start_offset = line_offset_dict.get(start_line, None)
             if (
                 start_offset is not None
                 and start_column is not None
@@ -95,19 +118,6 @@ def code_loop_for_positions(
                             (start_line, start_column),
                             (end_line, end_column),
                         )
-
-        for start_offset, _, lineno in code.co_lines():
-            if start_offset in linestarts_dict:
-                # A start offset of 0 means that this code is at the
-                # beginning of some module, method or function. This
-                # is one place where it is possible for a line number
-                # alone to be ambiguous about the scoping
-                # level. Therefore, add in the code's qualified name,
-                # co_qualname
-                if start_offset == 0:
-                    line_info[lineno].append(code)
-                else:
-                    line_info[lineno].append(start_offset)
 
         for c in code.co_consts:
             if iscode(c):

@@ -61,18 +61,21 @@ import os.path as osp
 import re
 import sys
 from collections import namedtuple
+from dataclasses import dataclass, field
 from importlib.util import find_spec, source_from_cache
-from typing import List, Optional
-from term_background import is_dark_background
+from types import CodeType
+from typing import Any, Dict, List, Optional, Tuple
 
 from pygments import highlight
 from pygments.formatters import Terminal256Formatter, TerminalFormatter
 from pygments.lexers import PythonLexer
+from term_background import is_dark_background
 from xdis.lineoffsets import lineoffsets_in_file
 from xdis.version_info import PYTHON3
 
-from pyficache.pyasm import PyasmLexer
+from pyficache.code_positions import get_position_info
 from pyficache.line_numbers import code_linenumbers_in_file
+from pyficache.pyasm import PyasmLexer
 
 PYVER = "%s%s" % sys.version_info[0:2]
 
@@ -83,7 +86,7 @@ default_opts = {
     # time
     "use_linecache_lines": True,
     "strip_nl": True,  # Strip trailing \n on line returned
-    "output": "plain"  # To we want plain output?
+    "output": "plain",  # To we want plain output?
     # Set to 'terminal'
     # for terminal syntax-colored output
 }
@@ -160,26 +163,42 @@ def resolve_name_to_path(path_or_name: str) -> str:
     return path_or_name
 
 
+@dataclass
 class LineCacheInfo:
-    def __init__(
-        self,
-        stat,
-        line_numbers,
-        linestarts,
-        lines,
-        path,
-        sha1,
-        eols=None,
-        code_map=None,
-    ):
-        self.stat, self.lines, self.path, self.sha1 = (stat, lines, path, sha1)
-        self.line_numbers = line_numbers
-        self.linestarts = linestarts
-        self.eols = eols
-        self.code_map = code_map
-        return
+    """Container for cached file info.
 
-    pass
+    Fields:
+
+    code_map: a dictionary mapping the name (co_name) of a file to its code object.
+    line_info: a dictionary mapping line number in a file to its
+          offsets in a code object.
+          When the code offset is 0, the code object is stored.
+    line_info_and_offset: A dictionary mapping line and code offset numbers into a pair of
+          (starting line, starting column), (ending line, ending column) values.
+          in code.
+    lineno_and_start_column: A dictionary mapping line and code offset numbers into a pair of
+          (starting line, starting column), (ending line, ending column) values.
+          in code.
+    lines: A dictionary lines of the file, with pygments formatting applied according to
+          the style name of of the case. If the key is "plain", then no pygments formatting
+          has been applied.
+    linestarts: a dictionary mapping a bytecode offset to a source line number
+    path: the OS file path it it is not "".
+    sha1: a sha1 of the contents of the "path" if it is not None
+    stat: file system OS stat object, i.e. result of calling os.stat().
+    """
+
+    code_map: Dict[str, CodeType] = field(default_factory=dict)
+    eols: Optional[Any] = None
+    line_info: Optional[Dict[int, list]] = None
+    line_info_and_offset: Optional[Dict[Tuple[int, int], set]] = None
+    line_numbers: Optional[Dict[int, Any]] = None
+    lineno_and_start_column: Optional[Dict[Tuple[int, int], set]] = None
+    lines: Dict[str, List[str]] = field(default_factory=dict)
+    linestarts: Optional[Dict[int, Any]] = None
+    path: str = ""
+    sha1: Optional[Any] = None
+    stat: Optional[os.stat_result] = None
 
 
 # The file cache. The key is a name as would be given by co_filename
@@ -252,7 +271,7 @@ RemapLineEntry = namedtuple("RemapLineEntry", "mapped_path from_to_pairs")
 
 # In this example, line 1 of foo.template corresponds to line 3 of
 # mapped_file.py.  There is no line recorded in foo.template that corresponds
-# to line 4 of mapped_file. Line 4 of foo.template corresponds to line 5 of
+# to line 4 of mapped_file.py. Line 4 of foo.template corresponds to line 5 of
 # mapped_file.py. And line 5 of foo.template implicitly corresponds to line 6
 # of mapped_file.py since there is nothing to indicate contrary and since that
 # line exists in mapped_file.
@@ -478,7 +497,6 @@ def getlines(filename, opts=default_opts, is_pyasm: Optional[bool] = None):
         pass
     lines = file_cache[filename].lines
     if is_pyasm:
-        # Until we has a pyasm lexer.
         highlight_opts["lexer"] = pyasm_lexer
     if fmt not in lines.keys():
         lines[fmt] = highlight_array(lines["plain"], **highlight_opts)
@@ -647,7 +665,7 @@ def stat(filename, use_cache_only=False):
     return file_cache[filename].stat
 
 
-def trace_line_numbers(filename, reload_on_change=False, toplevel_only=False):
+def trace_line_numbers(filename: str, reload_on_change=False):
     """Return the line numbers that are (or would be) stored in
     co_linenotab for `filename`.
 
@@ -663,34 +681,38 @@ def trace_line_numbers(filename, reload_on_change=False, toplevel_only=False):
     fullname = cache_file(filename, reload_on_change)
     if not fullname:
         return None
-    e = file_cache[filename]
-    if not e.line_numbers:
-        e.line_numbers = code_linenumbers_in_file(fullname)
+    linecache_info = file_cache[filename]
+    if not linecache_info.line_numbers:
+        linecache_info.line_numbers = code_linenumbers_in_file(fullname)
+        lineno_info, lineno_and_offset, lineno_and_start_column = get_position_info(
+            fullname
+        )
+        linecache_info.lineno_info = lineno_info
+        linecache_info.lineno_and_offset = lineno_and_offset
+        linecache_info.lineno_and_start_column = lineno_and_start_column
         pass
-    return e.line_numbers
+    return linecache_info.line_numbers
 
 
-def get_code_positions(filename, reload_on_change=False, toplevel_only=False):
-    """Return the line numbers that are (or would be) stored in
-    co_linenotab for `filename`.
-
-    These are places setting a breakpoint could conceivably
-    trigger. On other lines, a breakpoint would never occur, because
-    only the Python interpreter only stops at bytecode offsets
-    that have a line number.
-
-    The line in the source file could be empty because the line is
-    blank, inside a string or comment, in the middle of some long
-    construct or is something of that ilk.
-    """
+def get_linecache_info(
+    filename: str, reload_on_change=False
+) -> Optional[LineCacheInfo]:
+    """Return the linecache information for filename."""
     fullname = cache_file(filename, reload_on_change)
     if not fullname:
         return None
-    e = file_cache[filename]
-    if not e.line_numbers:
-        e.line_numbers = code_linenumbers_in_file(fullname)
+    linecache_info = file_cache[filename]
+    if not linecache_info.line_numbers:
+        linecache_info.line_numbers = code_linenumbers_in_file(fullname)
+        lineno_info, lineno_and_offset, lineno_and_start_column = get_position_info(
+            fullname
+        )
+        linecache_info.lineno_info = lineno_info
+        linecache_info.lineno_and_offset = lineno_and_offset
+        linecache_info.lineno_and_start_column = lineno_and_start_column
+
         pass
-    return e.line_numbers
+    return linecache_info
 
 
 def cache_code_lines(
@@ -718,6 +740,12 @@ def cache_code_lines(
     if not file_info.line_numbers:
         code_info = lineoffsets_in_file(fullname, toplevel_only=toplevel_only)
         file_info.line_numbers = code_info.line_numbers(include_offsets=include_offsets)
+        lineno_info, lineno_and_offset, lineno_and_start_column = get_position_info(
+            fullname
+        )
+        file_info.lineno_info = lineno_info
+        file_info.lineno_and_offset = lineno_and_offset
+        file_info.lineno_and_start_column = lineno_and_start_column
         file_info.linestarts = code_info.linestarts
         file_info.code_map = code_info.code_map
         pass
@@ -871,12 +899,12 @@ def update_cache(filename, opts=default_opts, module_globals=None):
                         "plain": plain_lines,
                     }
                     file_cache[filename] = LineCacheInfo(
-                        stat=stat,
                         line_numbers=None,
-                        linestarts=None,
                         lines=lines,
+                        linestarts=None,
                         path=path,
                         sha1=None,
+                        stat=stat,
                     )
                 except Exception:
                     pass
@@ -967,14 +995,14 @@ def update_cache(filename, opts=default_opts, module_globals=None):
     pass
 
     file_cache[filename] = LineCacheInfo(
-        stat=stat,
+        code_map={},
+        eols=eols,
         line_numbers=None,
-        linestarts=None,
         lines=lines,
+        linestarts=None,
         path=path,
         sha1=None,
-        eols=eols,
-        code_map={},
+        stat=stat,
     )
     file2file_remap[path] = filename
     return True
@@ -982,6 +1010,8 @@ def update_cache(filename, opts=default_opts, module_globals=None):
 
 # example usage
 if __name__ == "__main__":
+    from pprint import pp
+
     z = lambda x, y: x + y
 
     def yes_no(var):
@@ -1044,6 +1074,13 @@ if __name__ == "__main__":
     for mod, code in file_cache[__file__].code_map.items():
         print(mod, ":", code)
     print("=" * 30)
+
+    lineno_info, lineno_and_offset, lineno_and_start_column = get_position_info(
+        __file__
+    )
+    pp(lineno_info)
+    pp(lineno_and_offset)
+    pp(lineno_and_start_column)
 
     # print("%s is %scached." % (__file__, yes_no(is_cached(__file__))))
     # print(stat(__file__))
