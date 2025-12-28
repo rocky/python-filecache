@@ -670,6 +670,29 @@ def trace_line_numbers(filename, reload_on_change=False, toplevel_only=False):
     return e.line_numbers
 
 
+def get_code_positions(filename, reload_on_change=False, toplevel_only=False):
+    """Return the line numbers that are (or would be) stored in
+    co_linenotab for `filename`.
+
+    These are places setting a breakpoint could conceivably
+    trigger. On other lines, a breakpoint would never occur, because
+    only the Python interpreter only stops at bytecode offsets
+    that have a line number.
+
+    The line in the source file could be empty because the line is
+    blank, inside a string or comment, in the middle of some long
+    construct or is something of that ilk.
+    """
+    fullname = cache_file(filename, reload_on_change)
+    if not fullname:
+        return None
+    e = file_cache[filename]
+    if not e.line_numbers:
+        e.line_numbers = code_linenumbers_in_file(fullname)
+        pass
+    return e.line_numbers
+
+
 def cache_code_lines(
     filename, reload_on_change=False, toplevel_only=False, include_offsets=True
 ):
