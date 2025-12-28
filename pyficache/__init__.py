@@ -83,6 +83,7 @@ __docformat__ = "restructuredtext"
 
 # Export some functions
 from pyficache.pyasm import PyasmLexer
+from pyficache.code_positions import get_position_info
 
 from pyficache.main import (
     PYVER,
@@ -146,6 +147,7 @@ __all__ = [
     "dark_terminal_formatter",
     "file_cache",
     "file2file_remap",
+    "get_position_info",
     "getline",
     "getlines",
     "highlight_array",
