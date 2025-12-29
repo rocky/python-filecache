@@ -16,19 +16,40 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from collections import defaultdict
+from dataclasses import dataclass
+
 from types import CodeType
-from typing import Dict, Tuple
+from typing import Dict, Optional, Tuple
 
 from xdis import iscode, load_file, findlinestarts
 from collections import deque
 
 
-def get_position_info(
-    filename,
-) -> Tuple[Dict[int, list], Dict[Tuple[int, int], set], Dict[Tuple[int, int], set]]:
-    """Returns three things:
+@dataclass
+class CodePositionInfo:
+    """
+    lineno_and_offset: A dictionary mapping line and code offset numbers into a pair of
+          (starting line, starting column), (ending line, ending column) values.
+          in code.
 
-    1) a dictionary mapping line number in a file to its
+    lineno_and_start_column: A dictionary mapping line and code offset numbers into a pair of
+          (starting line, starting column), (ending line, ending column) values.
+          in code.
+
+    parent: static enclosing codem or not None if this a module.
+    """
+
+    lineno_and_offset: Optional[Dict[Tuple[int, int], set]] = None
+    lineno_and_start_column: Optional[Dict[Tuple[int, int], set]] = None
+    parent: Optional[CodeType] = None
+
+
+# A cache of source-code position and code offset information keyed by a Python code object.
+code_position_cache: Dict[CodeType, CodePositionInfo] = {}
+
+
+def update_code_position_cache(filename: str) -> Dict[int, list]:
+    """Update code_position_cache and returns a dictionary mapping line number in a file to its
     offsets in a code object.  Note for example that loops and
     conditional statements typically have more than one offset
     associated with a line number.
@@ -40,15 +61,6 @@ def get_position_info(
     situation where a line number itself is ambiguous and can refer
     to several scopes. The code object as opposed to its name,
     might be useful in setting breakpoints.
-
-    2) A dictionary mapping line and code offset numbers into a pair of
-      (starting line, starting column), (ending line, ending column) values.
-      in code.
-
-    3) A dictionary mapping line and code offset numbers into a pair of
-      (starting line, starting column), (ending line, ending column) values.
-      in code.
-
     """
     # FIXME: try to find bytecode for corresponding file
     code = load_file(filename)
@@ -57,26 +69,24 @@ def get_position_info(
 
 def code_loop_for_positions(
     code: CodeType,
-) -> Tuple[Dict[int, list], Dict[Tuple[int, int], set], Dict[Tuple[int, int], set]]:
-    """Loops over all code objects found within the constant section of `code` creating the
-    three dictionaries described in get_position_info() above.
+) -> Dict[int, list]:
+    """Loops over all code objects found within the constant section of `code` returnin the
+    information described in populate_code_position_cache() above and updating code_position_cache.
     """
 
-    queue = deque([code])
+    parent: Optional[CodeType] = None
+    queue = deque([(code, parent)])
 
     offset_line_dict = {}
     line_offset_dict = {}
-
-    for offset, line in findlinestarts(code):
-        offset_line_dict[offset] = line
-        line_offset_dict[line] = offset
-
-    lineno_and_offset = {}
-    lineno_and_start_column = {}
     line_info = defaultdict(list)
 
     while len(queue) > 0:
-        code = queue.popleft()
+        code, parent = queue.popleft()
+
+        for offset, line in findlinestarts(code):
+            offset_line_dict[offset] = line
+            line_offset_dict[line] = offset
 
         # First, process code.co_lines()...
         for start_offset, _, lineno in code.co_lines():
@@ -91,6 +101,9 @@ def code_loop_for_positions(
                     line_info[lineno].append(code)
                 else:
                     line_info[lineno].append(start_offset)
+
+        lineno_and_offset = {}
+        lineno_and_start_column = {}
 
         # Next, process code.co_positions()...
         for start_line, end_line, start_column, end_column in code.co_positions():
@@ -119,20 +132,35 @@ def code_loop_for_positions(
                             (end_line, end_column),
                         )
 
+            code_position_cache[code] = CodePositionInfo(
+                lineno_and_offset, lineno_and_start_column, parent
+            )
+
         for c in code.co_consts:
             if iscode(c):
-                queue.append(c)
+                queue.append((c, code))
             pass
         pass
-    return line_info, lineno_and_offset, lineno_and_start_column
+
+    return line_info
 
 
 if __name__ == "__main__":
-    from pprint import pp
+    from pprint import pp, pformat
 
-    lineno_info, lineno_and_offset, lineno_and_start_column = get_position_info(
-        __file__
-    )
+    lineno_info = update_code_position_cache(__file__)
+
     pp(lineno_info)
-    pp(lineno_and_offset)
-    pp(lineno_and_start_column)
+
+    for code, code_position_info in code_position_cache.items():
+        print("=" * 30)
+        print(f"{code.co_name} parent: {code_position_info.parent}")
+        print(
+            f"(line, offset): source positions for {code.co_name}:"
+            f"\n\t{pformat(code_position_info.lineno_and_offset)}"
+        )
+        print(
+            f"(line, offset): start columns for {code.co_name}:"
+            f"\n\t{pformat(code_position_info.lineno_and_start_column)}"
+        )
+        print("-" * 30)
