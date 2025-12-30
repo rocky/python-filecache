@@ -64,7 +64,7 @@ from collections import namedtuple
 from dataclasses import dataclass, field
 from importlib.util import find_spec, source_from_cache
 from types import CodeType
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Set
 
 from pygments import highlight
 from pygments.formatters import Terminal256Formatter, TerminalFormatter
@@ -198,9 +198,9 @@ class LineCacheInfo:
 
 
 # The file cache. The key is a name as would be given by co_filename
-# or __file__. The value is a LineCacheInfo object.
-file_cache = {}
-pyasm_files = set()
+# or __file__.
+file_cache: Dict[str, LineCacheInfo] = {}
+pyasm_files: Set[str] = set()
 script_cache = {}
 
 
