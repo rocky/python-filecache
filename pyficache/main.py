@@ -64,7 +64,7 @@ from collections import namedtuple
 from dataclasses import dataclass, field
 from importlib.util import find_spec, source_from_cache
 from types import CodeType
-from typing import Any, Dict, List, Optional, Set
+from typing import Any, Dict, List, Optional, Set, Tuple
 
 from pygments import highlight
 from pygments.formatters import Terminal256Formatter, TerminalFormatter
@@ -188,7 +188,7 @@ class LineCacheInfo:
 
     code_map: Dict[str, CodeType] = field(default_factory=dict)
     eols: Optional[Any] = None
-    line_info: Optional[Dict[int, list]] = None
+    line_info: Optional[Dict[int, List[Tuple[int, CodeType]]]] = None
     line_numbers: Optional[Dict[int, Any]] = None
     lines: Dict[str, List[str]] = field(default_factory=dict)
     linestarts: Optional[Dict[int, Any]] = None
@@ -776,7 +776,7 @@ def code_line_info(
     reload_on_change=False,
     toplevel_only=False,
     include_offsets=True,
-) -> tuple:
+) -> Optional[tuple]:
     """Return the bytecode information that is associated with
     `line_number` in the bytecode for `filename`.
     """
@@ -813,16 +813,34 @@ def code_offset_info(
     # Perhaps we should revise the API
     file_info = code_lines(filename, toplevel_only=False, include_offsets=True)
 
+    if file_info is None or file_info.linestarts is None:
+        return None
     return file_info.linestarts.get(offset, None)
 
 
-def is_mapped_file(filename):
+def is_mapped_file(filename) -> Optional[str]:
     if filename in file2file_remap:
         return "file"
     elif file2file_remap_lines.get(filename):
         return "file_line"
     else:
         return None
+
+
+def print_line_number_info(line_number_info: dict):
+    """
+    Print `line_number_info` nicely.
+    """
+    for line_num, li in line_number_info.items():
+        offset_info = []
+        for i in li:
+            if i.name != last_code_name:
+                item = f"{i.name}: {i.offsets}"
+            else:
+                item = str(i.offset)
+            offset_info.append(item)
+
+        print("\tline: %4d: %s" % (line_num, ", ".join(offset_info)))
 
 
 def unmap_file(filename):
@@ -1079,11 +1097,18 @@ if __name__ == "__main__":
     print(f"{file_path} has {size(file_path)} lines")
     print(f"{file_path} code_lines data:\n")
 
-    line_info = code_offset_info(file_path, 0)
-    print(f"Starting line for file (bytecode offset 0) is {line_info}")
-    line_info = code_lines(file_path).line_numbers
-    for line_num, li in line_info.items():
-        print("\tline: %4d: %s" % (line_num, ", ".join([str(i.offsets) for i in li])))
+    first_code_line = code_offset_info(file_path, 0)
+    print(
+        f"Starting line for file {file_path} (bytecode offset 0) is {first_code_line}"
+    )
+
+    line_number_info = None
+    if code_lines_info := code_lines(file_path):
+        line_number_info = code_lines_info.line_numbers
+    last_code_name = None
+    if line_number_info is not None:
+        print("line number to code and offset mappings:")
+        print_line_number_info(line_number_info)
     print("=" * 30)
     for mod, code in file_cache[file_path].code_map.items():
         print(mod, ":", code)
