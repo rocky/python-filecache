@@ -75,7 +75,7 @@ from xdis.version_info import PYTHON3
 
 from pyficache.code_positions import update_code_position_cache
 from pyficache.line_numbers import code_linenumbers_in_file
-from pyficache.pyasm import PyasmLexer
+from pyficache.pyasm import PyasmLexer, compute_pyasm_line_mapping
 
 PYVER = "%s%s" % sys.version_info[0:2]
 
@@ -422,25 +422,45 @@ def is_empty(filename):
     return 0 == len(file_cache[filename].lines["plain"])
 
 
-def getline(file_or_script, line_number, opts=default_opts):
+def getline(file_or_script: str, line_number: int, opts=default_opts):
     """Get line *line_number* from file named *file_or_script*. Return None if
     there was a problem or it is not found.
+
+    Python disassembly files (".pyasm") are handled here as well.
 
     Example:
 
     lines = pyficache.getline("/tmp/myfile.py")
     """
     filename = unmap_file(file_or_script)
-    filename, line_number = unmap_file_line(filename, line_number)
 
     is_pyasm = opts.get("is_pyasm", filename.endswith(".pyasm"))
     lines = getlines(filename, opts, is_pyasm=is_pyasm)
     if is_pyasm:
-        lines = getlines(filename, {"output": "plain"}, is_pyasm=is_pyasm)
+        if opts.get("output") != "plain":
+            lines = getlines(filename, {"output": "plain"}, is_pyasm=is_pyasm)
         if lines is None:
             return ""
+
+        line = None
+        if not (remap_line_entries := file2file_remap_lines.get(filename)):
+            from_to_lines = compute_pyasm_line_mapping(lines)
+            remap_file_lines(filename, filename, from_to_lines)
+            remap_line_entries = file2file_remap_lines.get(filename)
+        if remap_line_entries:
+            from_to_lines = remap_line_entries.from_to_pairs
+            line_max = len(lines)
+            # FIXME: use binary search
+            # Note we assume assume from_line is increasing.
+            # Add sentinel at end of from pairs to handle using the final
+            # entry for line numbers greater than it.
+            # Find the closest mapped line number equal or before line_number.
+            for t in remap_line_entries.from_to_pairs + ((large_int, line_max),):
+                if t[0] == line_number:
+                    line = lines[t[1]]
+                    break
+
         fmt = opts.get("output", "plain")
-        line = grep_first_line(lines, f"^[ ]+{line_number}:")
         if line is None:
             return ""
         if fmt == "plain":
@@ -449,6 +469,7 @@ def getline(file_or_script, line_number, opts=default_opts):
             return highlight_string(line, fmt, lexer=pyasm_lexer)
 
     elif lines and line_number >= 1 and line_number <= maxline(filename):
+        filename, line_number = unmap_file_line(filename, line_number)
         line = lines[line_number - 1]
         if get_option("strip_nl", opts):
             return line.rstrip("\n")
@@ -565,7 +586,7 @@ def add_remap_pat(pat, replace, clear_remap=True):
         file2file_remap = {}
 
 
-def remap_file_pat(from_file, remap_re_hash=remap_re_hash):
+def remap_file_pat(from_file: str, remap_re_hash=remap_re_hash) -> str:
     """If *from_file* matches remap_patterns do the replacement"""
     for pat, replace_tup in remap_re_hash.items():
         match = pat.match(from_file)
@@ -574,7 +595,7 @@ def remap_file_pat(from_file, remap_re_hash=remap_re_hash):
     return from_file
 
 
-def remap_file_lines(from_path, to_path, line_map_list):
+def remap_file_lines(from_path: str, to_path: str, line_map_list):
     """Adds line_map list to the list of association of from_file to
     to to_file"""
     from_path = resolve_name_to_path(from_path)
@@ -821,7 +842,7 @@ def unmap_file(filename):
     return filename
 
 
-def unmap_file_line(filename, line_number, reverse=False):
+def unmap_file_line(filename: str, line_number: int, reverse=False):
     remap_line_entry = file2file_remap_lines.get(filename)
     mapped_line_number = line_number
     if remap_line_entry:
@@ -1048,6 +1069,11 @@ if __name__ == "__main__":
     else:
         file_path = __file__
 
+    filename = "../test/seven-313.pyasm"
+    line_number = 2
+    line = getline(filename, line_number)
+
+    print(f"line {line_number} of {filename} is:\n", line)
     update_cache(file_path)
     checkcache(file_path)
     print(f"{file_path} has {size(file_path)} lines")
