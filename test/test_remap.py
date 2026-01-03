@@ -7,7 +7,7 @@ import os.path as osp
 TEST_DIR = osp.abspath(osp.dirname(__file__))
 top_builddir = osp.join(TEST_DIR, "..")
 
-from pyficache import add_remap_pat, getline, remap_file_lines, remap_file_pat
+from pyficache import add_remap_pat, remap_file_lines, remap_file_pat
 
 
 def strip_line(line):
@@ -17,8 +17,9 @@ def strip_line(line):
 def test_remap():
     mapped_path = os.path.join(TEST_DIR, "mapped.py")
     unmapped_path = os.path.join(TEST_DIR, "unmapped.py")
-    with open(unmapped_path, "r") as fp:
-        unmapped_lines = fp.readlines()
+    fp = open(unmapped_path, "r")
+    unmapped_lines = fp.readlines()
+    fp.close()
 
     mapping = ((1, 3), (4, 5))
     remap_file_lines(unmapped_path, str(mapped_path), mapping)

@@ -61,18 +61,12 @@ import os.path as osp
 import re
 import sys
 from term_background import is_dark_background
-from pyficache.namedtuple24 import namedtuple
+from xdis.namedtuple24 import namedtuple
 
 # from pygments import highlight
 # from pygments.formatters import Terminal256Formatter, TerminalFormatter
 # from pygments.lexers import GasLexer, PythonLexer
-from collections import namedtuple
 
-from pygments import highlight
-from pygments.formatters import Terminal256Formatter, TerminalFormatter
-from pygments.lexers import PythonLexer
-from term_background import is_dark_background
->>>>>>> python-3.0-to-3.2
 from xdis.lineoffsets import lineoffsets_in_file
 from xdis.version_info import PYTHON3, PYTHON_VERSION_TRIPLE
 
@@ -86,7 +80,6 @@ large_int = sys.maxint
 if PYTHON_VERSION_TRIPLE[:2] > (2, 6):
     from pygments import highlight
     from pygments.lexers import PythonLexer
-    from pygments.lexers import GasLexer
     from pygments.formatters import TerminalFormatter, Terminal256Formatter
 else:
     TerminalFormatter = Terminal256Formatter = None
@@ -426,7 +419,7 @@ def is_empty(filename):
     return 0 == len(file_cache[filename].lines["plain"])
 
 
-def getline(file_or_script: str, line_number: int, opts=default_opts):
+def getline(file_or_script, line_number, opts=default_opts):
     """Get line *line_number* from file named *file_or_script*. Return None if
     there was a problem or it is not found.
 
@@ -601,7 +594,7 @@ def add_remap_pat(pat, replace, clear_remap=True):
         file2file_remap = {}
 
 
-def remap_file_pat(from_file: str, remap_re_hash=remap_re_hash) -> str:
+def remap_file_pat(from_file, remap_re_hash=remap_re_hash):
     """If *from_file* matches remap_patterns do the replacement"""
     for pat, replace_tup in remap_re_hash.items():
         match = pat.match(from_file)
@@ -610,7 +603,7 @@ def remap_file_pat(from_file: str, remap_re_hash=remap_re_hash) -> str:
     return from_file
 
 
-def remap_file_lines(from_path: str, to_path: str, line_map_list):
+def remap_file_lines(from_path, to_path, line_map_list):
     """Adds line_map list to the list of association of from_file to
     to to_file"""
     from_path = resolve_name_to_path(from_path)
@@ -698,7 +691,7 @@ def stat(filename, use_cache_only=False):
     return file_cache[filename].stat
 
 
-def trace_line_numbers(filename: str, reload_on_change=False):
+def trace_line_numbers(filename, reload_on_change=False):
     """Return the line numbers that are (or would be) stored in
     co_linenotab for `filename`.
 
@@ -721,7 +714,7 @@ def trace_line_numbers(filename: str, reload_on_change=False):
     return linecache_info.line_numbers
 
 
-def get_linecache_info(filename: str, reload_on_change=False):
+def get_linecache_info(filename, reload_on_change=False):
     """Return the linecache information for filename."""
     fullname = cache_file(filename, reload_on_change)
     if not fullname:
@@ -835,7 +828,7 @@ def is_mapped_file(filename):
         return None
 
 
-def print_line_number_info(line_number_info: dict):
+def print_line_number_info(line_number_info):
     """
     Print `line_number_info` nicely.
     """
@@ -868,7 +861,7 @@ def unmap_file(filename):
     return filename
 
 
-def unmap_file_line(filename: str, line_number: int, reverse=False):
+def unmap_file_line(filename, line_number, reverse=False):
     remap_line_entry = file2file_remap_lines.get(filename)
     mapped_line_number = line_number
     if remap_line_entry:
