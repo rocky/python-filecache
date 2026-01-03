@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 #   Copyright (C) 2008-2009, 2012-2013, 2015-2016, 2018, 2020-2021,
-#   2023-2025 Rocky Bernstein <rocky@gnu.org>
+#   2023-2026 Rocky Bernstein <rocky@gnu.org>
 #
 #   This program is free software: you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
@@ -66,11 +66,18 @@ from pyficache.namedtuple24 import namedtuple
 # from pygments import highlight
 # from pygments.formatters import Terminal256Formatter, TerminalFormatter
 # from pygments.lexers import GasLexer, PythonLexer
+from collections import namedtuple
+
+from pygments import highlight
+from pygments.formatters import Terminal256Formatter, TerminalFormatter
+from pygments.lexers import PythonLexer
+from term_background import is_dark_background
+>>>>>>> python-3.0-to-3.2
 from xdis.lineoffsets import lineoffsets_in_file
 from xdis.version_info import PYTHON3, PYTHON_VERSION_TRIPLE
 
-# from pyficache.pyasm import PyasmLexer
 from pyficache.line_numbers import code_linenumbers_in_file
+from pyficache.pyasm import PyasmLexer, compute_pyasm_line_mapping
 
 PYVER = "%s%s" % sys.version_info[0:2]
 
@@ -90,12 +97,12 @@ default_opts = {
     # time
     "use_linecache_lines": True,
     "strip_nl": True,  # Strip trailing \n on line returned
-    "output": "plain"  # To we want plain output?
+    "output": "plain",  # To we want plain output?
     # Set to 'terminal'
     # for terminal syntax-colored output
 }
 
-source_from_cache = resolve_name = find_spec = None
+resolve_name = None
 
 
 def grep_first_line(lines, pattern):
@@ -139,26 +146,6 @@ def resolve_name_to_path(path_or_name):
         # Assume Python source code
         return path_or_name
 
-    if source_from_cache:
-        try:
-            source_path = source_from_cache(path_or_name)
-        except Exception:
-            pass
-        else:
-            if source_path:
-                return source_path
-            pass
-
-    if find_spec:
-        try:
-            spec = find_spec(path_or_name)
-        except Exception:
-            spec = None
-        else:
-            if spec and spec.origin:
-                return spec.origin
-            pass
-
     if re.match(".*py[co]$", path_or_name):
         if PYTHON3:
             return re.sub(
@@ -174,6 +161,27 @@ def resolve_name_to_path(path_or_name):
 
 
 class LineCacheInfo:
+    """Container for cached file info.
+
+    Fields:
+
+    code_map: a dictionary mapping the name (co_name) of a file to its code object.
+
+    line_info: a dictionary mapping line number in a file to its
+          offsets in a code object.
+          When the code offset is 0, the code object is stored.
+
+    linestarts: a dictionary mapping a bytecode offset to a source line number
+
+    lines: A dictionary lines of the file, with pygments formatting applied according to
+          the style name of of the case. If the key is "plain", then no pygments formatting
+          has been applied.
+
+    path: the OS file path it it is not "".
+    sha1: a sha1 of the contents of the "path" if it is not None
+    stat: file system OS stat object, i.e. result of calling os.stat().
+    """
+
     def __init__(
         self,
         stat,
@@ -196,10 +204,11 @@ class LineCacheInfo:
 
 
 # The file cache. The key is a name as would be given by co_filename
-# or __file__. The value is a LineCacheInfo object.
+# or __file__.
 file_cache = {}
-script_cache = {}
 pyasm_files = set()
+script_cache = {}
+
 
 # `file2file_remap` maps a path (a string) to another path key in file_cache (a
 # string).
@@ -265,7 +274,7 @@ RemapLineEntry = namedtuple("RemapLineEntry", "mapped_path from_to_pairs")
 
 # In this example, line 1 of foo.template corresponds to line 3 of
 # mapped_file.py.  There is no line recorded in foo.template that corresponds
-# to line 4 of mapped_file. Line 4 of foo.template corresponds to line 5 of
+# to line 4 of mapped_file.py. Line 4 of foo.template corresponds to line 5 of
 # mapped_file.py. And line 5 of foo.template implicitly corresponds to line 6
 # of mapped_file.py since there is nothing to indicate contrary and since that
 # line exists in mapped_file.
@@ -417,25 +426,46 @@ def is_empty(filename):
     return 0 == len(file_cache[filename].lines["plain"])
 
 
-def getline(file_or_script, line_number, opts=default_opts):
+def getline(file_or_script: str, line_number: int, opts=default_opts):
     """Get line *line_number* from file named *file_or_script*. Return None if
     there was a problem or it is not found.
+
+    Python disassembly files (".pyasm") are handled here as well.
 
     Example:
 
     lines = pyficache.getline("/tmp/myfile.py")
     """
     filename = unmap_file(file_or_script)
-    filename, line_number = unmap_file_line(filename, line_number)
 
     is_pyasm = opts.get("is_pyasm", filename.endswith(".pyasm"))
     lines = getlines(filename, opts, is_pyasm=is_pyasm)
     if is_pyasm:
-        lines = getlines(filename, {"output": "plain"}, is_pyasm=is_pyasm)
+        if opts.get("output") != "plain":
+            lines = getlines(filename, {"output": "plain"}, is_pyasm=is_pyasm)
         if lines is None:
             return ""
+
+        line = None
+        remap_line_entries = file2file_remap_lines.get(filename)
+        if not remap_line_entries:
+            from_to_lines = compute_pyasm_line_mapping(lines)
+            remap_file_lines(filename, filename, from_to_lines)
+            remap_line_entries = file2file_remap_lines.get(filename)
+        if remap_line_entries:
+            from_to_lines = remap_line_entries.from_to_pairs
+            line_max = len(lines)
+            # FIXME: use binary search
+            # Note we assume assume from_line is increasing.
+            # Add sentinel at end of from pairs to handle using the final
+            # entry for line numbers greater than it.
+            # Find the closest mapped line number equal or before line_number.
+            for t in remap_line_entries.from_to_pairs + ((large_int, line_max),):
+                if t[0] == line_number:
+                    line = lines[t[1]]
+                    break
+
         fmt = opts.get("output", "plain")
-        line = grep_first_line(lines, "^[ ]+%s:" % line_number)
         if line is None:
             return ""
         if fmt == "plain":
@@ -444,6 +474,7 @@ def getline(file_or_script, line_number, opts=default_opts):
             return highlight_string(line, fmt, lexer=pyasm_lexer)
 
     elif lines and line_number >= 1 and line_number <= maxline(filename):
+        filename, line_number = unmap_file_line(filename, line_number)
         line = lines[line_number - 1]
         if get_option("strip_nl", opts):
             return line.rstrip("\n")
@@ -509,7 +540,7 @@ def highlight_array(array, trailing_nl=True, bg="light", **options):
 # FIXME for 2.4
 if PYTHON_VERSION_TRIPLE[:2] > (2, 6):
     python_lexer = PythonLexer()
-    pyasm_lexer = GasLexer()
+    pyasm_lexer = PyasmLexer()
 
     # TerminalFormatter uses a colorTHEME with light and dark pairs.
     # But Terminal256Formatter uses a colorSTYLE.  Ugh
@@ -570,7 +601,7 @@ def add_remap_pat(pat, replace, clear_remap=True):
         file2file_remap = {}
 
 
-def remap_file_pat(from_file, remap_re_hash=remap_re_hash):
+def remap_file_pat(from_file: str, remap_re_hash=remap_re_hash) -> str:
     """If *from_file* matches remap_patterns do the replacement"""
     for pat, replace_tup in remap_re_hash.items():
         match = pat.match(from_file)
@@ -579,7 +610,7 @@ def remap_file_pat(from_file, remap_re_hash=remap_re_hash):
     return from_file
 
 
-def remap_file_lines(from_path, to_path, line_map_list):
+def remap_file_lines(from_path: str, to_path: str, line_map_list):
     """Adds line_map list to the list of association of from_file to
     to to_file"""
     from_path = resolve_name_to_path(from_path)
@@ -667,7 +698,7 @@ def stat(filename, use_cache_only=False):
     return file_cache[filename].stat
 
 
-def trace_line_numbers(filename, reload_on_change=False, toplevel_only=False):
+def trace_line_numbers(filename: str, reload_on_change=False):
     """Return the line numbers that are (or would be) stored in
     co_linenotab for `filename`.
 
@@ -683,11 +714,23 @@ def trace_line_numbers(filename, reload_on_change=False, toplevel_only=False):
     fullname = cache_file(filename, reload_on_change)
     if not fullname:
         return None
-    e = file_cache[filename]
-    if not e.line_numbers:
-        e.line_numbers = code_linenumbers_in_file(fullname)
+    linecache_info = file_cache[filename]
+    if not linecache_info.line_numbers:
+        linecache_info.line_numbers = code_linenumbers_in_file(fullname)
         pass
-    return e.line_numbers
+    return linecache_info.line_numbers
+
+
+def get_linecache_info(filename: str, reload_on_change=False):
+    """Return the linecache information for filename."""
+    fullname = cache_file(filename, reload_on_change)
+    if not fullname:
+        return None
+    linecache_info = file_cache[filename]
+    if not linecache_info.line_numbers:
+        linecache_info.line_numbers = code_linenumbers_in_file(fullname)
+        pass
+    return linecache_info
 
 
 def cache_code_lines(
@@ -778,6 +821,8 @@ def code_offset_info(
     # Perhaps we should revise the API
     file_info = code_lines(filename, toplevel_only=False, include_offsets=True)
 
+    if file_info is None or file_info.linestarts is None:
+        return None
     return file_info.linestarts.get(offset, None)
 
 
@@ -788,6 +833,22 @@ def is_mapped_file(filename):
         return "file_line"
     else:
         return None
+
+
+def print_line_number_info(line_number_info: dict):
+    """
+    Print `line_number_info` nicely.
+    """
+    for line_num, li in line_number_info.items():
+        offset_info = []
+        for i in li:
+            if i.name != last_code_name:
+                item = "%s: %s" % (i.name, i.offsets)
+            else:
+                item = str(i.offset)
+            offset_info.append(item)
+
+        print("\tline: %4d: %s" % (line_num, ", ".join(offset_info)))
 
 
 def unmap_file(filename):
@@ -807,7 +868,7 @@ def unmap_file(filename):
     return filename
 
 
-def unmap_file_line(filename, line_number, reverse=False):
+def unmap_file_line(filename: str, line_number: int, reverse=False):
     remap_line_entry = file2file_remap_lines.get(filename)
     mapped_line_number = line_number
     if remap_line_entry:
@@ -868,12 +929,12 @@ def update_cache(filename, opts=default_opts, module_globals=None):
                         "plain": plain_lines,
                     }
                     file_cache[filename] = LineCacheInfo(
-                        stat=stat,
                         line_numbers=None,
-                        linestarts=None,
                         lines=lines,
+                        linestarts=None,
                         path=path,
                         sha1=None,
+                        stat=stat,
                     )
                 except Exception:
                     pass
@@ -967,14 +1028,14 @@ def update_cache(filename, opts=default_opts, module_globals=None):
     pass
 
     file_cache[filename] = LineCacheInfo(
-        stat=stat,
+        code_map={},
+        eols=eols,
         line_numbers=None,
-        linestarts=None,
         lines=lines,
+        linestarts=None,
         path=path,
         sha1=None,
-        eols=eols,
-        code_map={},
+        stat=stat,
     )
     file2file_remap[path] = filename
     return True
@@ -982,6 +1043,8 @@ def update_cache(filename, opts=default_opts, module_globals=None):
 
 # example usage
 if __name__ == "__main__":
+    from pprint import pprint, pformat
+
     z = lambda x, y: x + y
 
     def yes_no(var):
@@ -1029,34 +1092,52 @@ if __name__ == "__main__":
     # print(getline("another_name", 7))
 
     # print("Files cached: %s" % cached_files())
+    if len(sys.argv) > 1:
+        file_path = sys.argv[1]
+    else:
+        file_path = __file__
 
-    update_cache(__file__)
-    checkcache(__file__)
-    print("%s has %s lines" % (__file__, size(__file__)))
-    print("%s code_lines data:\n" % __file__)
+    filename = "../test/seven-313.pyasm"
+    line_number = 2
+    line = getline(filename, line_number)
 
-    line_info = code_offset_info(__file__, 0)
-    print("Starting line for file (bytecode offset 0) is %s" % line_info)
-    line_info = code_lines(__file__).line_numbers
-    for line_num, li in line_info.items():
-        print("\tline: %4d: %s" % (line_num, ", ".join([str(i.offsets) for i in li])))
+    print("line %d of %s is:\n" % (line_number, filename), line)
+    update_cache(file_path)
+    checkcache(file_path)
+    print("%s has %d lines" % (file_path, size(file_path)))
+    print("%s code_lines data:\n" % file_path)
+
+    first_code_line = code_offset_info(file_path, 0)
+    print(
+        "Starting line for file %s (bytecode offset 0) is %d"
+        % (file_path, first_code_line)
+    )
+
+    line_number_info = None
+    code_lines_info = code_lines(file_path)
+    if code_lines_info:
+        line_number_info = code_lines_info.line_numbers
+    last_code_name = None
+    if line_number_info is not None:
+        print("line number to code and offset mappings:")
+        print_line_number_info(line_number_info)
     print("=" * 30)
-    for mod, code in file_cache[__file__].code_map.items():
+    for mod, code in file_cache[file_path].code_map.items():
         print(mod, ":", code)
     print("=" * 30)
 
-    # print("%s is %scached." % (__file__, yes_no(is_cached(__file__))))
-    # print(stat(__file__))
-    # print("Full path: %s" % path(__file__))
+    # print("%s is %scached." % (file_path, yes_no(is_cached(file_path))))
+    # print(stat(file_path))
+    # print("Full path: %s" % path(file_path))
     # checkcache()  # Check all files in the cache
     # clear_file_format_cache()
     # clear_file_cache()
-    # print(("%s is now %scached." % (__file__, yes_no(is_cached(__file__)))))
+    # print(("%s is now %scached." % (file_path, yes_no(is_cached(file_path)))))
     # #   # digest = SCRIPT_LINES__.select{|k,v| k =~ /digest.rb$/}
     # #   # if digest is not None: print digest.first[0]
-    # line = getline(__file__, 7)
+    # line = getline(file_path, 7)
     # print("The 7th line is\n%s" % line)
-    # orig_path = __file__
+    # orig_path = file_path
     # mapped_path = "test2"
     # start_line = 10
     # start_mapped = 6
