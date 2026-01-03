@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 #   Copyright (C) 2008-2009, 2012-2013, 2015-2016, 2018, 2020-2021,
-#   2023-2025 Rocky Bernstein <rocky@gnu.org>
+#   2023-2026 Rocky Bernstein <rocky@gnu.org>
 #
 #   This program is free software: you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
@@ -73,7 +73,6 @@ from term_background import is_dark_background
 from xdis.lineoffsets import lineoffsets_in_file
 from xdis.version_info import PYTHON3
 
-from pyficache.code_positions import update_code_position_cache
 from pyficache.line_numbers import code_linenumbers_in_file
 from pyficache.pyasm import PyasmLexer, compute_pyasm_line_mapping
 
@@ -443,7 +442,8 @@ def getline(file_or_script: str, line_number: int, opts=default_opts):
             return ""
 
         line = None
-        if not (remap_line_entries := file2file_remap_lines.get(filename)):
+        remap_line_entries = file2file_remap_lines.get(filename)
+        if not remap_line_entries:
             from_to_lines = compute_pyasm_line_mapping(lines)
             remap_file_lines(filename, filename, from_to_lines)
             remap_line_entries = file2file_remap_lines.get(filename)
@@ -702,8 +702,6 @@ def trace_line_numbers(filename: str, reload_on_change=False):
     linecache_info = file_cache[filename]
     if not linecache_info.line_numbers:
         linecache_info.line_numbers = code_linenumbers_in_file(fullname)
-        lineno_info = update_code_position_cache(fullname)
-        linecache_info.lineno_info = lineno_info
         pass
     return linecache_info.line_numbers
 
@@ -718,7 +716,6 @@ def get_linecache_info(
     linecache_info = file_cache[filename]
     if not linecache_info.line_numbers:
         linecache_info.line_numbers = code_linenumbers_in_file(fullname)
-        linecache_info.lineno_info = update_code_position_cache(fullname)
         pass
     return linecache_info
 
@@ -748,8 +745,6 @@ def cache_code_lines(
     if not file_info.line_numbers:
         code_info = lineoffsets_in_file(fullname, toplevel_only=toplevel_only)
         file_info.line_numbers = code_info.line_numbers(include_offsets=include_offsets)
-        lineno_info = update_code_position_cache(fullname)
-        file_info.lineno_info = lineno_info
         file_info.linestarts = code_info.linestarts
         file_info.code_map = code_info.code_map
         pass
@@ -1032,8 +1027,7 @@ def update_cache(filename, opts=default_opts, module_globals=None):
 
 # example usage
 if __name__ == "__main__":
-    from pprint import pp, pformat
-    from pyficache.code_positions import code_position_cache
+    from pprint import pprint, pformat
 
     z = lambda x, y: x + y
 
@@ -1103,7 +1097,8 @@ if __name__ == "__main__":
     )
 
     line_number_info = None
-    if code_lines_info := code_lines(file_path):
+    code_lines_info = code_lines(file_path)
+    if code_lines_info:
         line_number_info = code_lines_info.line_numbers
     last_code_name = None
     if line_number_info is not None:
@@ -1114,20 +1109,6 @@ if __name__ == "__main__":
         print(mod, ":", code)
     print("=" * 30)
 
-    lineno_info = update_code_position_cache(file_path)
-
-    pp(lineno_info)
-
-    for code, code_position_info in code_position_cache.items():
-        print(
-            f"(line, offset): source positions for {code.co_name}:"
-            f"\n\t{pformat(code_position_info.lineno_and_offset)}"
-        )
-        print(
-            f"(line, offset): start columns for {code.co_name}:"
-            f"\n\t{pformat(code_position_info.lineno_and_start_column)}"
-        )
-        print("=" * 30)
 
     # print("%s is %scached." % (file_path, yes_no(is_cached(file_path))))
     # print(stat(file_path))

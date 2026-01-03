@@ -12,7 +12,7 @@ import sys
 from tempfile import mkstemp
 
 import pytest
-from xdis.version_info import PYTHON3, PYTHON_VERSION_TRIPLE
+from xdis.version_info import PYTHON3
 
 import pyficache
 from pyficache import PYVER
@@ -163,13 +163,13 @@ class TestPyFiCache:
             if platform.python_implementation() == "GraalVM":
                 start_lineno = 2
             else:
-                start_lineno = 1 if PYTHON_VERSION_TRIPLE < (3, 11) else 0
+                start_lineno = 1
             assert set([start_lineno]) == line_nums
 
         test_file = osp.join(TEST_DIR, "devious.py")
-        expected = {0, 2, 5, 7, 9}
+        expected = {4, 6, 8, 9}
         assert expected == pyficache.trace_line_numbers(test_file)
->>>>>>> master
+
 
     def test_sha1(self):
         test_file = osp.join(TEST_DIR, "short-file")

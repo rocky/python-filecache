@@ -384,7 +384,8 @@ def compute_pyasm_line_mapping(pyasm_lines: List[str]) -> Tuple[Tuple[int, int]]
     """
     from_to_pairs = []
     for i, line in enumerate(pyasm_lines):
-        if match := re.match(r"^\s+(\d+):", line):
+        match = re.match(r"^\s+(\d+):", line)
+        if match:
             from_to_pairs.append((int(match.group(1)), i))
 
     return tuple(from_to_pairs)
