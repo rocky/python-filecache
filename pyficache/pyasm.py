@@ -3,7 +3,6 @@ Lexer for Python Disassembler Pyasm
 """
 
 import re
-from typing import List, Tuple
 
 from pygments.lexer import (
     RegexLexer,
@@ -371,7 +370,7 @@ class PyasmLexer(RegexLexer):
             return True
 
 
-def compute_pyasm_line_mapping(pyasm_lines: List[str]) -> Tuple[Tuple[int, int]]:
+def compute_pyasm_line_mapping(pyasm_lines: list) -> tuple:
     r"""
     Build a from_to remapping tuple for lines indicated by
     line marks inside pyasm_lines. These are line that start with

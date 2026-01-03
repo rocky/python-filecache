@@ -41,7 +41,9 @@ class TestPyFiCache:
 
         fp = open(filename, "r")
         compare_lines = fp.readlines()
-        assert compare_lines, f"Should have been able to read {filename} for comparing"
+        assert compare_lines, (
+            "Should have been able to read %s for comparing" % filename
+        )
         fp.close()
 
         # Test getlines to read this file.
@@ -59,9 +61,9 @@ class TestPyFiCache:
         ), "We should get exactly the same line as reading this file."
 
         line = pyficache.getline(__file__, test_line, {"output": "light"})
-        assert (
-            "# This is line 3." in line
-        ), f"Terminal formatted line 3 should be '# This is line 3.', got:\n{line}"
+        assert "# This is line 3." in line, (
+            "Terminal formatted line 3 should be '# This is line 3.', got:\n%s" % line
+        )
 
         # Test getting the line via a relative file name
         old_dir = os.getcwd()
@@ -69,9 +71,9 @@ class TestPyFiCache:
         short_file = osp.basename(__file__)
         test_line = 10
         line = pyficache.getline(short_file, test_line, {"strip_nl": False})
-        assert (
-            compare_lines[test_line - 1] == line
-        ), f"Short filename lookup on {short_file} should work"
+        assert compare_lines[test_line - 1] == line, (
+            "Short filename lookup on %s should work" % short_file
+        )
         os.chdir(old_dir)
 
         # Write a temporary file; read contents, rewrite it and check that
@@ -101,15 +103,15 @@ class TestPyFiCache:
 
     def test_cached(self):
         myfile = __file__
-        assert (
-            pyficache.is_cached(myfile) is False
-        ), f"file {myfile} shouldn't be cached - just cleared cache."
+        assert pyficache.is_cached(myfile) is False, (
+            "file %s shouldn't be cached - just cleared cache." % myfile
+        )
 
         line = pyficache.getline(__file__, 1)
         assert line
-        assert (
-            pyficache.is_cached(__file__) is True
-        ), f"file {__file__} should now be cached"
+        assert pyficache.is_cached(__file__) is True, (
+            "file %s should now be cached" % __file__
+        )
 
     def test_remap(self):
         pyficache.remap_file(__file__, "another-name")
@@ -147,11 +149,11 @@ class TestPyFiCache:
     #     assert line7 == rline11, "lines should be the same via remap_file_line - range"
 
     def test_path(self):
-        assert (
-            pyficache.path(__file__) is None
-        ), f"path for {__file__} should be None - just cleared cache."
+        assert pyficache.path(__file__) is None, (
+            "path for %s should be None - just cleared cache." % __file__
+        )
         path = pyficache.cache_file(__file__)
-        assert path, f"should have cached path for {__file__}"
+        assert path, "should have cached path for %s" % __file__
 
     def test_trace_line_numbers(self):
         test_file = osp.join(TEST_DIR, "short-file")
@@ -170,7 +172,6 @@ class TestPyFiCache:
         expected = {4, 6, 8, 9}
         assert expected == pyficache.trace_line_numbers(test_file)
 
-
     def test_sha1(self):
         test_file = osp.join(TEST_DIR, "short-file")
         assert pyficache.sha1(test_file) == "1134f95ea84a3dcc67d7d1bf41390ee1a03af6d2"
@@ -180,12 +181,12 @@ class TestPyFiCache:
         assert pyficache.size(test_file) == 2
 
     def test_stat(self):
-        assert (
-            pyficache.stat(__file__, use_cache_only=True) is None
-        ), f"stat for {__file__} should be None - just cleared cache."
+        assert pyficache.stat(__file__, use_cache_only=True) is None, (
+            "stat for %s should be None - just cleared cache." % __file__
+        )
         line = pyficache.getline(__file__, 1)
         assert line
-        assert pyficache.stat(__file__), f"file {__file__} should now have a stat"
+        assert pyficache.stat(__file__), "file %s should now have a stat" % __file__
 
     def test_update_cache(self):
         assert pyficache.update_cache("foo") is False
@@ -200,9 +201,15 @@ class TestPyFiCache:
     def test_resolve_name_to_path(self):
         if PYTHON3:
             testdata = (
-                (f"pyc/__pycache__/foo.cpython-{PYVER}.pyc", osp.join("pyc", "foo.py")),
-                (f"__pycache__/pyo.cpython-{PYVER}.pyc", "pyo.py"),
-                (f"foo/__pycache__/bar.cpython-{PYVER}.pyo", osp.join("foo", "bar.py")),
+                (
+                    "pyc/__pycache__/foo.cpython-%s.pyc" % PYVER,
+                    osp.join("pyc", "foo.py"),
+                ),
+                ("__pycache__/pyo.cpython-%s.pyc" % PYVER, "pyo.py"),
+                (
+                    "foo/__pycache__/bar.cpython-%s.pyo" % PYVER,
+                    osp.join("foo", "bar.py"),
+                ),
             )
         else:
             testdata = (
