@@ -30,10 +30,6 @@ test: check
 #: Same as "check-short"
 test-short: check-short
 
-#: Run all tests - the older way
-check-nosetests:
-	nosetests test/*.py
-
 #: Run all tests - the pytest way
 check:
 	$(PYTHON) -m pytest test

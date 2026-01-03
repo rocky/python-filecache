@@ -1,5 +1,5 @@
 # Copyright (C) 2009-2010, 2013, 2015, 2017,
-# 2020-2021, 2024-2025 Rocky Bernstein <rocky@gnu.org>
+# 2020-2021, 2024-2026 Rocky Bernstein <rocky@gnu.org>
 #
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -23,7 +23,6 @@ Copyright (C) 2008-2010, 2012-2013, 2015-2018, 2020-2021, 2024, 2025 Rocky Berns
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: GNU General Public License (GPL)",
     "Programming Language :: Python",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Programming Language :: Python :: 2.4",
