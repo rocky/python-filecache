@@ -379,6 +379,26 @@ class PyasmLexer(RegexLexer):
         ],
     }
 
-    def analyse_text(text: str):
+    def analyse_text(self, text: str):
         if re.search(r"^# pydisasm", text, re.M):
             return True
+
+
+def compute_pyasm_line_mapping(pyasm_lines: list) -> tuple:
+    r"""
+    Build a from_to remapping tuple for lines indicated by
+    line marks inside pyasm_lines. These are line that start with
+       ^\s+\d+:
+    For example:
+        0:           0 |97 00| RESUME               0
+        4:           2 |64 00| LOAD_CONST           ("a") ; TOS = "a"
+    ^^^^^
+
+    """
+    from_to_pairs = []
+    for i, line in enumerate(pyasm_lines):
+        match = re.match(r"^\s+(\d+):", line)
+        if match:
+            from_to_pairs.append((int(match.group(1)), i))
+
+    return tuple(from_to_pairs)
