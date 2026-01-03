@@ -515,7 +515,7 @@ def highlight_array(array, trailing_nl=True, bg="light", **options):
     return lines
 
 
-pyasm_lexer = GasLexer()
+pyasm_lexer = PyasmLexer()
 python_lexer = PythonLexer()
 
 # TerminalFormatter uses a colorTHEME with light and dark pairs.

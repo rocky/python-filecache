@@ -160,16 +160,12 @@ class TestPyFiCache:
         if 0 == len(line_nums):
             assert line_nums == {}
         else:
-            if platform.python_implementation() == "GraalVM":
-                start_lineno = 2
-            else:
-                start_lineno = 1
+            start_lineno = 1
             assert set([start_lineno]) == line_nums
 
         test_file = osp.join(TEST_DIR, "devious.py")
         expected = {4, 6, 8, 9}
         assert expected == pyficache.trace_line_numbers(test_file)
->>>>>>> python-3.3-to-3.5
 
     def test_sha1(self):
         test_file = osp.join(TEST_DIR, "short-file")

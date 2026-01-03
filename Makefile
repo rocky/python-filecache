@@ -32,7 +32,7 @@ test-short: check-short
 
 #: Run all tests - the pytest way
 check:
-	nosetests test/test_*.py
+	$(PYTHON) -m pytest test
 
 #: Clean up temporary files
 #: Clean up temporary files and .pyc files
