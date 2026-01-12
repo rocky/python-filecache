@@ -206,7 +206,7 @@ script_cache = {}
 # For eval, exec, and AST evaluations we might have mapped <string> to a
 # temporary file name. Here, we store a mapping from code file to
 # temporary file name. Creating this file is done outside this package.
-code2_tempfile: Dict[CodeType, str] = {}
+code2tempfile: Dict[CodeType, str] = {}
 
 # `file2file_remap` maps a path (a string) to another path key in file_cache (a
 # string).
