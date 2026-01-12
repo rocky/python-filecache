@@ -36,7 +36,7 @@ class CodePositionInfo:
           (starting line, starting column), (ending line, ending column) values.
           in code.
 
-    parent: static enclosing codem or not None if this a module.
+    parent: static enclosing code or not None if this a module.
     """
 
     lineno_and_offset: Optional[Dict[Tuple[int, int], set]] = None
