@@ -723,6 +723,8 @@ def get_linecache_info(
     if not linecache_info.line_numbers:
         linecache_info.line_numbers = code_linenumbers_in_file(fullname)
         linecache_info.lineno_info = update_code_position_cache(fullname)
+        code_info = lineoffsets_in_file(fullname)
+        linecache_info.code_map = code_info.code_map
         pass
     return linecache_info
 
