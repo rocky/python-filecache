@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 #   Copyright (C) 2008-2009, 2012-2013, 2015-2016, 2018, 2020-2021,
-#   2023-2025 Rocky Bernstein <rocky@gnu.org>
+#   2023-2026 Rocky Bernstein <rocky@gnu.org>
 #
 #   This program is free software: you can redistribute it and/or modify
 #   it under the terms of the GNU General Public License as published by
@@ -127,7 +127,7 @@ def resolve_name_to_path(path_or_name: str) -> str:
     """
     if path_or_name.endswith(".py"):
         # Assume Python source code
-        return path_or_name
+        return file2file_remap.get(path_or_name, path_or_name)
 
     if source_from_cache:
         try:
@@ -408,22 +408,88 @@ def cache_file(filename, reload_on_change=False, opts=default_opts):
     return None
 
 
-def is_cached(file_or_script):
+def is_cached(file_or_script) -> bool:
     """Return True if file_or_script is cached"""
     if isinstance(file_or_script, str):
         return unmap_file(file_or_script) in file_cache
     else:
+        # ???
         return is_cached_script(file_or_script)
     return
 
 
-def is_cached_script(filename):
+def is_cached_script(filename: str) -> bool:
     return unmap_file(filename) in list(script_cache.keys())
 
 
-def is_empty(filename):
+def is_empty(filename: str) -> bool:
     filename = unmap_file(filename)
     return 0 == len(file_cache[filename].lines["plain"])
+
+
+def is_python_assembly_file(filename: str) -> bool:
+    """
+    Return True if file contains a Python disassembly file.
+    """
+    # For now, we'll go with the file extension only.
+    # Later, we can extend by verification by looking at contents.
+    return filename.endswith(".pyasm")
+
+
+# FIXME: add approximate flag.
+def get_pyasm_line(
+    filepath: str, location: int, is_source_line: bool, opts=default_opts
+) -> tuple:
+    """
+    Get a line from a python assembly file. If `is_source_line` is True, then we need to look
+    up the `location`, a line number, in the remapping file. Otherwise we will take the `location`
+    to be the index in the pyasm file.
+    """
+    filename = unmap_file(filepath)
+
+    lines = getlines(filename, {"output": "plain"}, is_pyasm=True)
+    pyasm_line_index = -1
+    if lines is None:
+        return None, -1
+
+    if is_source_line:
+        line = None
+        if not (remap_line_entries := file2file_remap_lines.get(filename)):
+            from_to_lines = compute_pyasm_line_mapping(lines)
+            remap_file_lines(filename, filename, from_to_lines)
+            remap_line_entries = file2file_remap_lines.get(filename)
+        if remap_line_entries:
+            from_to_lines = remap_line_entries.from_to_pairs
+            line_max = len(lines)
+            # FIXME: use binary search
+            # Note we assume assume from_line is increasing.
+            # Add sentinel at end of from pairs to handle using the final
+            # entry for line numbers greater than it.
+            # Find the closest mapped line number equal or before line_number.
+            for python_line, try_pyasm_index in remap_line_entries.from_to_pairs + (
+                (large_int, line_max),
+            ):
+                if python_line == location:
+                    pyasm_line_index = try_pyasm_index
+                    line = lines[pyasm_line_index]
+                    break
+                pass
+            pass
+        pass
+    else:
+        if location >= len(lines):
+            return None, -1
+        pyasm_line_index = location
+        line = lines[pyasm_line_index]
+
+    fmt = opts.get("output", "plain")
+    if line is None:
+        return None, -1
+    if fmt == "plain":
+        return line, pyasm_line_index
+    else:
+        return highlight_string(line, fmt, lexer=pyasm_lexer), pyasm_line_index
+    return
 
 
 def getline(file_or_script: str, line_number: int, opts=default_opts):
@@ -438,41 +504,9 @@ def getline(file_or_script: str, line_number: int, opts=default_opts):
     """
     filename = unmap_file(file_or_script)
 
-    is_pyasm = opts.get("is_pyasm", filename.endswith(".pyasm"))
+    is_pyasm = opts.get("is_pyasm", is_python_assembly_file(filename))
     lines = getlines(filename, opts, is_pyasm=is_pyasm)
-    if is_pyasm:
-        if opts.get("output") != "plain":
-            lines = getlines(filename, {"output": "plain"}, is_pyasm=is_pyasm)
-        if lines is None:
-            return ""
-
-        line = None
-        if not (remap_line_entries := file2file_remap_lines.get(filename)):
-            from_to_lines = compute_pyasm_line_mapping(lines)
-            remap_file_lines(filename, filename, from_to_lines)
-            remap_line_entries = file2file_remap_lines.get(filename)
-        if remap_line_entries:
-            from_to_lines = remap_line_entries.from_to_pairs
-            line_max = len(lines)
-            # FIXME: use binary search
-            # Note we assume assume from_line is increasing.
-            # Add sentinel at end of from pairs to handle using the final
-            # entry for line numbers greater than it.
-            # Find the closest mapped line number equal or before line_number.
-            for t in remap_line_entries.from_to_pairs + ((large_int, line_max),):
-                if t[0] == line_number:
-                    line = lines[t[1]]
-                    break
-
-        fmt = opts.get("output", "plain")
-        if line is None:
-            return ""
-        if fmt == "plain":
-            return line
-        else:
-            return highlight_string(line, fmt, lexer=pyasm_lexer)
-
-    elif lines and line_number >= 1 and line_number <= maxline(filename):
+    if lines and line_number >= 1 and line_number <= maxline(filename):
         filename, line_number = unmap_file_line(filename, line_number)
         line = lines[line_number - 1]
         if get_option("strip_nl", opts):
@@ -498,7 +532,7 @@ def getlines(filename, opts=default_opts, is_pyasm: Optional[bool] = None):
     highlight_opts = {"bg": fmt}
 
     if is_pyasm is None:
-        is_pyasm = filename.endswith(".pyasm")
+        is_pyasm = is_python_assembly_file(filename)
 
     # Set list style based on "style" option passed
     # if no style given use "monokai" for dark backgrounds,
@@ -644,7 +678,7 @@ def sha1(filename):
     return sha1.hexdigest()
 
 
-def size(filename, use_cache_only=False):
+def size(filename, use_cache_only=False) -> Optional[int]:
     """Return the number of lines in filename. If `use_cache_only' is False,
     we'll try to fetch the file if it is not cached."""
     filename = unmap_file(filename)
@@ -654,6 +688,11 @@ def size(filename, use_cache_only=False):
         if filename not in file_cache:
             return None
         pass
+    if filename in pyasm_files or is_python_assembly_file(filename):
+        lines = getlines(filename, opts={}, is_pyasm=True)
+        from_to_lines = compute_pyasm_line_mapping(lines)
+        remap_file_lines(filename, filename, from_to_lines)
+        return max([line for line, offset in from_to_lines])
     return len(file_cache[filename].lines["plain"])
 
 
