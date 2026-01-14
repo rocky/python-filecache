@@ -482,14 +482,16 @@ def get_pyasm_line(
         pyasm_line_index = location
         line = lines[pyasm_line_index]
 
-    fmt = opts.get("output", "plain")
+    fmt = opts.get("style", "plain")
     if line is None:
         return None, -1
-    if fmt == "plain":
-        return line, pyasm_line_index
-    else:
-        return highlight_string(line, fmt, lexer=pyasm_lexer), pyasm_line_index
-    return
+
+    if fmt != "plain":
+        line = highlight_string(line, fmt, lexer=pyasm_lexer)
+
+    if get_option("strip_nl", opts):
+        line = line.rstrip("\n")
+    return line, pyasm_line_index
 
 
 def getline(file_or_script: str, line_number: int, opts=default_opts):

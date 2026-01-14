@@ -240,6 +240,7 @@ class PyasmLexer(RegexLexer):
                         "MATCH_MAPPING",
                         "MATCH_SEQUENCE",
                         "NOP",
+                        "NOT_TAKEN",
                         "POP_BLOCK",
                         "POP_EXCEPT",
                         "POP_FINALLY",
