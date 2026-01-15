@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#  Copyright (C) 2015, 2018, 2020, 2023-2024 Rocky Bernstein <rocky@gnu.org>
+#  Copyright (C) 2015, 2018, 2020, 2023-2024, 2026 Rocky Bernstein <rocky@gnu.org>
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
 #  the Free Software Foundation, either version 3 of the License, or
@@ -118,6 +118,7 @@ from pyficache.main import (
     light_terminal_formatter,
     maxline,
     path,
+    pyasm_lexer,
     remap_file,
     remap_file_lines,
     remap_file_pat,
@@ -169,6 +170,7 @@ __all__ = [
     "light_terminal_formatter",
     "maxline",
     "path",
+    "pyasm_lexer",
     "remap_file",
     "remap_file_lines",
     "remap_file_pat",

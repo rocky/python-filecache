@@ -226,6 +226,7 @@ class PyasmLexer(RegexLexer):
                         "LOAD_METHOD",
                         "LOAD_NAME",
                         "LOAD_REVDB_VAR",
+                        "LOAD_SMALL_INT",
                         "LOAD_SUPER_ATTR",
                         "LOAD_SUPER_METHOD",
                         "LOAD_ZERO_SUPER_ATTR",

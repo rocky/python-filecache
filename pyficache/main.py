@@ -531,7 +531,7 @@ def getlines(filename, opts=default_opts, is_pyasm: Optional[bool] = None):
         cs = "plain"
     else:
         cs = opts.get("style")
-    highlight_opts = {"bg": fmt}
+    highlight_opts = {}
 
     if is_pyasm is None:
         is_pyasm = is_python_assembly_file(filename)
@@ -562,8 +562,8 @@ def getlines(filename, opts=default_opts, is_pyasm: Optional[bool] = None):
     return lines[fmt]
 
 
-def highlight_array(array, trailing_nl=True, bg="light", **options):
-    fmt_array = highlight_string("".join(array), bg, **options).split("\n")
+def highlight_array(array, trailing_nl=True, **options):
+    fmt_array = highlight_string("".join(array), **options).split("\n")
     lines = [line + "\n" for line in fmt_array]
     if not trailing_nl:
         lines[-1] = lines[-1].rstrip("\n")
@@ -580,18 +580,19 @@ light_terminal_formatter = TerminalFormatter(bg="light")
 terminal_256_formatter = Terminal256Formatter()
 
 
-def highlight_string(string, bg="light", **options) -> str:
+def highlight_string(string, **options) -> str:
     global terminal_256_formatter
     if "lexer" in options:
         lexer = options.pop("lexer")
     else:
         lexer = python_lexer
+    bg = options.get("bg", "light")
     if options.get("style"):
         if terminal_256_formatter.style != options["style"]:
             terminal_256_formatter = Terminal256Formatter(style=options["style"])
             del options["style"]
         return highlight(string, lexer, terminal_256_formatter, **options)
-    elif "light" == bg:
+    elif bg and bg == "light":
         return highlight(string, lexer, light_terminal_formatter, **options)
     else:
         return highlight(string, lexer, dark_terminal_formatter, **options)
@@ -1135,9 +1136,12 @@ if __name__ == "__main__":
         file_path = __file__
 
     filename = "../test/seven-313.pyasm"
-    line_number = 2
-    line = getline(filename, line_number)
 
+    line_number = 2
+    line, remapped_line_number = get_pyasm_line(
+        filename, line_number, is_source_line=True
+    )
+    print(highlight_string(line, lexer=pyasm_lexer, style="colorful"))
     print(f"line {line_number} of {filename} is:\n", line)
     update_cache(file_path)
     checkcache(file_path)
