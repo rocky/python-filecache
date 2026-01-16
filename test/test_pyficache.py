@@ -170,7 +170,6 @@ class TestPyFiCache:
         expected = {4, 6, 8, 9}
         assert expected == pyficache.trace_line_numbers(test_file)
 
-
     def test_sha1(self):
         test_file = osp.join(TEST_DIR, "short-file")
         assert pyficache.sha1(test_file) == "1134f95ea84a3dcc67d7d1bf41390ee1a03af6d2"

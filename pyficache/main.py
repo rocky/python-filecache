@@ -1158,7 +1158,6 @@ if __name__ == "__main__":
         print(mod, ":", code)
     print("=" * 30)
 
-
     # print("%s is %scached." % (file_path, yes_no(is_cached(file_path))))
     # print(stat(file_path))
     # print("Full path: %s" % path(file_path))
