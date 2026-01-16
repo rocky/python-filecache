@@ -11,4 +11,4 @@ def test_remap():
     line, pyasm_line_index = get_pyasm_line(pyasm_path, location=2, is_source_line=True)
     expected_line2 = "  2:           2 |67 01| RETURN_CONST         (7)"
     assert line == expected_line2
-    assert pyasm_line_index == 60
+    assert pyasm_line_index == 61

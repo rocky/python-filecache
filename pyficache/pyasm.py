@@ -3,7 +3,7 @@ Lexer for Python Disassembler Pyasm
 """
 
 import re
-from typing import List, Tuple
+from typing import Dict, List, Tuple
 
 from pygments.lexer import (
     RegexLexer,
@@ -373,20 +373,55 @@ class PyasmLexer(RegexLexer):
             return True
 
 
-def compute_pyasm_line_mapping(pyasm_lines: List[str]) -> Tuple[Tuple[int, int]]:
+def compute_pyasm_line_mapping(
+    pyasm_lines: List[str],
+) -> Tuple[Tuple[Tuple[int, int]], Dict[Tuple[int, int], int]]:
     r"""
-    Build a from_to remapping tuple for lines indicated by
-    line marks inside pyasm_lines. These are line that start with
+    Build and return two mappings.
+
+    The mapping is remapping tuple for lines indicated by
+    line marks inside pyasm_lines. These are pyasm lines that start with
        ^\s+\d+:
-    For example:
+    For example assuming the next line of the pyasm file is line 10:
         0:           0 |97 00| RESUME               0
         4:           2 |64 00| LOAD_CONST           ("a") ; TOS = "a"
     ^^^^^
 
+    will produce:
+    ((0, 10), (11, 4))
+
+    The second mapping gives the pyasm line for a given Python source line and byte offset:
+    For the above we would get:
+    {(0, 0): 10, (4, 2): 11}
+      l1,o : l2   l1,o : l2
     """
     from_to_pairs = []
+    line_offset_to_remapped_line = {}
+    line_number = -1
     for i, line in enumerate(pyasm_lines):
-        if match := re.match(r"^\s+(\d+):", line):
-            from_to_pairs.append((int(match.group(1)), i))
+        if line.startswith("#"):
+            continue
+        if line_match := re.match(r"^\s+(\d+):", line):
+            line_match_str = line_match.group(1)
+            line_number = int(line_match_str)
+            # enumerate() is 0 origin, but lines are 1 origin
+            from_to_pairs.append((line_number, i + 1))
+            line = line[line_match.span()[-1] :]
+        if offset_match := re.match(r"\s+(\d+) (:?[|][0-9a-fA-F ]+[|] )?[A-Z]+", line):
+            offset = int(offset_match.group(1))
+            # enumerate() is 0 origin, but lines are 1 origin
+            line_offset_to_remapped_line[line_number, offset] = i + 1
+    return (tuple(from_to_pairs), line_offset_to_remapped_line)
 
-    return tuple(from_to_pairs)
+
+# example usage
+if __name__ == "__main__":
+    path = "../test/seven-313.pyasm"
+    # path = "/tmp/00_chained-compare.cpython-314_y4l6el8b.pyasm"
+    from_to_pairs, line_offset_to_remapped_line = compute_pyasm_line_mapping(
+        open(path).readlines()
+    )
+    from pprint import pp
+
+    pp(from_to_pairs)
+    pp(line_offset_to_remapped_line)

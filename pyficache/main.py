@@ -438,7 +438,11 @@ def is_python_assembly_file(filename: str) -> bool:
 
 # FIXME: add approximate flag.
 def get_pyasm_line(
-    filepath: str, location: int, is_source_line: bool, opts=default_opts
+    filepath: str,
+    location: int,
+    is_source_line: bool,
+    offset: int = -1,
+    opts=default_opts,
 ) -> tuple:
     """
     Get a line from a python assembly file. If `is_source_line` is True, then we need to look
@@ -454,25 +458,31 @@ def get_pyasm_line(
 
     if is_source_line:
         line = None
-        if not (remap_line_entries := file2file_remap_lines.get(filename)):
-            from_to_lines = compute_pyasm_line_mapping(lines)
-            remap_file_lines(filename, filename, from_to_lines)
-            remap_line_entries = file2file_remap_lines.get(filename)
+        from_to_lines, line_offset_to_remapped_line = compute_pyasm_line_mapping(lines)
+        remap_file_lines(filename, filename, from_to_lines)
+        remap_line_entries = file2file_remap_lines.get(filename)
         if remap_line_entries:
             from_to_lines = remap_line_entries.from_to_pairs
-            line_max = len(lines)
-            # FIXME: use binary search
-            # Note we assume assume from_line is increasing.
-            # Add sentinel at end of from pairs to handle using the final
-            # entry for line numbers greater than it.
-            # Find the closest mapped line number equal or before line_number.
-            for python_line, try_pyasm_index in remap_line_entries.from_to_pairs + (
-                (large_int, line_max),
+            if offset >= 0 and (
+                pyasm_line_index := line_offset_to_remapped_line.get((location, offset))
             ):
-                if python_line == location:
-                    pyasm_line_index = try_pyasm_index
-                    line = lines[pyasm_line_index]
-                    break
+                line = lines[pyasm_line_index - 1]
+
+            if line is None:
+                line_max = len(lines)
+                # FIXME: use binary search
+                # Note we assume assume from_line is increasing.
+                # Add sentinel at end of from pairs to handle using the final
+                # entry for line numbers greater than it.
+                # Find the closest mapped line number equal or before line_number.
+                for python_line, try_pyasm_index in remap_line_entries.from_to_pairs + (
+                    (large_int, line_max),
+                ):
+                    if python_line == location:
+                        pyasm_line_index = try_pyasm_index
+                        line = lines[pyasm_line_index - 1]
+                        break
+                    pass
                 pass
             pass
         pass
@@ -693,7 +703,7 @@ def size(filename, use_cache_only=False) -> Optional[int]:
         pass
     if filename in pyasm_files or is_python_assembly_file(filename):
         lines = getlines(filename, opts={}, is_pyasm=True)
-        from_to_lines = compute_pyasm_line_mapping(lines)
+        from_to_lines, _ = compute_pyasm_line_mapping(lines)
         remap_file_lines(filename, filename, from_to_lines)
         return max([line for line, offset in from_to_lines])
     return len(file_cache[filename].lines["plain"])
