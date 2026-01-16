@@ -12,7 +12,7 @@ import sys
 from tempfile import mkstemp
 
 import pytest
-from xdis.version_info import PYTHON3, PYTHON_VERSION_TRIPLE
+from xdis.version_info import IS_GRAAL, PYTHON3, PYTHON_VERSION_TRIPLE
 
 import pyficache
 from pyficache import PYVER
@@ -167,7 +167,7 @@ class TestPyFiCache:
             assert set([start_lineno]) == line_nums
 
         test_file = osp.join(TEST_DIR, "devious.py")
-        expected = {0, 2, 5, 7, 9}
+        expected = {2, 5, 6, 7, 9} if IS_GRAAL else {0, 2, 5, 7, 9}
         assert expected == pyficache.trace_line_numbers(test_file)
 
     def test_sha1(self):
