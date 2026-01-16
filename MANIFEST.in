@@ -2,6 +2,6 @@ include Makefile
 include NEWS.md
 include __pkginfo__.py
 recursive-include pyficache *.py
-recursive-include test test-pyficache.py
+recursive-include test test_pyficache.py
 recursive-include test devious.py
 recursive-include test short-file
