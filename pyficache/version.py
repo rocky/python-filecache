@@ -5,4 +5,4 @@
 # package version number.
 
 # fmt: off
-__version__="2.5.1.dev0"  # noqa
+__version__="2.6.0.dev0"  # noqa
