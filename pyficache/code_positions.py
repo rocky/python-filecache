@@ -70,7 +70,7 @@ def update_code_position_cache(filename: str) -> Dict[int, list]:
 def code_loop_for_positions(
     code: CodeType,
 ) -> Dict[int, list]:
-    """Loops over all code objects found within the constant section of `code` returnin the
+    """Loops over all code objects found within the constant section of `code` returning the
     information described in populate_code_position_cache() above and updating code_position_cache.
     """
 
@@ -91,16 +91,7 @@ def code_loop_for_positions(
         # First, process code.co_lines()...
         for start_offset, _, lineno in code.co_lines():
             if start_offset in offset_line_dict:
-                # A start offset of 0 means that this code is at the
-                # beginning of some module, method or function. This
-                # is one place where it is possible for a line number
-                # alone to be ambiguous about the scoping
-                # level. Therefore, add in the code's qualified name,
-                # co_qualname
-                if start_offset == 0:
-                    line_info[lineno].append(code)
-                else:
-                    line_info[lineno].append(start_offset)
+                line_info[lineno].append((code, start_offset))
 
         lineno_and_offset = {}
         lineno_and_start_column = {}
@@ -146,11 +137,17 @@ def code_loop_for_positions(
 
 
 if __name__ == "__main__":
-    from pprint import pp, pformat
+    from pprint import pformat
 
     lineno_info = update_code_position_cache(__file__)
 
-    pp(lineno_info)
+    for line_number, offset_pairs in lineno_info.items():
+        print(f"line #: {line_number}")
+        print(
+            "  "
+            + ", ".join([f"{code.co_name}: {offset}" for code, offset in offset_pairs])
+        )
+        print()
 
     for code, code_position_info in code_position_cache.items():
         print("=" * 30)

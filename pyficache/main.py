@@ -171,9 +171,8 @@ class LineCacheInfo:
 
     code_map: a dictionary mapping the name (co_name) of a file to its code object.
 
-    line_info: a dictionary mapping line number in a file to its
-          offsets in a code object.
-          When the code offset is 0, the code object is stored.
+    line_info: a dictionary mapping line number in a file to a list of
+          code object and offsets pairs.
 
     linestarts: a dictionary mapping a bytecode offset to a source line number
 
@@ -188,7 +187,7 @@ class LineCacheInfo:
 
     code_map: Dict[str, CodeType] = field(default_factory=dict)
     eols: Optional[Any] = None
-    line_info: Optional[Dict[int, List[Tuple[int, CodeType]]]] = None
+    line_info: Optional[Dict[int, List[Tuple[CodeType, int]]]] = None
     line_numbers: Optional[Dict[int, Any]] = None
     lines: Dict[str, List[str]] = field(default_factory=dict)
     linestarts: Optional[Dict[int, Any]] = None
@@ -774,10 +773,11 @@ def get_linecache_info(
     linecache_info = file_cache[filename]
     if not linecache_info.line_numbers:
         linecache_info.line_numbers = code_linenumbers_in_file(fullname)
-        linecache_info.lineno_info = update_code_position_cache(fullname)
         code_info = lineoffsets_in_file(fullname)
         linecache_info.code_map = code_info.code_map
         pass
+    if not linecache_info.line_info:
+        linecache_info.line_info = update_code_position_cache(fullname)
     return linecache_info
 
 
