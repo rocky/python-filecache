@@ -757,9 +757,9 @@ def trace_line_numbers(filename: str, reload_on_change=False):
     linecache_info = file_cache[filename]
     if not linecache_info.line_numbers:
         linecache_info.line_numbers = code_linenumbers_in_file(fullname)
-        lineno_info = update_code_position_cache(fullname)
-        linecache_info.lineno_info = lineno_info
         pass
+    if not linecache_info.line_info:
+        linecache_info.line_info = update_code_position_cache(fullname)
     return linecache_info.line_numbers
 
 
