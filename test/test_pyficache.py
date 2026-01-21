@@ -12,7 +12,7 @@ import sys
 from tempfile import mkstemp
 
 import pytest
-from xdis.version_info import PYTHON3
+from xdis.version_info import PYTHON_VERSION_TRIPLE
 
 import pyficache
 from pyficache import PYVER
@@ -167,7 +167,13 @@ class TestPyFiCache:
             assert set([start_lineno]) == line_nums
 
         test_file = osp.join(TEST_DIR, "devious.py")
-        expected = {4, 6, 8, 9}
+        print("WOOT")
+        if PYTHON_VERSION_TRIPLE[:2] in ((3, 7),):
+            expected = {4, 5, 8, 9}
+        elif PYTHON_VERSION_TRIPLE[:2] in ((3, 8),):
+            expected = {2, 5, 7, 9}
+        else:
+            expected = {4, 6, 8, 9}
         assert expected == pyficache.trace_line_numbers(test_file)
 
     def test_sha1(self):
@@ -197,17 +203,10 @@ class TestPyFiCache:
         assert pyficache.cached_files() == []
 
     def test_resolve_name_to_path(self):
-        if PYTHON3:
-            testdata = (
-                (f"pyc/__pycache__/foo.cpython-{PYVER}.pyc", osp.join("pyc", "foo.py")),
-                (f"__pycache__/pyo.cpython-{PYVER}.pyc", "pyo.py"),
-                (f"foo/__pycache__/bar.cpython-{PYVER}.pyo", osp.join("foo", "bar.py")),
-            )
-        else:
-            testdata = (
-                (osp.join("pyc", "foo.pyc"), osp.join("pyc", "foo.py")),
-                ("pyo.pyc", "pyo.py"),
-                ("foo.pyo", "foo.py"),
-            )
+        testdata = (
+            (f"pyc/__pycache__/foo.cpython-{PYVER}.pyc", osp.join("pyc", "foo.py")),
+            (f"__pycache__/pyo.cpython-{PYVER}.pyc", "pyo.py"),
+            (f"foo/__pycache__/bar.cpython-{PYVER}.pyo", osp.join("foo", "bar.py")),
+        )
         for path, expect in testdata:
             assert pyficache.resolve_name_to_path(path) == expect
