@@ -73,6 +73,7 @@ from term_background import is_dark_background
 from xdis.lineoffsets import lineoffsets_in_file
 from xdis.version_info import PYTHON3
 
+from pyficache.code_positions import update_code_position_cache
 from pyficache.line_numbers import code_linenumbers_in_file
 from pyficache.pyasm import PyasmLexer, compute_pyasm_line_mapping
 
@@ -461,11 +462,12 @@ def get_pyasm_line(
         remap_line_entries = file2file_remap_lines.get(filename)
         if remap_line_entries:
             from_to_lines = remap_line_entries.from_to_pairs
-            if offset >= 0 and (
-                pyasm_line_index := line_offset_to_remapped_line.get((location, offset))
-            ):
-                line = lines[pyasm_line_index - 1]
-
+            if offset >= 0:
+                pyasm_line_index = line_offset_to_remapped_line.get((location, offset))
+                if pyasm_line_index:
+                    line = lines[pyasm_line_index - 1]
+                    pass
+                pass
             if line is None:
                 line_max = len(lines)
                 # FIXME: use binary search
@@ -757,8 +759,6 @@ def trace_line_numbers(filename: str, reload_on_change=False):
     if not linecache_info.line_numbers:
         linecache_info.line_numbers = code_linenumbers_in_file(fullname)
         pass
-    if not linecache_info.line_info:
-        linecache_info.line_info = update_code_position_cache(fullname)
     return linecache_info.line_numbers
 
 
@@ -771,6 +771,7 @@ def get_linecache_info(
         return None
     linecache_info = file_cache[filename]
     if not linecache_info.line_numbers:
+        linecache_info.line_numbers = code_linenumbers_in_file(fullname)
         code_info = lineoffsets_in_file(fullname)
         linecache_info.code_map = code_info.code_map
         pass

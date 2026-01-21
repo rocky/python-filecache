@@ -401,18 +401,19 @@ def compute_pyasm_line_mapping(
     for i, line in enumerate(pyasm_lines):
         if line.startswith("#"):
             continue
-        if line_match := re.match(r"^\s+(\d+):", line):
+        line_match = re.match(r"^\s+(\d+):", line)
+        if line_match:
             line_match_str = line_match.group(1)
             line_number = int(line_match_str)
             # enumerate() is 0 origin, but lines are 1 origin
             from_to_pairs.append((line_number, i + 1))
             line = line[line_match.span()[-1] :]
-        if offset_match := re.match(r"\s+(\d+) (:?[|][0-9a-fA-F ]+[|] )?[A-Z]+", line):
+        offset_match = re.match(r"\s+(\d+) (:?[|][0-9a-fA-F ]+[|] )?[A-Z]+", line)
+        if offset_match:
             offset = int(offset_match.group(1))
             # enumerate() is 0 origin, but lines are 1 origin
             line_offset_to_remapped_line[line_number, offset] = i + 1
     return (tuple(from_to_pairs), line_offset_to_remapped_line)
->>>>>>> master
 
 
 # example usage
@@ -422,7 +423,7 @@ if __name__ == "__main__":
     from_to_pairs, line_offset_to_remapped_line = compute_pyasm_line_mapping(
         open(path).readlines()
     )
-    from pprint import pp
+    from pprint import pprint
 
-    pp(from_to_pairs)
-    pp(line_offset_to_remapped_line)
+    pprint(from_to_pairs)
+    pprint(line_offset_to_remapped_line)

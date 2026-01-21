@@ -83,6 +83,11 @@ __docformat__ = "restructuredtext"
 
 # Export some functions
 from pyficache.pyasm import PyasmLexer
+from pyficache.code_positions import (
+    code_loop_for_positions,
+    code_position_cache,
+    update_code_position_cache,
+)
 
 from pyficache.main import (
     PYVER,
@@ -146,7 +151,9 @@ __all__ = [
     "clear_file_format_cache",
     "code_line_info",
     "code_lines",
+    "code_loop_for_positions",
     "code_offset_info",
+    "code_position_cache",
     "dark_terminal_formatter",
     "file_cache",
     "file2file_remap",
@@ -178,5 +185,6 @@ __all__ = [
     "unmap_file",
     "unmap_file_line",
     "update_cache",
+    "update_code_position_cache",
     "update_script_cache",
 ]
