@@ -1037,12 +1037,15 @@ def update_cache(filename, opts=default_opts, module_globals=None):
                     raw_string.split("\n"), trailing_nl, **highlight_opts
                 )
                 file_cache[filename] = LineCacheInfo(
-                    stat=None,
-                    lines=lines,
+                    code_map={},
+                    eols=None,
                     line_info=None,
+                    line_numbers=None,
+                    lines=lines,
                     linestarts=None,
                     path=filename,
                     sha1=None,
+                    stat=None,
                 )
                 file2file_remap[path] = filename
                 return True
@@ -1104,7 +1107,7 @@ def update_cache(filename, opts=default_opts, module_globals=None):
 
 # example usage
 if __name__ == "__main__":
-    from pprint import pprint, pformat
+    # from pprint import pprint, pformat
 
     z = lambda x, y: x + y
 

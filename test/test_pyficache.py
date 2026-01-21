@@ -167,10 +167,9 @@ class TestPyFiCache:
             assert set([start_lineno]) == line_nums
 
         test_file = osp.join(TEST_DIR, "devious.py")
-        print("WOOT")
         if PYTHON_VERSION_TRIPLE[:2] in ((3, 7),):
             expected = {4, 5, 8, 9}
-        elif PYTHON_VERSION_TRIPLE[:2] in ((3, 8),):
+        elif (3, 8) <= PYTHON_VERSION_TRIPLE[:2] <= (3, 10):
             expected = {2, 5, 7, 9}
         else:
             expected = {4, 6, 8, 9}
