@@ -61,10 +61,9 @@ import os.path as osp
 import re
 import sys
 from collections import namedtuple
-from dataclasses import dataclass, field
 from importlib.util import find_spec, source_from_cache
 from types import CodeType
-from typing import Any, Dict, List, Optional, Set, Tuple
+from typing import Dict, List, Optional, Set
 
 from pygments import highlight
 from pygments.formatters import Terminal256Formatter, TerminalFormatter
@@ -163,7 +162,6 @@ def resolve_name_to_path(path_or_name: str) -> str:
     return path_or_name
 
 
-@dataclass
 class LineCacheInfo:
     """Container for cached file info.
 
@@ -185,15 +183,27 @@ class LineCacheInfo:
     stat: file system OS stat object, i.e. result of calling os.stat().
     """
 
-    code_map: Dict[str, CodeType] = field(default_factory=dict)
-    eols: Optional[Any] = None
-    line_info: Optional[Dict[int, List[Tuple[CodeType, int]]]] = None
-    line_numbers: Optional[Dict[int, Any]] = None
-    lines: Dict[str, List[str]] = field(default_factory=dict)
-    linestarts: Optional[Dict[int, Any]] = None
-    path: str = ""
-    sha1: Optional[Any] = None
-    stat: Optional[os.stat_result] = None
+    def __init__(
+        self,
+        code_map,
+        eols,
+        line_info,
+        line_numbers,
+        lines,
+        linestarts,
+        path="",
+        sha1=None,
+        stat=None,
+    ):
+        self.code_map = code_map
+        self.eols = (eols,)
+        self.line_info = line_info
+        self.line_numbers = line_numbers
+        self.lines = lines
+        self.linestarts = linestarts
+        self.path = path
+        self.sha1 = sha1
+        self.stat = stat
 
 
 # The file cache. The key is a name as would be given by co_filename
@@ -977,6 +987,7 @@ def update_cache(filename, opts=default_opts, module_globals=None):
                     }
                     file_cache[filename] = LineCacheInfo(
                         line_numbers=None,
+                        line_info=None,
                         lines=lines,
                         linestarts=None,
                         path=path,
@@ -1026,7 +1037,12 @@ def update_cache(filename, opts=default_opts, module_globals=None):
                     raw_string.split("\n"), trailing_nl, **highlight_opts
                 )
                 file_cache[filename] = LineCacheInfo(
-                    stat=None, lines=lines, linestarts=None, path=filename, sha1=None
+                    stat=None,
+                    lines=lines,
+                    line_info=None,
+                    linestarts=None,
+                    path=filename,
+                    sha1=None,
                 )
                 file2file_remap[path] = filename
                 return True
@@ -1074,6 +1090,7 @@ def update_cache(filename, opts=default_opts, module_globals=None):
     file_cache[filename] = LineCacheInfo(
         code_map={},
         eols=eols,
+        line_info=None,
         line_numbers=None,
         lines=lines,
         linestarts=None,

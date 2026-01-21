@@ -16,7 +16,6 @@
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from collections import defaultdict
-from dataclasses import dataclass
 
 from types import CodeType
 from typing import Dict, Optional
@@ -25,7 +24,6 @@ from xdis import iscode, load_file, findlinestarts
 from collections import deque
 
 
-@dataclass
 class CodePositionInfo:
     """
     lineno_and_offset: A dictionary mapping line and code offset numbers into a pair of
@@ -37,6 +35,10 @@ class CodePositionInfo:
 
     lineno_and_offset = None
     parent = None
+
+    def __init__(self, lineno_and_offset=None, parent=None):
+        self.lineno_and_offset = lineno_and_offset
+        self.parent = parent
 
 
 # A cache of source-code position and code offset information keyed by a Python code object.
