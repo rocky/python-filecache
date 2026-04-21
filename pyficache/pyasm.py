@@ -225,6 +225,7 @@ class PyasmLexer(RegexLexer):
                         "LOAD_METHOD",
                         "LOAD_NAME",
                         "LOAD_REVDB_VAR",
+                        "LOAD_SMALL_INT",
                         "LOAD_SUPER_ATTR",
                         "LOAD_SUPER_METHOD",
                         "LOAD_ZERO_SUPER_ATTR",
@@ -239,6 +240,7 @@ class PyasmLexer(RegexLexer):
                         "MATCH_MAPPING",
                         "MATCH_SEQUENCE",
                         "NOP",
+                        "NOT_TAKEN",
                         "POP_BLOCK",
                         "POP_EXCEPT",
                         "POP_FINALLY",
@@ -372,19 +374,53 @@ class PyasmLexer(RegexLexer):
 
 def compute_pyasm_line_mapping(pyasm_lines: list) -> tuple:
     r"""
-    Build a from_to remapping tuple for lines indicated by
-    line marks inside pyasm_lines. These are line that start with
+    Build and return two mappings.
+
+    The mapping is remapping tuple for lines indicated by
+    line marks inside pyasm_lines. These are pyasm lines that start with
        ^\s+\d+:
-    For example:
+    For example assuming the next line of the pyasm file is line 10:
         0:           0 |97 00| RESUME               0
         4:           2 |64 00| LOAD_CONST           ("a") ; TOS = "a"
     ^^^^^
 
+    will produce:
+    ((0, 10), (11, 4))
+
+    The second mapping gives the pyasm line for a given Python source line and byte offset:
+    For the above we would get:
+    {(0, 0): 10, (4, 2): 11}
+      l1,o : l2   l1,o : l2
     """
     from_to_pairs = []
+    line_offset_to_remapped_line = {}
+    line_number = -1
     for i, line in enumerate(pyasm_lines):
-        match = re.match(r"^\s+(\d+):", line)
-        if match:
-            from_to_pairs.append((int(match.group(1)), i))
+        if line.startswith("#"):
+            continue
+        line_match = re.match(r"^\s+(\d+):", line)
+        if line_match:
+            line_match_str = line_match.group(1)
+            line_number = int(line_match_str)
+            # enumerate() is 0 origin, but lines are 1 origin
+            from_to_pairs.append((line_number, i + 1))
+            line = line[line_match.span()[-1] :]
+        offset_match = re.match(r"\s+(\d+) (:?[|][0-9a-fA-F ]+[|] )?[A-Z]+", line)
+        if offset_match:
+            offset = int(offset_match.group(1))
+            # enumerate() is 0 origin, but lines are 1 origin
+            line_offset_to_remapped_line[line_number, offset] = i + 1
+    return (tuple(from_to_pairs), line_offset_to_remapped_line)
 
-    return tuple(from_to_pairs)
+
+# example usage
+if __name__ == "__main__":
+    path = "../test/seven-313.pyasm"
+    # path = "/tmp/00_chained-compare.cpython-314_y4l6el8b.pyasm"
+    from_to_pairs, line_offset_to_remapped_line = compute_pyasm_line_mapping(
+        open(path).readlines()
+    )
+    from pprint import pprint
+
+    pprint(from_to_pairs)
+    pprint(line_offset_to_remapped_line)
