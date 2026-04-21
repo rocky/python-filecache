@@ -68,10 +68,11 @@ class TestPyFiCache:
         os.chdir(osp.dirname(osp.abspath((__file__))))
         short_file = osp.basename(__file__)
         test_line = 10
-        line = pyficache.getline(short_file, test_line, {"strip_nl": False})
+        line = pyficache.getline(short_file, test_line)
         assert (
-            compare_lines[test_line - 1] == line
+            compare_lines[test_line - 1] == line + "\n"
         ), f"Short filename lookup on {short_file} should work"
+
         os.chdir(old_dir)
 
         # Write a temporary file; read contents, rewrite it and check that
@@ -187,8 +188,8 @@ class TestPyFiCache:
         assert pyficache.stat(__file__), f"file {__file__} should now have a stat"
 
     def test_update_cache(self):
-        assert pyficache.update_cache("foo") is False
-        assert pyficache.update_cache(__file__) is True
+        assert not pyficache.update_cache("foo")
+        assert pyficache.update_cache(__file__)
 
     def test_clear_file_cache(self):
         pyficache.update_cache(__file__)
