@@ -10,8 +10,6 @@ import os.path as osp
 import sys
 from tempfile import mkstemp
 
-import pytest
-
 import pyficache
 from pyficache import PYVER
 
@@ -23,16 +21,17 @@ if top_builddir[-1] != osp.sep:
 sys.path.insert(0, top_builddir)
 
 
-@pytest.fixture(autouse=True)
-def clear_file_cache():
-    # runs before each test
-    pyficache.clear_file_cache()
-    yield
-    # no teardown actions required
+# @pytest.fixture(autouse=True)
+# def clear_file_cache():
+#     # runs before each test
+#     pyficache.clear_file_cache()
+#     yield
+#     # no teardown actions required
 
 
 class TestPyFiCache:
     def test_basic(self):
+        pyficache.clear_file_cache()
         filename = __file__
         if ".pyc" == filename[-4:]:
             filename = filename[:-1]
@@ -100,6 +99,7 @@ class TestPyFiCache:
             pass
 
     def test_cached(self):
+        pyficache.clear_file_cache()
         myfile = __file__
         assert pyficache.is_cached(myfile) is False, (
             "file %s shouldn't be cached - just cleared cache." % myfile
@@ -147,6 +147,7 @@ class TestPyFiCache:
     #     assert line7 == rline11, "lines should be the same via remap_file_line - range"
 
     def test_path(self):
+        pyficache.clear_file_cache()
         assert pyficache.path(__file__) is None, (
             "path for %s should be None - just cleared cache." % __file__
         )
@@ -154,6 +155,7 @@ class TestPyFiCache:
         assert path, "should have cached path for %s" % __file__
 
     def test_trace_line_numbers(self):
+        pyficache.clear_file_cache()
         test_file = osp.join(TEST_DIR, "short-file")
         line_nums = pyficache.trace_line_numbers(test_file)
         assert line_nums is not None, "expected to get line numbers from pyficache"
@@ -168,14 +170,17 @@ class TestPyFiCache:
         assert expected == pyficache.trace_line_numbers(test_file)
 
     def test_sha1(self):
+        pyficache.clear_file_cache()
         test_file = osp.join(TEST_DIR, "short-file")
         assert pyficache.sha1(test_file) == "1134f95ea84a3dcc67d7d1bf41390ee1a03af6d2"
 
     def test_size(self):
+        pyficache.clear_file_cache()
         test_file = osp.join(TEST_DIR, "short-file")
         assert pyficache.size(test_file) == 2
 
     def test_stat(self):
+        pyficache.clear_file_cache()
         assert pyficache.stat(__file__, use_cache_only=True) is None, (
             "stat for %s should be None - just cleared cache." % __file__
         )
@@ -184,16 +189,19 @@ class TestPyFiCache:
         assert pyficache.stat(__file__), "file %s should now have a stat" % __file__
 
     def test_update_cache(self):
+        pyficache.clear_file_cache()
         assert not pyficache.update_cache("foo")
         assert pyficache.update_cache(__file__)
 
     def test_clear_file_cache(self):
+        pyficache.clear_file_cache()
         pyficache.update_cache(__file__)
         pyficache.clear_file_format_cache()
         pyficache.clear_file_cache()
         assert pyficache.cached_files() == []
 
     def test_resolve_name_to_path(self):
+        pyficache.clear_file_cache()
         testdata = (
             (
                 "pyc/__pycache__/foo.cpython-%s.pyc" % PYVER,
