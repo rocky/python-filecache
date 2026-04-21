@@ -4,17 +4,8 @@ Lexer for Python Disassembler Pyasm
 
 import re
 
-from pygments.lexer import (
-    RegexLexer,
-    include,
-    words,
-)
-from pygments.token import (
-    Comment,
-    Keyword,
-    Name,
-    Whitespace,
-)
+from pygments.lexer import RegexLexer, include, words
+from pygments.token import Comment, Keyword, Name, Whitespace
 
 
 class PyasmLexer(RegexLexer):

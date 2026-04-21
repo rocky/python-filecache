@@ -68,7 +68,6 @@ from pygments.lexers import PythonLexer
 from term_background import is_dark_background
 from xdis.lineoffsets import lineoffsets_in_file
 
-from pyficache.code_positions import update_code_position_cache
 from pyficache.line_numbers import code_linenumbers_in_file
 from pyficache.pyasm import PyasmLexer, compute_pyasm_line_mapping
 
@@ -131,7 +130,7 @@ def resolve_name_to_path(path_or_name: str) -> str:
             r"(.*)__pycache__/(.+)\.cpython-%s.py[co]$" % PYVER,
             "\\1\\2.py",
             path_or_name,
-            )
+        )
 
     # If none of the fancy things above happened
     return path_or_name
@@ -188,6 +187,7 @@ class LineCacheInfo:
         self.path = path
         self.sha1 = sha1
         self.stat = stat
+
 
 # The file cache. The key is a name as would be given by co_filename
 # or __file__.
@@ -450,17 +450,18 @@ def get_pyasm_line(
 
     if is_source_line:
         line = None
-        from_to_lines, line_offset_to_remapped_line = compute_pyasm_line_mapping(lines)
+        from_to_lines = compute_pyasm_line_mapping(lines)
         remap_file_lines(filename, filename, from_to_lines)
         remap_line_entries = file2file_remap_lines.get(filename)
         if remap_line_entries:
             from_to_lines = remap_line_entries.from_to_pairs
-            if offset >= 0:
-                pyasm_line_index = line_offset_to_remapped_line.get((location, offset))
-                if pyasm_line_index:
-                    line = lines[pyasm_line_index - 1]
-                    pass
-                pass
+            # FIXME figure out how to handle offsets in 3.5 and below
+            # if offset >= 0:
+            #     pyasm_line_index = line_offset_to_remapped_line.get((location, offset))
+            #     if pyasm_line_index:
+            #         line = lines[pyasm_line_index - 1]
+            #         pass
+            #     pass
             if line is None:
                 line_max = len(lines)
                 # FIXME: use binary search
@@ -687,7 +688,7 @@ def sha1(filename):
     return sha1.hexdigest()
 
 
-def size(filename, use_cache_only=False) -> Optional[int]:
+def size(filename, use_cache_only=False):
     """Return the number of lines in filename. If `use_cache_only' is False,
     we'll try to fetch the file if it is not cached."""
     filename = unmap_file(filename)
@@ -699,7 +700,7 @@ def size(filename, use_cache_only=False) -> Optional[int]:
         pass
     if filename in pyasm_files or is_python_assembly_file(filename):
         lines = getlines(filename, opts={}, is_pyasm=True)
-        from_to_lines, _ = compute_pyasm_line_mapping(lines)
+        from_to_lines = compute_pyasm_line_mapping(lines)
         remap_file_lines(filename, filename, from_to_lines)
         return max([line for line, offset in from_to_lines])
     return len(file_cache[filename].lines["plain"])
@@ -769,8 +770,6 @@ def get_linecache_info(filename: str, reload_on_change=False):
         code_info = lineoffsets_in_file(fullname)
         linecache_info.code_map = code_info.code_map
         pass
-    if not linecache_info.line_info:
-        linecache_info.line_info = update_code_position_cache(fullname)
     return linecache_info
 
 
@@ -948,7 +947,7 @@ def filename_readlines(filename):
     return lines, eols
 
 
-def update_cache(filename, opts=default_opts, module_globals=None) -> Optional[str]:
+def update_cache(filename, opts=default_opts, module_globals=None):
     """
     Update a file_cache entry if lines in in "filename" have changed.
     The filename is returned, or None is something went wrong.
@@ -987,7 +986,7 @@ def update_cache(filename, opts=default_opts, module_globals=None) -> Optional[s
             for filename in fname_list:
                 try:
                     stat = os.stat(filename)
-                    unstripped_lines: List[str] = linecache.getlines(filename)
+                    unstripped_lines = linecache.getlines(filename)
                     # Strip \n in Python linecache'd lines only if the line is NOT exactly "\n".
                     stripped_lines = [
                         removesuffix(line, "\n") if line != "\n" else line

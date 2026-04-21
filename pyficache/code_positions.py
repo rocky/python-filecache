@@ -15,13 +15,10 @@
 #   You should have received a copy of the GNU General Public License
 #   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from collections import defaultdict
-
+from collections import defaultdict, deque
 from types import CodeType
-from typing import Dict, Optional
 
-from xdis import iscode, load_file, findlinestarts
-from collections import deque
+from xdis import findlinestarts, iscode, load_file
 
 
 class CodePositionInfo:
@@ -42,10 +39,10 @@ class CodePositionInfo:
 
 
 # A cache of source-code position and code offset information keyed by a Python code object.
-code_position_cache: Dict[CodeType, CodePositionInfo] = {}
+code_position_cache = {}
 
 
-def update_code_position_cache(filename: str) -> Dict[int, list]:
+def update_code_position_cache(filename: str):
     """Update code_position_cache and returns a dictionary mapping line number in a file to its
     offsets in a code object.  Note for example that loops and
     conditional statements typically have more than one offset
@@ -66,12 +63,12 @@ def update_code_position_cache(filename: str) -> Dict[int, list]:
 
 def code_loop_for_positions(
     code: CodeType,
-) -> Dict[int, list]:
+):
     """Loops over all code objects found within the constant section of `code` returning the
     information described in populate_code_position_cache() above and updating code_position_cache.
     """
 
-    parent: Optional[CodeType] = None
+    parent = None
     queue = deque([(code, parent)])
 
     offset_line_dict = {}
@@ -105,22 +102,24 @@ if __name__ == "__main__":
     lineno_info = update_code_position_cache(__file__)
 
     for line_number, offset_pairs in lineno_info.items():
-        print(f"line #: {line_number}")
+        print("line #: %s" % line_number)
         print(
             "  "
-            + ", ".join([f"{code.co_name}: {offset}" for code, offset in offset_pairs])
+            + ", ".join(
+                [("%s: %d" % (code.co_name, offset)) for code, offset in offset_pairs]
+            )
         )
         print()
 
     for code, code_position_info in code_position_cache.items():
         print("=" * 30)
-        print(f"{code.co_name} parent: {code_position_info.parent}")
+        print("%s parent: %s" % (code.co_name, code_position_info.parent))
         print(
-            f"(line, offset): source positions for {code.co_name}:"
-            f"\n\t{pformat(code_position_info.lineno_and_offset)}"
+            ("(line, offset): source positions for %s:" % code.co_name)
+            + "\n\t%s" % pformat(code_position_info.lineno_and_offset)
         )
         print(
-            f"(line, offset): start columns for {code.co_name}:"
-            f"\n\t{pformat(code_position_info.lineno_and_start_column)}"
+            ("(line, offset): start columns for %s:" % code.co_name)
+            + ("\n\t%s" % pformat(code_position_info.lineno_and_start_column))
         )
         print("-" * 30)

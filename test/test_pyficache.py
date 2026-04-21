@@ -215,29 +215,16 @@ class TestPyFiCache:
         assert pyficache.cached_files() == []
 
     def test_resolve_name_to_path(self):
-            testdata = (
-                (
-                    "pyc/__pycache__/foo.cpython-%s.pyc" % PYVER,
-                    osp.join("pyc", "foo.py"),
-                ),
-                ("__pycache__/pyo.cpython-%s.pyc" % PYVER, "pyo.py"),
-                (
-                    "foo/__pycache__/bar.cpython-%s.pyo" % PYVER,
-                    osp.join("foo", "bar.py"),
-                ),
-            )
-        else:
-            testdata = (
-                (osp.join("pyc", "foo.pyc"), osp.join("pyc", "foo.py")),
-                ("pyo.pyc", "pyo.py"),
-                ("foo.pyo", "foo.py"),
-            )
-=======
         testdata = (
-            (f"pyc/__pycache__/foo.cpython-{PYVER}.pyc", osp.join("pyc", "foo.py")),
-            (f"__pycache__/pyo.cpython-{PYVER}.pyc", "pyo.py"),
-            (f"foo/__pycache__/bar.cpython-{PYVER}.pyo", osp.join("foo", "bar.py")),
+            (
+                "pyc/__pycache__/foo.cpython-%s.pyc" % PYVER,
+                osp.join("pyc", "foo.py"),
+            ),
+            ("__pycache__/pyo.cpython-%s.pyc" % PYVER, "pyo.py"),
+            (
+                "foo/__pycache__/bar.cpython-%s.pyo" % PYVER,
+                osp.join("foo", "bar.py"),
+            ),
         )
->>>>>>> python-3.6-to-3.10
         for path, expect in testdata:
             assert pyficache.resolve_name_to_path(path) == expect
