@@ -70,7 +70,6 @@ from pygments.formatters import Terminal256Formatter, TerminalFormatter
 from pygments.lexers import PythonLexer
 from term_background import is_dark_background
 from xdis.lineoffsets import lineoffsets_in_file
-from xdis.version_info import PYTHON3
 
 from pyficache.code_positions import update_code_position_cache
 from pyficache.line_numbers import code_linenumbers_in_file
@@ -158,13 +157,15 @@ def resolve_name_to_path(path_or_name: str) -> str:
     # If none of the fancy things above happened
     return path_or_name
 
-def removesuffix(text, suffix):
+
+def removesuffix(text, suffix) -> str:
     """
     Equivalent to str.removesuffix() introduced in Python 3.9.
     """
     if suffix and text.endswith(suffix):
-        return text[:-len(suffix)]
+        return text[: -len(suffix)]
     return text
+
 
 class LineCacheInfo:
     """Container for cached file info.
@@ -572,8 +573,8 @@ def getlines(filename, opts=default_opts, is_pyasm: Optional[bool] = None):
         highlight_opts["style"] = "tango"
 
     if filename not in file_cache:
-        update_cache(filename, opts)
         filename = resolve_name_to_path(filename)
+        update_cache(filename, opts)
         if filename not in file_cache:
             return None
         pass
@@ -1006,13 +1007,14 @@ def update_cache(filename, opts=default_opts, module_globals=None) -> Optional[s
         if mapped_path:
             if mapped_path != path:
                 fname_list.append(mapped_path)
+            formatted_line_list = {}
             for filename in fname_list:
                 try:
                     stat = os.stat(filename)
                     unstripped_lines: List[str] = linecache.getlines(filename)
                     # Strip \n in Python linecache'd lines only if the line is NOT exactly "\n".
                     stripped_lines = [
-                        line.removesuffix("\n") if line != "\n" else line
+                        removesuffix(line, "\n") if line != "\n" else line
                         for line in unstripped_lines
                     ]
                     if (
@@ -1046,7 +1048,6 @@ def update_cache(filename, opts=default_opts, module_globals=None) -> Optional[s
                                 stat=stat,
                             )
                         )
->>>>>>> master
                 except Exception:
                     pass
                 pass
@@ -1054,7 +1055,8 @@ def update_cache(filename, opts=default_opts, module_globals=None) -> Optional[s
             file2file_remap[orig_filename] = filename
             file2file_remap[osp.abspath(orig_filename)] = filename
             file2file_remap[path] = filename
-            return filename
+            if filename in file_cache:
+                return filename
         pass
     pass
 
@@ -1100,7 +1102,7 @@ def update_cache(filename, opts=default_opts, module_globals=None) -> Optional[s
                     stat=None,
                 )
                 file2file_remap[path] = filename
-                return True
+                return filename
             pass
         pass
     if not osp.isabs(filename):
