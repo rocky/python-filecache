@@ -71,7 +71,6 @@ from pygments.formatters import Terminal256Formatter, TerminalFormatter
 from pygments.lexers import PythonLexer
 from term_background import is_dark_background
 from xdis.lineoffsets import lineoffsets_in_file
-from xdis.version_info import PYTHON3
 
 from pyficache.code_positions import update_code_position_cache
 from pyficache.line_numbers import code_linenumbers_in_file
@@ -554,8 +553,8 @@ def getlines(filename, opts=default_opts, is_pyasm: Optional[bool] = None):
         highlight_opts["style"] = "tango"
 
     if filename not in file_cache:
-        update_cache(filename, opts)
         filename = resolve_name_to_path(filename)
+        update_cache(filename, opts)
         if filename not in file_cache:
             return None
         pass
@@ -1039,7 +1038,8 @@ def update_cache(filename, opts=default_opts, module_globals=None) -> Optional[s
             file2file_remap[orig_filename] = filename
             file2file_remap[osp.abspath(orig_filename)] = filename
             file2file_remap[path] = filename
-            return filename
+            if filename in file_cache:
+                return filename
         pass
     pass
 
@@ -1077,7 +1077,7 @@ def update_cache(filename, opts=default_opts, module_globals=None) -> Optional[s
                     stat=None, lines=lines, linestarts=None, path=filename, sha1=None
                 )
                 file2file_remap[path] = filename
-                return True
+                return filename
             pass
         pass
     if not osp.isabs(filename):
