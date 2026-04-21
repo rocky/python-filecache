@@ -1109,7 +1109,7 @@ def update_cache(filename, opts=default_opts, module_globals=None):
 if __name__ == "__main__":
     # from pprint import pprint, pformat
 
-    z = lambda x, y: x + y
+    z = lambda x, y: x + y  # noqa
 
     def yes_no(var):
         # NOTE: for testing, we want the next line to contain 2 statements on a
