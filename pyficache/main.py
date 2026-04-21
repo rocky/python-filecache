@@ -354,7 +354,7 @@ def checkcache(filename=None, opts=False):
                 or cache_info.st_mtime != stat.st_mtime
             ):
                 result.append(filename)
-                update_cache(filename, use_linecache_lines)
+                update_cache(filename, {"use_linecache_lines": use_linecache_lines})
             else:
                 result.append(filename)
                 update_cache(filename)
@@ -964,8 +964,11 @@ def update_cache(filename, opts=default_opts, module_globals=None):
     if filename in file_cache:
         del file_cache[filename]
     path = osp.abspath(filename)
-    stat = None
-    if get_option("use_linecache_lines", opts):
+    if osp.exists(path):
+        stat = os.stat(path)
+    else:
+        stat = None
+    if get_option("use_linecache_lines", opts) and stat is None:
         fname_list = [filename]
         mapped_path = file2file_remap.get(path)
         if mapped_path:
