@@ -977,7 +977,7 @@ def update_cache(filename, opts=default_opts, module_globals=None):
         mapped_path = file2file_remap.get(path)
         if mapped_path:
             fname_list.append(mapped_path)
-            for filename in fname_list:
+            for filename in set(fname_list):
                 try:
                     stat = os.stat(filename)
                     plain_lines = linecache.getlines(filename)
