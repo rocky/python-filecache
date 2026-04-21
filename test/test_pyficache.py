@@ -173,6 +173,10 @@ class TestPyFiCache:
             and platform.python_implementation() != "PyPy"
         ):
             expected = {4, 5, 8, 9}
+        elif (
+            (3, 10) <= PYTHON_VERSION_TRIPLE[:2]
+        ) and platform.python_implementation() == "GraalVM":
+            expected = {2, 5, 6, 7, 9}
         elif (3, 8) <= PYTHON_VERSION_TRIPLE[:2] <= (3, 10):
             expected = {2, 5, 7, 9}
         elif (
