@@ -970,7 +970,7 @@ def update_cache(filename, opts=default_opts, module_globals=None):
         mapped_path = file2file_remap.get(path)
         if mapped_path:
             fname_list.append(mapped_path)
-            for filename in fname_list:
+            for filename in set(fname_list):
                 try:
                     stat = os.stat(filename)
                     plain_lines = linecache.getlines(filename)
@@ -1090,7 +1090,8 @@ def update_cache(filename, opts=default_opts, module_globals=None):
 
 # example usage
 if __name__ == "__main__":
-    from pprint import pp, pformat
+    from pprint import pformat, pp
+
     from pyficache.code_positions import code_position_cache
 
     z = lambda x, y: x + y
