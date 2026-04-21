@@ -67,7 +67,6 @@ from pygments.formatters import Terminal256Formatter, TerminalFormatter
 from pygments.lexers import PythonLexer
 from term_background import is_dark_background
 from xdis.lineoffsets import lineoffsets_in_file
-from xdis.version_info import PYTHON3
 
 from pyficache.line_numbers import code_linenumbers_in_file
 from pyficache.pyasm import PyasmLexer, compute_pyasm_line_mapping
@@ -124,20 +123,26 @@ def resolve_name_to_path(path_or_name: str) -> str:
     """
     if path_or_name.endswith(".py"):
         # Assume Python source code
-        return path_or_name
+        return file2file_remap.get(path_or_name, path_or_name)
 
     if re.match(".*py[co]$", path_or_name):
-        if PYTHON3:
-            return re.sub(
-                r"(.*)__pycache__/(.+)\.cpython-%s.py[co]$" % PYVER,
-                "\\1\\2.py",
-                path_or_name,
-            )
-        else:
-            return path_or_name[:-1]
+        return re.sub(
+            r"(.*)__pycache__/(.+)\.cpython-%s.py[co]$" % PYVER,
+            "\\1\\2.py",
+            path_or_name,
+        )
 
     # If none of the fancy things above happened
     return path_or_name
+
+
+def removesuffix(text, suffix) -> str:
+    """
+    Equivalent to str.removesuffix() introduced in Python 3.9.
+    """
+    if suffix and text.endswith(suffix):
+        return text[: -len(suffix)]
+    return text
 
 
 class LineCacheInfo:
@@ -147,9 +152,8 @@ class LineCacheInfo:
 
     code_map: a dictionary mapping the name (co_name) of a file to its code object.
 
-    line_info: a dictionary mapping line number in a file to its
-          offsets in a code object.
-          When the code offset is 0, the code object is stored.
+    line_info: a dictionary mapping line number in a file to a list of
+          code object and offsets pairs.
 
     linestarts: a dictionary mapping a bytecode offset to a source line number
 
@@ -164,23 +168,25 @@ class LineCacheInfo:
 
     def __init__(
         self,
-        stat,
+        code_map,
+        eols,
+        line_info,
         line_numbers,
-        linestarts,
         lines,
-        path,
-        sha1,
-        eols=None,
-        code_map=None,
+        linestarts,
+        path="",
+        sha1=None,
+        stat=None,
     ):
-        self.stat, self.lines, self.path, self.sha1 = (stat, lines, path, sha1)
-        self.line_numbers = line_numbers
-        self.linestarts = linestarts
-        self.eols = eols
         self.code_map = code_map
-        return
-
-    pass
+        self.eols = (eols,)
+        self.line_info = line_info
+        self.line_numbers = line_numbers
+        self.lines = lines
+        self.linestarts = linestarts
+        self.path = path
+        self.sha1 = sha1
+        self.stat = stat
 
 
 # The file cache. The key is a name as would be given by co_filename
@@ -189,6 +195,10 @@ file_cache = {}
 pyasm_files = set()
 script_cache = {}
 
+# For eval, exec, and AST evaluations we might have mapped <string> to a
+# temporary file name. Here, we store a mapping from code file to
+# temporary file name. Creating this file is done outside this package.
+code2tempfile = {}
 
 # `file2file_remap` maps a path (a string) to another path key in file_cache (a
 # string).
@@ -337,7 +347,7 @@ def checkcache(filename=None, opts=False):
                 or cache_info.st_mtime != stat.st_mtime
             ):
                 result.append(filename)
-                update_cache(filename, use_linecache_lines)
+                update_cache(filename, {"use_linecache_lines": use_linecache_lines})
             else:
                 result.append(filename)
                 update_cache(filename)
@@ -390,20 +400,102 @@ def cache_file(filename, reload_on_change=False, opts=default_opts):
     return None
 
 
-def is_cached(file_or_script):
+def is_cached(file_or_script) -> bool:
     """Return True if file_or_script is cached"""
     if isinstance(file_or_script, str):
         return unmap_file(file_or_script) in file_cache
-    return is_cached_script(file_or_script)
+    else:
+        # ???
+        return is_cached_script(file_or_script)
+    return
 
 
-def is_cached_script(filename):
+def is_cached_script(filename: str) -> bool:
     return unmap_file(filename) in list(script_cache.keys())
 
 
-def is_empty(filename):
+def is_empty(filename: str) -> bool:
     filename = unmap_file(filename)
     return 0 == len(file_cache[filename].lines["plain"])
+
+
+def is_python_assembly_file(filename: str) -> bool:
+    """
+    Return True if file contains a Python disassembly file.
+    """
+    # For now, we'll go with the file extension only.
+    # Later, we can extend by verification by looking at contents.
+    return filename.endswith(".pyasm")
+
+
+# FIXME: add approximate flag.
+def get_pyasm_line(
+    filepath: str,
+    location: int,
+    is_source_line: bool,
+    offset: int = -1,
+    opts=default_opts,
+) -> tuple:
+    """
+    Get a line from a python assembly file. If `is_source_line` is True, then we need to look
+    up the `location`, a line number, in the remapping file. Otherwise we will take the `location`
+    to be the index in the pyasm file.
+    """
+    filename = unmap_file(filepath)
+
+    lines = getlines(filename, {"output": "plain"}, is_pyasm=True)
+    pyasm_line_index = -1
+    if lines is None:
+        return None, -1
+
+    if is_source_line:
+        line = None
+        from_to_lines = compute_pyasm_line_mapping(lines)
+        remap_file_lines(filename, filename, from_to_lines)
+        remap_line_entries = file2file_remap_lines.get(filename)
+        if remap_line_entries:
+            from_to_lines = remap_line_entries.from_to_pairs
+            # FIXME figure out how to handle offsets in 3.5 and below
+            # if offset >= 0:
+            #     pyasm_line_index = line_offset_to_remapped_line.get((location, offset))
+            #     if pyasm_line_index:
+            #         line = lines[pyasm_line_index - 1]
+            #         pass
+            #     pass
+            if line is None:
+                line_max = len(lines)
+                # FIXME: use binary search
+                # Note we assume assume from_line is increasing.
+                # Add sentinel at end of from pairs to handle using the final
+                # entry for line numbers greater than it.
+                # Find the closest mapped line number equal or before line_number.
+                for python_line, try_pyasm_index in remap_line_entries.from_to_pairs + (
+                    (large_int, line_max),
+                ):
+                    if python_line == location:
+                        pyasm_line_index = try_pyasm_index
+                        line = lines[pyasm_line_index - 1]
+                        break
+                    pass
+                pass
+            pass
+        pass
+    else:
+        if location >= len(lines):
+            return None, -1
+        pyasm_line_index = location
+        line = lines[pyasm_line_index]
+
+    fmt = opts.get("style", "plain")
+    if line is None:
+        return None, -1
+
+    if fmt != "plain":
+        line = highlight_string(line, fmt, lexer=pyasm_lexer)
+
+    if get_option("strip_nl", opts):
+        line = line.rstrip("\n")
+    return line, pyasm_line_index
 
 
 def getline(file_or_script: str, line_number: int, opts=default_opts):
@@ -418,42 +510,9 @@ def getline(file_or_script: str, line_number: int, opts=default_opts):
     """
     filename = unmap_file(file_or_script)
 
-    is_pyasm = opts.get("is_pyasm", filename.endswith(".pyasm"))
+    is_pyasm = opts.get("is_pyasm", is_python_assembly_file(filename))
     lines = getlines(filename, opts, is_pyasm=is_pyasm)
-    if is_pyasm:
-        if opts.get("output") != "plain":
-            lines = getlines(filename, {"output": "plain"}, is_pyasm=is_pyasm)
-        if lines is None:
-            return ""
-
-        line = None
-        remap_line_entries = file2file_remap_lines.get(filename)
-        if not remap_line_entries:
-            from_to_lines = compute_pyasm_line_mapping(lines)
-            remap_file_lines(filename, filename, from_to_lines)
-            remap_line_entries = file2file_remap_lines.get(filename)
-        if remap_line_entries:
-            from_to_lines = remap_line_entries.from_to_pairs
-            line_max = len(lines)
-            # FIXME: use binary search
-            # Note we assume assume from_line is increasing.
-            # Add sentinel at end of from pairs to handle using the final
-            # entry for line numbers greater than it.
-            # Find the closest mapped line number equal or before line_number.
-            for t in remap_line_entries.from_to_pairs + ((large_int, line_max),):
-                if t[0] == line_number:
-                    line = lines[t[1]]
-                    break
-
-        fmt = opts.get("output", "plain")
-        if line is None:
-            return ""
-        if fmt == "plain":
-            return line
-        else:
-            return highlight_string(line, fmt, lexer=pyasm_lexer)
-
-    elif lines and line_number >= 1 and line_number <= maxline(filename):
+    if lines and line_number >= 1 and line_number <= maxline(filename):
         filename, line_number = unmap_file_line(filename, line_number)
         line = lines[line_number - 1]
         if get_option("strip_nl", opts):
@@ -476,10 +535,10 @@ def getlines(filename, opts=default_opts, is_pyasm=None):
         cs = "plain"
     else:
         cs = opts.get("style")
-    highlight_opts = {"bg": fmt}
+    highlight_opts = {}
 
     if is_pyasm is None:
-        is_pyasm = filename.endswith(".pyasm")
+        is_pyasm = is_python_assembly_file(filename)
 
     # Set list style based on "style" option passed
     # if no style given use "monokai" for dark backgrounds,
@@ -493,8 +552,8 @@ def getlines(filename, opts=default_opts, is_pyasm=None):
         highlight_opts["style"] = "tango"
 
     if filename not in file_cache:
-        update_cache(filename, opts)
         filename = resolve_name_to_path(filename)
+        update_cache(filename, opts)
         if filename not in file_cache:
             return None
         pass
@@ -502,13 +561,16 @@ def getlines(filename, opts=default_opts, is_pyasm=None):
     if is_pyasm:
         highlight_opts["lexer"] = pyasm_lexer
     if fmt not in lines.keys():
-        lines[fmt] = highlight_array(lines["plain"], **highlight_opts)
+        lines_with_nl = [
+            line + "\n" if not line.endswith("\n") else line for line in lines["plain"]
+        ]
+        lines[fmt] = highlight_array(lines_with_nl, **highlight_opts)
         pass
     return lines[fmt]
 
 
-def highlight_array(array, trailing_nl=True, bg="light", **options):
-    fmt_array = highlight_string("".join(array), bg, **options).split("\n")
+def highlight_array(array, trailing_nl=True, **options):
+    fmt_array = highlight_string("".join(array), **options).split("\n")
     lines = [line + "\n" for line in fmt_array]
     if not trailing_nl:
         lines[-1] = lines[-1].rstrip("\n")
@@ -525,18 +587,19 @@ light_terminal_formatter = TerminalFormatter(bg="light")
 terminal_256_formatter = Terminal256Formatter()
 
 
-def highlight_string(string, bg="light", **options) -> str:
+def highlight_string(string, **options) -> str:
     global terminal_256_formatter
     if "lexer" in options:
         lexer = options.pop("lexer")
     else:
         lexer = python_lexer
+    bg = options.get("bg", "light")
     if options.get("style"):
         if terminal_256_formatter.style != options["style"]:
             terminal_256_formatter = Terminal256Formatter(style=options["style"])
             del options["style"]
         return highlight(string, lexer, terminal_256_formatter, **options)
-    elif "light" == bg:
+    elif bg and bg == "light":
         return highlight(string, lexer, light_terminal_formatter, **options)
     else:
         return highlight(string, lexer, dark_terminal_formatter, **options)
@@ -635,6 +698,11 @@ def size(filename, use_cache_only=False):
         if filename not in file_cache:
             return None
         pass
+    if filename in pyasm_files or is_python_assembly_file(filename):
+        lines = getlines(filename, opts={}, is_pyasm=True)
+        from_to_lines = compute_pyasm_line_mapping(lines)
+        remap_file_lines(filename, filename, from_to_lines)
+        return max([line for line, offset in from_to_lines])
     return len(file_cache[filename].lines["plain"])
 
 
@@ -699,6 +767,8 @@ def get_linecache_info(filename: str, reload_on_change=False):
     linecache_info = file_cache[filename]
     if not linecache_info.line_numbers:
         linecache_info.line_numbers = code_linenumbers_in_file(fullname)
+        code_info = lineoffsets_in_file(fullname)
+        linecache_info.code_map = code_info.code_map
         pass
     return linecache_info
 
@@ -870,11 +940,22 @@ def unmap_file_line(filename: str, line_number: int, reverse=False):
     return (filename, mapped_line_number)
 
 
+def filename_readlines(filename):
+    with open(path, "r") as fp:
+        lines = {"plain": fp.readlines()}
+        eols = fp.newlines
+    return lines, eols
+
+
 def update_cache(filename, opts=default_opts, module_globals=None):
-    """Update a cache entry.  If something is wrong, return
-    *None*. Return *True* if the cache was updated and *False* if not.  If
-    *use_linecache_lines* is *True*, use an existing cache entry as source
-    for the lines of the file."""
+    """
+    Update a file_cache entry if lines in in "filename" have changed.
+    The filename is returned, or None is something went wrong.
+
+    If *use_linecache_lines* is *True*, use an existing Python module linecache
+    data as source for the lines of the file. However, it is compared with the
+    data from prior cache data if that exits.
+    """
 
     if not filename:
         return None
@@ -882,39 +963,75 @@ def update_cache(filename, opts=default_opts, module_globals=None):
     orig_filename = filename
     filename = resolve_name_to_path(filename)
     if filename in file_cache:
+        # Delete old file_cache entry after saving.
+        # It might get reinstated though, if
+        # the linecache info indicates it has been
+        # unchanged.
+        old_cached_info = file_cache[filename]
         del file_cache[filename]
+    else:
+        old_cached_info = None
+
     path = osp.abspath(filename)
+    # stat contains stat info for the file we eventually read in
     stat = None
+
     if get_option("use_linecache_lines", opts):
         fname_list = [filename]
         mapped_path = file2file_remap.get(path)
         if mapped_path:
-            fname_list.append(mapped_path)
+            if mapped_path != path:
+                fname_list.append(mapped_path)
+            formatted_line_list = {}
             for filename in fname_list:
                 try:
                     stat = os.stat(filename)
-                    plain_lines = linecache.getlines(filename)
-                    trailing_nl = has_trailing_nl(plain_lines[-1])
-                    lines = {
-                        "plain": plain_lines,
-                    }
-                    file_cache[filename] = LineCacheInfo(
-                        line_numbers=None,
-                        lines=lines,
-                        linestarts=None,
-                        path=path,
-                        sha1=None,
-                        stat=stat,
-                    )
+                    unstripped_lines = linecache.getlines(filename)
+                    # Strip \n in Python linecache'd lines only if the line is NOT exactly "\n".
+                    stripped_lines = [
+                        removesuffix(line, "\n") if line != "\n" else line
+                        for line in unstripped_lines
+                    ]
+                    if (
+                        old_cached_info
+                        and old_cached_info.lines["plain"] == unstripped_lines
+                    ):
+                        # Info has not changed, so reinstate prior filcache info, but use recently-read
+                        # stat info.
+                        old_cached_info.stat = stat
+                        file_cache[filename] = file_cache[orig_filename] = (
+                            old_cached_info
+                        )
+                        if "style" in opts:
+                            key = opts["style"]
+                            highlight_opts = {"style": key}
+                            if key not in old_cached_info.lines:
+                                old_cached_info.lines[key] = highlight_array(style=key)
+
+                    else:
+                        trailing_nl = has_trailing_nl(stripped_lines[-1])
+                        formatted_line_list = {
+                            "plain": stripped_lines,
+                        }
+                        file_cache[filename] = file_cache[orig_filename] = (
+                            LineCacheInfo(
+                                line_numbers=None,
+                                lines=formatted_line_list,
+                                linestarts=None,
+                                path=path,
+                                sha1=None,
+                                stat=stat,
+                            )
+                        )
                 except Exception:
                     pass
                 pass
-            if orig_filename != filename:
-                file2file_remap[orig_filename] = filename
-                file2file_remap[osp.abspath(orig_filename)] = filename
-                pass
+
+            file2file_remap[orig_filename] = filename
+            file2file_remap[osp.abspath(orig_filename)] = filename
             file2file_remap[path] = filename
-            return filename
+            if filename in file_cache:
+                return filename
         pass
     pass
 
@@ -949,10 +1066,18 @@ def update_cache(filename, opts=default_opts, module_globals=None):
                     raw_string.split("\n"), trailing_nl, **highlight_opts
                 )
                 file_cache[filename] = LineCacheInfo(
-                    stat=None, lines=lines, linestarts=None, path=filename, sha1=None
+                    code_map={},
+                    eols=None,
+                    line_info=None,
+                    line_numbers=None,
+                    lines=lines,
+                    linestarts=None,
+                    path=filename,
+                    sha1=None,
+                    stat=None,
                 )
                 file2file_remap[path] = filename
-                return True
+                return filename
             pass
         pass
     if not osp.isabs(filename):
@@ -966,11 +1091,11 @@ def update_cache(filename, opts=default_opts, module_globals=None):
                 break
             pass
         if not stat:
-            return False
+            return None
         pass
 
     try:
-        mode = "r" if PYTHON3 else "rU"
+        mode = "r"
         with open(path, mode) as fp:
             lines = {"plain": fp.readlines()}
             eols = fp.newlines
@@ -997,6 +1122,7 @@ def update_cache(filename, opts=default_opts, module_globals=None):
     file_cache[filename] = LineCacheInfo(
         code_map={},
         eols=eols,
+        line_info=None,
         line_numbers=None,
         lines=lines,
         linestarts=None,
@@ -1005,14 +1131,14 @@ def update_cache(filename, opts=default_opts, module_globals=None):
         stat=stat,
     )
     file2file_remap[path] = filename
-    return True
+    return filename
 
 
 # example usage
 if __name__ == "__main__":
-    from pprint import pprint, pformat
+    # from pprint import pprint, pformat
 
-    z = lambda x, y: x + y
+    z = lambda x, y: x + y  # noqa
 
     def yes_no(var):
         # NOTE: for testing, we want the next line to contain 2 statements on a
@@ -1065,9 +1191,12 @@ if __name__ == "__main__":
         file_path = __file__
 
     filename = "../test/seven-313.pyasm"
-    line_number = 2
-    line = getline(filename, line_number)
 
+    line_number = 2
+    line, remapped_line_number = get_pyasm_line(
+        filename, line_number, is_source_line=True
+    )
+    print(highlight_string(line, lexer=pyasm_lexer, style="colorful"))
     print("line %d of %s is:\n" % (line_number, filename), line)
     update_cache(file_path)
     checkcache(file_path)

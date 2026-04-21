@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#  Copyright (C) 2015, 2018, 2020, 2023-2024,2026 Rocky Bernstein <rocky@gnu.org>
+#  Copyright (C) 2015, 2018, 2020, 2023-2024, 2026 Rocky Bernstein <rocky@gnu.org>
 #  This program is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
 #  the Free Software Foundation, either version 3 of the License, or
@@ -83,6 +83,11 @@ __docformat__ = "restructuredtext"
 
 # Export some functions
 from pyficache.pyasm import PyasmLexer
+from pyficache.code_positions import (
+    code_loop_for_positions,
+    code_position_cache,
+    update_code_position_cache,
+)
 
 from pyficache.main import (
     PYVER,
@@ -101,6 +106,7 @@ from pyficache.main import (
     file_cache,
     file2file_remap,
     get_linecache_info,
+    get_pyasm_line,
     getline,
     getlines,
     highlight_array,
@@ -108,9 +114,11 @@ from pyficache.main import (
     is_cached,
     is_cached_script,
     is_mapped_file,
+    is_python_assembly_file,
     light_terminal_formatter,
     maxline,
     path,
+    pyasm_lexer,
     remap_file,
     remap_file_lines,
     remap_file_pat,
@@ -143,11 +151,14 @@ __all__ = [
     "clear_file_format_cache",
     "code_line_info",
     "code_lines",
+    "code_loop_for_positions",
     "code_offset_info",
+    "code_position_cache",
     "dark_terminal_formatter",
     "file_cache",
     "file2file_remap",
     "get_linecache_info",
+    "get_pyasm_line",
     "getline",
     "getlines",
     "highlight_array",
@@ -155,9 +166,11 @@ __all__ = [
     "is_cached",
     "is_cached_script",
     "is_mapped_file",
+    "is_python_assembly_file",
     "light_terminal_formatter",
     "maxline",
     "path",
+    "pyasm_lexer",
     "remap_file",
     "remap_file_lines",
     "remap_file_pat",
@@ -172,5 +185,6 @@ __all__ = [
     "unmap_file",
     "unmap_file_line",
     "update_cache",
+    "update_code_position_cache",
     "update_script_cache",
 ]
