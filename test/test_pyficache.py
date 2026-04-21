@@ -172,6 +172,10 @@ class TestPyFiCache:
             expected = {4, 5, 8, 9}
         elif (3, 8) <= PYTHON_VERSION_TRIPLE[:2] <= (3, 10):
             expected = {2, 5, 7, 9}
+        elif (
+            (3, 6) == PYTHON_VERSION_TRIPLE[:2]
+        ) and platform.python_implementation() == "PyPy":
+            expected = {2, 5, 7, 9}
         else:
             expected = {4, 6, 8, 9}
         assert expected == pyficache.trace_line_numbers(test_file)
