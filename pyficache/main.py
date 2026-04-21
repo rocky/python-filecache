@@ -1008,25 +1008,29 @@ def update_cache(filename, opts=default_opts, module_globals=None) -> Optional[s
                         # Info has not changed, so reinstate prior filcache info, but use recently-read
                         # stat info.
                         old_cached_info.stat = stat
-                        file_cache[filename] = old_cached_info
+                        file_cache[filename] = file_cache[orig_filename] = (
+                            old_cached_info
+                        )
                         if "style" in opts:
-                            print("WOOT style")
                             key = opts["style"]
                             highlight_opts = {"style": key}
                             if key not in old_cached_info.lines:
                                 old_cached_info.lines[key] = highlight_array(style=key)
+
                     else:
                         trailing_nl = has_trailing_nl(stripped_lines[-1])
                         formatted_line_list = {
                             "plain": stripped_lines,
                         }
-                        file_cache[filename] = LineCacheInfo(
-                            line_numbers=None,
-                            lines=formatted_line_list,
-                            linestarts=None,
-                            path=path,
-                            sha1=None,
-                            stat=stat,
+                        file_cache[filename] = file_cache[orig_filename] = (
+                            LineCacheInfo(
+                                line_numbers=None,
+                                lines=formatted_line_list,
+                                linestarts=None,
+                                path=path,
+                                sha1=None,
+                                stat=stat,
+                            )
                         )
                 except Exception:
                     pass
