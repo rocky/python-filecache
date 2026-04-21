@@ -149,18 +149,22 @@ def resolve_name_to_path(path_or_name: str) -> str:
             pass
 
     if re.match(".*py[co]$", path_or_name):
-        if PYTHON3:
-            return re.sub(
-                rf"(.*)__pycache__/(.+)\.cpython-{PYVER}.py[co]$",
-                "\\1\\2.py",
-                path_or_name,
-            )
-        else:
-            return path_or_name[:-1]
+        return re.sub(
+            rf"(.*)__pycache__/(.+)\.cpython-{PYVER}.py[co]$",
+            "\\1\\2.py",
+            path_or_name,
+        )
 
     # If none of the fancy things above happened
     return path_or_name
 
+def removesuffix(text, suffix):
+    """
+    Equivalent to str.removesuffix() introduced in Python 3.9.
+    """
+    if suffix and text.endswith(suffix):
+        return text[:-len(suffix)]
+    return text
 
 class LineCacheInfo:
     """Container for cached file info.
@@ -577,7 +581,10 @@ def getlines(filename, opts=default_opts, is_pyasm: Optional[bool] = None):
     if is_pyasm:
         highlight_opts["lexer"] = pyasm_lexer
     if fmt not in lines.keys():
-        lines[fmt] = highlight_array(lines["plain"], **highlight_opts)
+        lines_with_nl = [
+            line + "\n" if not line.endswith("\n") else line for line in lines["plain"]
+        ]
+        lines[fmt] = highlight_array(lines_with_nl, **highlight_opts)
         pass
     return lines[fmt]
 
@@ -957,11 +964,22 @@ def unmap_file_line(filename: str, line_number: int, reverse=False):
     return (filename, mapped_line_number)
 
 
-def update_cache(filename, opts=default_opts, module_globals=None):
-    """Update a cache entry.  If something is wrong, return
-    *None*. Return *True* if the cache was updated and *False* if not.  If
-    *use_linecache_lines* is *True*, use an existing cache entry as source
-    for the lines of the file."""
+def filename_readlines(filename):
+    with open(path, "r") as fp:
+        lines = {"plain": fp.readlines()}
+        eols = fp.newlines
+    return lines, eols
+
+
+def update_cache(filename, opts=default_opts, module_globals=None) -> Optional[str]:
+    """
+    Update a file_cache entry if lines in in "filename" have changed.
+    The filename is returned, or None is something went wrong.
+
+    If *use_linecache_lines* is *True*, use an existing Python module linecache
+    data as source for the lines of the file. However, it is compared with the
+    data from prior cache data if that exits.
+    """
 
     if not filename:
         return None
@@ -969,41 +987,72 @@ def update_cache(filename, opts=default_opts, module_globals=None):
     orig_filename = filename
     filename = resolve_name_to_path(filename)
     if filename in file_cache:
+        # Delete old file_cache entry after saving.
+        # It might get reinstated though, if
+        # the linecache info indicates it has been
+        # unchanged.
+        old_cached_info = file_cache[filename]
         del file_cache[filename]
-    path = osp.abspath(filename)
-    if osp.exists(path):
-        stat = os.stat(path)
     else:
-        stat = None
-    if get_option("use_linecache_lines", opts) and stat is None:
+        old_cached_info = None
+
+    path = osp.abspath(filename)
+    # stat contains stat info for the file we eventually read in
+    stat = None
+
+    if get_option("use_linecache_lines", opts):
         fname_list = [filename]
         mapped_path = file2file_remap.get(path)
         if mapped_path:
-            fname_list.append(mapped_path)
-            for filename in set(fname_list):
+            if mapped_path != path:
+                fname_list.append(mapped_path)
+            for filename in fname_list:
                 try:
                     stat = os.stat(filename)
-                    plain_lines = linecache.getlines(filename)
-                    trailing_nl = has_trailing_nl(plain_lines[-1])
-                    lines = {
-                        "plain": plain_lines,
-                    }
-                    file_cache[filename] = LineCacheInfo(
-                        line_numbers=None,
-                        line_info=None,
-                        lines=lines,
-                        linestarts=None,
-                        path=path,
-                        sha1=None,
-                        stat=stat,
-                    )
+                    unstripped_lines: List[str] = linecache.getlines(filename)
+                    # Strip \n in Python linecache'd lines only if the line is NOT exactly "\n".
+                    stripped_lines = [
+                        line.removesuffix("\n") if line != "\n" else line
+                        for line in unstripped_lines
+                    ]
+                    if (
+                        old_cached_info
+                        and old_cached_info.lines["plain"] == unstripped_lines
+                    ):
+                        # Info has not changed, so reinstate prior filcache info, but use recently-read
+                        # stat info.
+                        old_cached_info.stat = stat
+                        file_cache[filename] = file_cache[orig_filename] = (
+                            old_cached_info
+                        )
+                        if "style" in opts:
+                            key = opts["style"]
+                            highlight_opts = {"style": key}
+                            if key not in old_cached_info.lines:
+                                old_cached_info.lines[key] = highlight_array(style=key)
+
+                    else:
+                        trailing_nl = has_trailing_nl(stripped_lines[-1])
+                        formatted_line_list = {
+                            "plain": stripped_lines,
+                        }
+                        file_cache[filename] = file_cache[orig_filename] = (
+                            LineCacheInfo(
+                                line_numbers=None,
+                                lines=formatted_line_list,
+                                linestarts=None,
+                                path=path,
+                                sha1=None,
+                                stat=stat,
+                            )
+                        )
+>>>>>>> master
                 except Exception:
                     pass
                 pass
-            if orig_filename != filename:
-                file2file_remap[orig_filename] = filename
-                file2file_remap[osp.abspath(orig_filename)] = filename
-                pass
+
+            file2file_remap[orig_filename] = filename
+            file2file_remap[osp.abspath(orig_filename)] = filename
             file2file_remap[path] = filename
             return filename
         pass
@@ -1065,11 +1114,11 @@ def update_cache(filename, opts=default_opts, module_globals=None):
                 break
             pass
         if not stat:
-            return False
+            return None
         pass
 
     try:
-        mode = "r" if PYTHON3 else "rU"
+        mode = "r"
         with open(path, mode) as fp:
             lines = {"plain": fp.readlines()}
             eols = fp.newlines
@@ -1105,7 +1154,7 @@ def update_cache(filename, opts=default_opts, module_globals=None):
         stat=stat,
     )
     file2file_remap[path] = filename
-    return True
+    return filename
 
 
 # example usage
