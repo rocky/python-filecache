@@ -358,7 +358,6 @@ class PyasmLexer(RegexLexer):
                 Name.Builtin,
             ),
         ],
->>>>>>> python-3.3-to-3.5
         "whitespace": [
             (r"\n", Whitespace),
             (r"\s+", Whitespace),
