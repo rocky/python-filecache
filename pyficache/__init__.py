@@ -114,9 +114,16 @@ from pyficache.main import (
     is_cached_script,
     is_mapped_file,
     is_python_assembly_file,
+<<<<<<< HEAD
     maxline,
     path,
     # pyasm_lexer,
+=======
+    light_terminal_formatter,
+    maxline,
+    path,
+    pyasm_lexer,
+>>>>>>> python-3.0-to-3.2
     remap_file,
     remap_file_lines,
     remap_file_pat,

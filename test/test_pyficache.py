@@ -10,8 +10,11 @@ import os.path as osp
 import sys
 import unittest
 
+<<<<<<< HEAD
 from tempfile import mkstemp
 
+=======
+>>>>>>> python-3.0-to-3.2
 import pyficache
 from pyficache import PYVER
 from xdis import IS_PYPY
@@ -29,6 +32,18 @@ class TestPyFiCache(unittest.TestCase):
         pyficache.clear_file_cache()
         return
 
+<<<<<<< HEAD
+=======
+# @pytest.fixture(autouse=True)
+# def clear_file_cache():
+#     # runs before each test
+#     pyficache.clear_file_cache()
+#     yield
+#     # no teardown actions required
+
+
+class TestPyFiCache:
+>>>>>>> python-3.0-to-3.2
     def test_basic(self):
         pyficache.clear_file_cache()
         filename = __file__
@@ -192,10 +207,15 @@ class TestPyFiCache(unittest.TestCase):
 
     def test_path(self):
         pyficache.clear_file_cache()
+<<<<<<< HEAD
         self.assertEqual(
             None,
             pyficache.path(__file__),
             ("path for %s should be None - " "just cleared cache." % __file__),
+=======
+        assert pyficache.path(__file__) is None, (
+            "path for %s should be None - just cleared cache." % __file__
+>>>>>>> python-3.0-to-3.2
         )
         path = pyficache.cache_file(__file__)
         self.assertTrue(path, "should have cached path for %s" % __file__)
@@ -251,7 +271,11 @@ class TestPyFiCache(unittest.TestCase):
     #     self.assertEqual(('\n', '\r\n'), file_obj.eols)
 
     def test_sha1(self):
+<<<<<<< HEAD
         global TEST_DIR
+=======
+        pyficache.clear_file_cache()
+>>>>>>> python-3.0-to-3.2
         test_file = osp.join(TEST_DIR, "short-file")
         self.assertEqual(
             "1134f95ea84a3dcc67d7d1bf41390ee1a03af6d2", pyficache.sha1(test_file)
@@ -259,17 +283,26 @@ class TestPyFiCache(unittest.TestCase):
         return
 
     def test_size(self):
+<<<<<<< HEAD
         global TEST_DIR
+=======
+>>>>>>> python-3.0-to-3.2
         pyficache.clear_file_cache()
         test_file = osp.join(TEST_DIR, "short-file")
         self.assertEqual(2, pyficache.size(test_file))
         return
 
     def test_stat(self):
+<<<<<<< HEAD
         self.assertEqual(
             None,
             pyficache.stat(__file__, use_cache_only=True),
             ("stat for %s should be None - " "just cleared cache." % __file__),
+=======
+        pyficache.clear_file_cache()
+        assert pyficache.stat(__file__, use_cache_only=True) is None, (
+            "stat for %s should be None - just cleared cache." % __file__
+>>>>>>> python-3.0-to-3.2
         )
         line = pyficache.getline(__file__, 1)
         self.assertTrue(line)
@@ -279,9 +312,15 @@ class TestPyFiCache(unittest.TestCase):
         return
 
     def test_update_cache(self):
+<<<<<<< HEAD
         self.assertFalse(pyficache.update_cache("foo"))
         self.assertTrue(pyficache.update_cache(__file__))
         return
+=======
+        pyficache.clear_file_cache()
+        assert not pyficache.update_cache("foo")
+        assert pyficache.update_cache(__file__)
+>>>>>>> python-3.0-to-3.2
 
     def test_clear_file_cache(self):
         pyficache.clear_file_cache()

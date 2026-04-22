@@ -41,7 +41,11 @@ class CodePositionInfo:
 code_position_cache = {}
 
 
+<<<<<<< HEAD
 def update_code_position_cache(filename):
+=======
+def update_code_position_cache(filename: str):
+>>>>>>> python-3.0-to-3.2
     """Update code_position_cache and returns a dictionary mapping line number in a file to its
     offsets in a code object.  Note for example that loops and
     conditional statements typically have more than one offset
@@ -60,7 +64,13 @@ def update_code_position_cache(filename):
     return code_loop_for_positions(code)
 
 
+<<<<<<< HEAD
 def code_loop_for_positions(code):
+=======
+def code_loop_for_positions(
+    code: CodeType,
+):
+>>>>>>> python-3.0-to-3.2
     """Loops over all code objects found within the constant section of `code` returning the
     information described in populate_code_position_cache() above and updating code_position_cache.
     """
@@ -70,7 +80,11 @@ def code_loop_for_positions(code):
 
     offset_line_dict = {}
     line_offset_dict = {}
+<<<<<<< HEAD
     line_info = {}
+=======
+    line_info = defaultdict(list)
+>>>>>>> python-3.0-to-3.2
 
     while len(queue) > 0:
         code, parent = queue.popleft()
