@@ -1105,6 +1105,7 @@ def update_cache(filename, opts=default_opts, module_globals=None) -> Optional[s
                 return filename
             pass
         pass
+
     if not osp.isabs(filename):
         # Try looking through the module search path, which is only useful
         # when handling a relative filename.
