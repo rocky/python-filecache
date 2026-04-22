@@ -166,7 +166,23 @@ class TestPyFiCache:
             assert set([start_lineno]) == line_nums
 
         test_file = osp.join(TEST_DIR, "devious.py")
-        expected = {4, 6, 8, 9}
+        if (
+            PYTHON_VERSION_TRIPLE[:2] in ((3, 7),)
+            and platform.python_implementation() != "PyPy"
+        ):
+            expected = {4, 5, 8, 9}
+        elif (
+            (3, 10) <= PYTHON_VERSION_TRIPLE[:2]
+        ) and platform.python_implementation() == "GraalVM":
+            expected = {2, 5, 6, 7, 9}
+        elif (3, 8) <= PYTHON_VERSION_TRIPLE[:2] <= (3, 10):
+            expected = {2, 5, 7, 9}
+        elif (
+            (3, 6) <= PYTHON_VERSION_TRIPLE[:2] <= (3, 7)
+        ) and platform.python_implementation() == "PyPy":
+            expected = {2, 5, 7, 9}
+        else:
+            expected = {4, 6, 8, 9}
         assert expected == pyficache.trace_line_numbers(test_file)
 
     def test_sha1(self):

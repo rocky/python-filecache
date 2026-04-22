@@ -9,7 +9,7 @@ from pyficache import get_pyasm_line
 TEST_DIR = osp.abspath(osp.dirname(__file__))
 
 
-# @pytest.mark.skip(reason="not yet implemented for Python < 3.6")
+@pytest.mark.skip(reason="not yet implemented for Python < 3.6")
 def test_remap():
     assert True
     return
