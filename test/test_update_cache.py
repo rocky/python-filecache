@@ -33,7 +33,7 @@ def test_update_cache():
 
         # Copy current file to the temporary file path
         shutil.copy2(current_file, tmp_path)
-        print(f"Temporary file created at: {tmp_path}")
+        print("Temporary file created at: %s" % tmp_path)
 
         cached_filename2 = update_cache(tmp_path, {"use_linecache_lines": True})
         assert pyficache.main.file_cache[cached_filename2].lines["plain"] == orig_lines
