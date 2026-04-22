@@ -68,10 +68,7 @@ from xdis.namedtuple24 import namedtuple
 # from pygments.lexers import GasLexer, PythonLexer
 
 from xdis.lineoffsets import lineoffsets_in_file
-<<<<<<< HEAD
 from xdis.version_info import PYTHON_VERSION_TRIPLE
-=======
->>>>>>> python-3.0-to-3.2
 
 from pyficache.line_numbers import code_linenumbers_in_file
 from pyficache.pyasm import PyasmLexer, compute_pyasm_line_mapping
@@ -153,11 +150,7 @@ def resolve_name_to_path(path_or_name):
     return path_or_name
 
 
-<<<<<<< HEAD
 def removesuffix(text, suffix):
-=======
-def removesuffix(text, suffix) -> str:
->>>>>>> python-3.0-to-3.2
     """
     Equivalent to str.removesuffix() introduced in Python 3.9.
     """
@@ -440,11 +433,7 @@ def is_empty(filename: str) -> bool:
     return 0 == len(file_cache[filename].lines["plain"])
 
 
-<<<<<<< HEAD
 def is_python_assembly_file(filename):
-=======
-def is_python_assembly_file(filename: str) -> bool:
->>>>>>> python-3.0-to-3.2
     """
     Return True if file contains a Python disassembly file.
     """
@@ -454,17 +443,7 @@ def is_python_assembly_file(filename: str) -> bool:
 
 
 # FIXME: add approximate flag.
-<<<<<<< HEAD
 def get_pyasm_line(filepath, location, is_source_line, int = -1, opts=default_opts):
-=======
-def get_pyasm_line(
-    filepath: str,
-    location: int,
-    is_source_line: bool,
-    offset: int = -1,
-    opts=default_opts,
-) -> tuple:
->>>>>>> python-3.0-to-3.2
     """
     Get a line from a python assembly file. If `is_source_line` is True, then we need to look
     up the `location`, a line number, in the remapping file. Otherwise we will take the `location`
@@ -527,11 +506,7 @@ def get_pyasm_line(
     return line, pyasm_line_index
 
 
-<<<<<<< HEAD
 def getline(file_or_script, line_number, opts=default_opts):
-=======
-def getline(file_or_script: str, line_number: int, opts=default_opts):
->>>>>>> python-3.0-to-3.2
     """Get line *line_number* from file named *file_or_script*. Return None if
     there was a problem or it is not found.
 
@@ -596,18 +571,12 @@ def getlines(filename, opts=default_opts, is_pyasm=None):
         lines[fmt] = lines["plain"]
         return
     if fmt not in lines.keys():
-<<<<<<< HEAD
         lines_with_nl = []
         for line in lines["plain"]:
             if not line.endswith("\n"):
                 lines_with_nl.append(line + "\n")
             else:
                 lines_with_nl.append(line)
-=======
-        lines_with_nl = [
-            line + "\n" if not line.endswith("\n") else line for line in lines["plain"]
-        ]
->>>>>>> python-3.0-to-3.2
         lines[fmt] = highlight_array(lines_with_nl, **highlight_opts)
         pass
     return lines[fmt]
@@ -992,18 +961,12 @@ def unmap_file_line(filename, line_number, reverse=False):
 
 
 def filename_readlines(filename):
-<<<<<<< HEAD
     try:
         fp = open(path, "r")
         lines = {"plain": fp.readlines()}
         eols = fp.newlines
     finally:
         fp.close()
-=======
-    with open(path, "r") as fp:
-        lines = {"plain": fp.readlines()}
-        eols = fp.newlines
->>>>>>> python-3.0-to-3.2
     return lines, eols
 
 
@@ -1048,17 +1011,10 @@ def update_cache(filename, opts=default_opts, module_globals=None):
                     stat = os.stat(filename)
                     unstripped_lines = linecache.getlines(filename)
                     # Strip \n in Python linecache'd lines only if the line is NOT exactly "\n".
-<<<<<<< HEAD
                     if line != "\n":
                         stripped_lines = [removesuffix(line, "\n") for line in unstripped_lines]
                     else:
                         stripped_lines = unstripped_lines
-=======
-                    stripped_lines = [
-                        removesuffix(line, "\n") if line != "\n" else line
-                        for line in unstripped_lines
-                    ]
->>>>>>> python-3.0-to-3.2
                     if (
                         old_cached_info
                         and old_cached_info.lines["plain"] == unstripped_lines
@@ -1163,14 +1119,8 @@ def update_cache(filename, opts=default_opts, module_globals=None):
         pass
 
     try:
-<<<<<<< HEAD
-        mode = "rU"
         try:
-            fp = open(path, mode)
-=======
-        mode = "r"
-        with open(path, mode) as fp:
->>>>>>> python-3.0-to-3.2
+            fp = open(path, "rU")
             lines = {"plain": fp.readlines()}
             eols = fp.newlines
         finally:
@@ -1272,11 +1222,7 @@ if __name__ == "__main__":
     line, remapped_line_number = get_pyasm_line(
         filename, line_number, is_source_line=True
     )
-<<<<<<< HEAD
     # print(highlight_string(line, lexer=pyasm_lexer, style="colorful"))
-=======
-    print(highlight_string(line, lexer=pyasm_lexer, style="colorful"))
->>>>>>> python-3.0-to-3.2
     print("line %d of %s is:\n" % (line_number, filename), line)
     update_cache(file_path)
     checkcache(file_path)
