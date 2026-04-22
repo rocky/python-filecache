@@ -6,19 +6,22 @@ import os
 import shutil
 import tempfile
 
-import pytest
+# Important note. Access to file_cache must come via
+# pyfycache.main qualification and can't be "from" imported
+# since that can cache the information.
+import pyficache
+from pyficache.main import update_cache
 
-from pyficache.main import file_cache, update_cache
 
-
-@pytest.mark.skip(reason="Mysterious failure to be investiated")
 def test_update_cache():
     # Get the path of the current script
     current_file = __file__
 
     orig_lines = open(current_file).readlines()
     cached_filename = update_cache(current_file, {"use_linecache_lines": True})
-    assert file_cache[cached_filename].lines["plain"] == orig_lines
+
+    # Note that we access file_cache via pyfycache.main!
+    assert pyficache.main.file_cache[cached_filename].lines["plain"] == orig_lines
 
     try:
         # Create a NamedTemporaryFile
@@ -33,7 +36,7 @@ def test_update_cache():
         print(f"Temporary file created at: {tmp_path}")
 
         cached_filename2 = update_cache(tmp_path, {"use_linecache_lines": True})
-        assert file_cache[cached_filename2].lines["plain"] == orig_lines
+        assert pyficache.main.file_cache[cached_filename2].lines["plain"] == orig_lines
 
         # Modify a character in the temporary file
         # We open it in r+ mode (read/write)
@@ -48,7 +51,7 @@ def test_update_cache():
                 f.truncate()  # Ensure no old data remains if the new content is shorter
 
         cached_filename3 = update_cache(tmp_path, {"use_linecache_lines": True})
-        assert file_cache[cached_filename3].lines["plain"] != orig_lines
+        assert pyficache.main.file_cache[cached_filename3].lines["plain"] != orig_lines
     finally:
         # Delete temporary file used in test.
         os.remove(tmp_path)
