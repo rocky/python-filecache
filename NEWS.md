@@ -11,8 +11,6 @@ More support for listing Python pyasm assembly files. Add `get_pyasm_line()`; `i
 
 Add `code2tempfile()` mapping from code object to temporary file name.
 
->>>>>>> master
-
 2.5.0 2025-09-15
 ================
 
