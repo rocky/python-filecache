@@ -5,59 +5,78 @@ Test pyficache.main.update_cache
 import os
 import shutil
 import tempfile
+import unittest
 
 # Important note. Access to file_cache must come via
 # pyfycache.main qualification and can't be "from" imported
 # since that can cache the information.
 import pyficache
 from pyficache.main import update_cache
+import sys
 
 
-def test_update_cache():
-    # Get the path of the current script
-    current_file = __file__
+# Test LineCache module
+class TestUpdateCache(unittest.TestCase):
 
-    orig_lines = open(current_file).readlines()
-    cached_filename = update_cache(current_file, {"use_linecache_lines": True})
+    def test_update_cache(self):
+        # Get the path of the current script
+        current_file = __file__
 
-    # Note that we access file_cache via pyfycache.main!
-    assert pyficache.main.file_cache[cached_filename].lines["plain"] == orig_lines
+        orig_lines = open(current_file).readlines()
+        cached_filename = update_cache(current_file, {"use_linecache_lines": True})
+        if sys.version_info[:2] <= (2, 5):
+            return
 
-    try:
-        # Create a NamedTemporaryFile
-        # delete=False ensures the file remains on disk after we close the context
-        with tempfile.NamedTemporaryFile(
-            delete=False, prefix="test_update_cache", suffix=".py"
-        ) as tmp:
-            tmp_path = tmp.name
+        # Note that we access file_cache via pyfycache.main!
+        self.assertEqual(pyficache.main.file_cache[cached_filename].lines["plain"], orig_lines)
+        tmp_path = None
+        tmp = None
 
-        # Copy current file to the temporary file path
-        shutil.copy2(current_file, tmp_path)
-        print("Temporary file created at: %s" % tmp_path)
+        try:
+            # Create a NamedTemporaryFile
+            # delete=False ensures the file remains on disk after we close the context
+            try:
+                tmp = tempfile.NamedTemporaryFile(
+                    delete=False, prefix="test_update_cache", suffix=".py"
+                    )
+                tmp_path = tmp.name
+            finally:
+                if tmp is None:
+                    return
+                tmp.close()
 
-        cached_filename2 = update_cache(tmp_path, {"use_linecache_lines": True})
-        assert pyficache.main.file_cache[cached_filename2].lines["plain"] == orig_lines
 
-        # Modify a character in the temporary file
-        # We open it in r+ mode (read/write)
-        with open(tmp_path, "r+") as f:
-            content = f.read()
-            if content:
-                # For example, replace the first character with an 'X'
-                modified_content = "X" + content[1:]
+            # Copy current file to the temporary file path
+            shutil.copy2(current_file, tmp_path)
+            print("Temporary file created at: %s" % tmp_path)
 
-                f.seek(0)  # Go back to start
-                f.write(modified_content)
-                f.truncate()  # Ensure no old data remains if the new content is shorter
+            cached_filename2 = update_cache(tmp_path, {"use_linecache_lines": True})
+            self.assertEqual(pyficache.main.file_cache[cached_filename2].lines["plain"], orig_lines)
 
-        cached_filename3 = update_cache(tmp_path, {"use_linecache_lines": True})
-        assert pyficache.main.file_cache[cached_filename3].lines["plain"] != orig_lines
-    finally:
-        # Delete temporary file used in test.
-        os.remove(tmp_path)
+            # Modify a character in the temporary file
+            # We open it in r+ mode (read/write)
+            try:
+                f = open(tmp_path, "r+")
+                content = f.read()
+                if content:
+                    # For example, replace the first character with an 'X'
+                    modified_content = "X" + content[1:]
 
-    return
+                    f.seek(0)  # Go back to start
+                    f.write(modified_content)
+                    f.truncate()  # Ensure no old data remains if the new content is shorter
+            finally:
+                f.close()
+
+            cached_filename3 = update_cache(tmp_path, {"use_linecache_lines": True})
+            assert pyficache.main.file_cache[cached_filename3].lines["plain"] != orig_lines
+        finally:
+            # Delete temporary file used in test.
+            if tmp_path is not None:
+                os.remove(tmp_path)
+
+        return
 
 
 if __name__ == "__main__":
-    test_update_cache()
+    unittest.main()

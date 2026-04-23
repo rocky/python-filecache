@@ -414,7 +414,7 @@ def cache_file(filename, reload_on_change=False, opts=default_opts):
     return None
 
 
-def is_cached(file_or_script) -> bool:
+def is_cached(file_or_script):
     """Return True if file_or_script is cached"""
     if isinstance(file_or_script, str):
         return unmap_file(file_or_script) in file_cache
@@ -424,11 +424,11 @@ def is_cached(file_or_script) -> bool:
     return
 
 
-def is_cached_script(filename: str) -> bool:
+def is_cached_script(filename):
     return unmap_file(filename) in list(script_cache.keys())
 
 
-def is_empty(filename: str) -> bool:
+def is_empty(filename):
     filename = unmap_file(filename)
     return 0 == len(file_cache[filename].lines["plain"])
 
