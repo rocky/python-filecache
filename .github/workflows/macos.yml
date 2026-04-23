@@ -13,6 +13,14 @@ jobs:
       matrix:
         os: [macOS]
         python-version: ['3.9', '3.10']
+    steps:
+    - uses: actions/checkout@v6
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v6
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
         # pip install --local -e "git+https://github.com/rocky/python-xdis.git#egg=xdis"
         python -m pip install --upgrade pip
         pip install pytest
