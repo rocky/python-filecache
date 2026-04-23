@@ -1,7 +1,17 @@
 2.6.0 2026-04-23
 ================
 
-...
+We now store column positions in LineCache for Python versions that have this information, e.g. CPython 3.11 and later. It is also used in Python bytecode assembly.
+
+Code has been revamped for Python 3.11's `co_lines()` and `co_positions()`.
+
+We use Python's linecache module more aggressively.
+
+More support for listing Python pyasm assembly files. Add `get_pyasm_line()`; `is_python_assembly_file()` determines if a file is an assembly file.
+
+Add `code2tempfile()` mapping from code object to temporary file name.
+
+>>>>>>> master
 
 2.5.0 2025-09-15
 ================
