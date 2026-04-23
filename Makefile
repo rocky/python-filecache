@@ -71,11 +71,14 @@ distclean: clean
 install:
 	$(PYTHON) ./setup.py install
 
-ChangeLog: rmChangeLog
-	git log --pretty --numstat --summary | $(GIT2CL) >$@
-	patch -p0 < ChangeLog-spell-corrected.diff
+#: Create ChangeLog from version control without corrections
+ChangeLog-without-corrections:
+	git log --pretty --numstat --summary | $(GIT2CL) >ChangeLog
 
+#: Remove ChangeLog
 rmChangeLog:
-	rm ChangeLog || true
+	$(RM) ChangeLog || true
 
-.PHONY: $(PHONY)
+#: Create a ChangeLog from git via git log and git2cl
+ChangeLog: rmChangeLog ChangeLog-without-corrections
+	patch -p0 ChangeLog < ChangeLog-spell-corrected.diff
