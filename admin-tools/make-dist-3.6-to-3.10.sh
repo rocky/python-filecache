@@ -38,9 +38,9 @@ for pyversion in $PYVERSIONS; do
     rm -fr build
     python setup.py bdist_egg bdist_wheel
     if (( $first_two >= 30 )) ; then
-	mv -v dist/${PACKAGE}-$VERSION-{py3$first_two}-none-any.whl
+	mv -v dist/${PACKAGE}-${__version__}-{py3,py$first_two}-none-any.whl
     else
-	mv -v dist/${PACKAGE}-$VERSION-{py2,py$first_two}-none-any.whl
+	mv -v dist/${PACKAGE}-${__version__}-{py2,py$first_two}-none-any.whl
     fi
 done
 
